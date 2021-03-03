@@ -5,11 +5,13 @@ import express from 'express'
 import bodyParser, {json} from 'body-parser'
 import mongoose from 'mongoose'
 import { authRoute } from './routes/auth'
+import { assetRoute } from './routes/asset';
 
 const app = express()
 
 app.use(express.json())
 app.use('/api', authRoute)
+app.use('/api', assetRoute)
 
 app.get('/', (req, res)=>{
     res.send("hello")

@@ -24,7 +24,7 @@ export async function authByToken(req: Request, res: Response, next: NextFunctio
     return next()
   } catch (e) {
     return res.status(401).json({
-      message: { body: [ 'Authorization failed', e.message ] }
+      errors: { body: [ 'Authorization failed', e.message ] }
     })
   }
 

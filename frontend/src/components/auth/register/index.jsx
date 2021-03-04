@@ -11,7 +11,11 @@ const SignIn = ({ toggle, notify }) => {
   const register = (e) => {
     e.preventDefault();
     console.log(name, email, password, confirmPassword);
-    notify("register successful");
+    if(password!==confirmPassword) {
+      notify("Both passwoord should match");
+    } else {
+      notify("register successful");
+    }
   };
 
   return (

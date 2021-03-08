@@ -9,7 +9,10 @@ exports.signup = async (req: Request, res: Response) => {
 
   if (!errors.isEmpty()) {
     return res.status(422).json({
-      errors: errors.array()[0].msg,
+      error: { 
+        message: errors.array()[0].msg
+      },
+      data: {}
     });
   }
 
@@ -25,13 +28,19 @@ exports.signup = async (req: Request, res: Response) => {
   await user.save(async (err: any) => {
     if (err) {
       return res.status(422).json({
-        errors: err.message,
+        error: { 
+          message: err.message
+        },
+        data: {}
       });
     }
     return res.status(201).json({
-      name: user.name,
-      email: user.email,
-      token: await sign(user.email),
+      data: {
+        name: user.name,
+        email: user.email,
+        token: await sign(email),
+      },
+      error: {},
     });
   });
 };
@@ -41,7 +50,10 @@ exports.login = async (req: Request, res: Response) => {
 
   if (!errors.isEmpty()) {
     return res.status(422).json({
-      errors: errors.array()[0].msg,
+      error: { 
+        message: errors.array()[0].msg
+      },
+      data: {}
     });
   }
 
@@ -51,38 +63,51 @@ exports.login = async (req: Request, res: Response) => {
   User.findOne({ email: email }, async (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        errors: "No user with this email exists",
+        error: { 
+          message: "User not found"
+        },
+        data: {}
       });
     }
     const passwordMatch = await matchPassword(user.password!, password);
 
     if (passwordMatch == false) {
       return res.status(401).json({
-        errors: "Wrong password",
+        error: { 
+          message: "Wrong password"
+        },
+        data: {}
       });
     }
 
     return res.status(200).json({
-      name: user.name,
-      email: user.email,
-      token: await sign(email),
+      data: {
+        name: user.name,
+        email: user.email,
+        token: await sign(email),
+      },
+      error: {},
     });
   });
 };
 
-exports.getUser = async(req: Request, res: Response)=>{
-
-  let data = (req as any).email
-  User.findOne({email: data.email}, (err:any, user:any)=>{
+exports.getUser = async (req: Request, res: Response) => {
+  let data = (req as any).email;
+  User.findOne({ email: data.email }, (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        errors: "No user with this email exists",
+        error: {
+          message: "No user with this email exists",
+        },
+        data: {}
       });
     }
     return res.status(200).json({
-      email: user.email,
-      name: user.name
-    })
-  })
-
-}
+      data: {
+        email: user.email,
+        name: user.name,
+      },
+      error: {},
+    });
+  });
+};

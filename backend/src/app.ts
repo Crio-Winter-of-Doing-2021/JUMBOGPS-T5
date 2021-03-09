@@ -1,25 +1,29 @@
-import * as dotenv from 'dotenv';
-dotenv.config()
+import * as dotenv from "dotenv";
+dotenv.config();
 
-import express from 'express'
+import express from "express";
 
-import mongoose from 'mongoose'
-import { authRoute } from './routes/auth'
-import { assetRoute } from './routes/asset';
+import mongoose from "mongoose";
+import { authRoute } from "./routes/auth";
+import { assetRoute } from "./routes/asset";
 
-const app = express()
+const app = express();
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
-app.use(express.json())
+app.use(express.json());
 
-app.use('/api', assetRoute)
-app.use('/auth', authRoute)
+app.use("/api", assetRoute);
+app.use("/auth", authRoute);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get('/', (req, res)=>{
-    res.send("hello")
-}) 
+app.get("/", (req, res) => {
+  res.send("hello");
+});
 
 //DATABASE
-const databaseUrl = "mongodb+srv://chypsd:jumbotailgps5@mongoperul.hirgt.mongodb.net/Jumbotail"
+const databaseUrl =
+  "mongodb+srv://chypsd:jumbotailgps5@mongoperul.hirgt.mongodb.net/Jumbotail";
 mongoose
   .connect(databaseUrl, {
     useNewUrlParser: true,
@@ -28,11 +32,11 @@ mongoose
   })
   .then(() => {
     console.log("DB CONNECTED");
-  }).catch((e)=>{
-    console.log(e)
   })
+  .catch((e) => {
+    console.log(e);
+  });
 
-
-app.listen(8000, ()=>{
-    console.log("Server is running")
-})
+app.listen(8000, () => {
+  console.log("Server is running");
+});

@@ -1,13 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './view/App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/fontawesome.min.css'; 
+import  configStore  from './controller/configStore';
+import services from './service/api/index';
+import { Provider } from "react-redux";
 
 ReactDOM.render(
   <React.StrictMode>
+  <Provider store={configStore(services)}>
     <App />
+  </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

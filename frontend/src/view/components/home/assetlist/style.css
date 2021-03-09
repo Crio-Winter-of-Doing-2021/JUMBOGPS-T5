@@ -1,0 +1,12 @@
+.asset-list{
+  position: absolute;
+  background-color: #1a237e;
+  overflow: auto;
+  top: 50px;
+  right: 0px;
+  left:250px;
+  color: white;
+  padding: 20px;
+  bottom: 0;
+}
+

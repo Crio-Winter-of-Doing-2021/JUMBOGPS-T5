@@ -5,10 +5,13 @@ import express from 'express'
 
 import mongoose from 'mongoose'
 import { authRoute } from './routes/auth'
+import { assetRoute } from './routes/asset';
 
 const app = express()
 
 app.use(express.json())
+
+app.use('/api', assetRoute)
 app.use('/auth', authRoute)
 
 app.get('/', (req, res)=>{
@@ -16,7 +19,7 @@ app.get('/', (req, res)=>{
 }) 
 
 //DATABASE
-const databaseUrl = "mongodb://localhost:27017/jumbotail"
+const databaseUrl = "mongodb+srv://chypsd:jumbotailgps5@mongoperul.hirgt.mongodb.net/Jumbotail"
 mongoose
   .connect(databaseUrl, {
     useNewUrlParser: true,
@@ -25,6 +28,8 @@ mongoose
   })
   .then(() => {
     console.log("DB CONNECTED");
+  }).catch((e)=>{
+    console.log(e)
   })
 
 

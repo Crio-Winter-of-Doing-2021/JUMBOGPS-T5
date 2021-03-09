@@ -1,17 +1,14 @@
 var mongoose = require('mongoose');
 
-const gpsSchema =  mongoose.Schema({
-    lat: {
-        type: String,
-    },
-    lon: {
-        type: String,
-    },
-    timestamp: {
-        type: Date,
-        default: Date.now()
-    }
+
+const bodySchema = mongoose.Schema({
+    modelNo : String,
+    companyName: String,
+    employeeId: Number,
+    address: String
 })
+
+
 
 const assetSchema = mongoose.Schema({
     name: {
@@ -22,12 +19,23 @@ const assetSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    track : [gpsSchema],
-    arrived : {
-        type: Boolean,
-        default : false
+    type : {
+        type: String,
+        required: true
+    },
+    image_url : {
+        type: String,
+        required: true
+    },
+    body: {
+        type: bodySchema
+    },
+    lat: String,
+    lon: String,
+    timestamp: {
+        type: Date,
+        default: Date.now()
     }
 })
-
 
 module.exports = mongoose.model('Asset', assetSchema)

@@ -93,12 +93,11 @@ exports.getAssets = async (req: Request, res: Response) => {
   const data = await Asset.find({});
   return res.status(200).json({
     data,
-    errors: {}
+    errors: {},
   });
 };
 
 exports.getAsset = async (req: Request, res: Response) => {
-  
   const asset_data = await Asset.findOne({ _id: req.query.id }).exec();
 
   if (!asset_data) {
@@ -112,7 +111,7 @@ exports.getAsset = async (req: Request, res: Response) => {
   return res.status(200).json({
     data: {
       asset_data,
-      track: track_data
-    }
+      track: track_data,
+    },
   });
 };

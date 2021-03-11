@@ -1,9 +1,11 @@
 import ui from './ui';
-import todos from './todos';
+import asset from './asset';
+import user from './user';
 
 const flows = [
     ...ui,
-    ...todos,
+    ...asset,
+    ...user
 ]
 
 export default flows;

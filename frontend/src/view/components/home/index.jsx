@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AssetList from "./assetlist";
 import Dashboard from "./dashboard";
 import "./style.css";
@@ -22,9 +22,13 @@ const Home = () => {
   return (
     <div className="home">
       <Header />
-      <SideBar activeKey={activeKey} onSelect={handleSelect} onShow={handleShow}/>
+      <SideBar
+        activeKey={activeKey}
+        onSelect={handleSelect}
+        onShow={handleShow}
+      />
       <div className="child">{component}</div>
-      <LogoutModal show={show} onClose={handleClose}/>
+      <LogoutModal show={show} onClose={handleClose} />
     </div>
   );
 };

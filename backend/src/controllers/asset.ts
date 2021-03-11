@@ -90,6 +90,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
 };
 
 exports.getAssets = async (req: Request, res: Response) => {
+  // console.log(req);
   const data = await Asset.find({});
   return res.status(200).json({
     data,
@@ -98,7 +99,8 @@ exports.getAssets = async (req: Request, res: Response) => {
 };
 
 exports.getAsset = async (req: Request, res: Response) => {
-  const asset_data = await Asset.findOne({ _id: req.query.id }).exec();
+
+  const asset_data = await Asset.findOne({ _id: req.query._id }).exec();
 
   if (!asset_data) {
     return res.status(422).json({

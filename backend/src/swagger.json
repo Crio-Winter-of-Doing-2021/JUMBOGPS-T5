@@ -183,7 +183,7 @@
             "description": "Token <token>"
           },
           {
-            "name": "id",
+            "name": "_id",
             "in": "query"
           }
         ],

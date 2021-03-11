@@ -13,6 +13,10 @@ const swaggerDocument = require("./swagger.json");
 
 app.use(express.json());
 
+//Required for making calls from localhost -- dev only
+var cors = require('cors')
+app.use(cors()) 
+
 app.use("/api", assetRoute);
 app.use("/auth", authRoute);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

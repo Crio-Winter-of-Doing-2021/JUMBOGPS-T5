@@ -5,6 +5,8 @@ export const counterSlice = createSlice({
   initialState: {
     assetList: [],
     asset: {},
+    assetId:'',
+    token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlcnVsMzY1QGdtYWlsLmNvbSIsImlhdCI6MTYxNTQ3NTc3MH0.OgPINiPGMGz432TeWiCk5AC967JTRU1sOr-wuyOKfTc',
     error: null,
   },
   reducers: {
@@ -20,6 +22,10 @@ export const counterSlice = createSlice({
       state.asset = action.payload.data;
     },
     loadAssetFailure: () => {},
+    setAssetId:  (state, action) => {
+      // console.log(action);
+      state.assetId = action.payload.assetId;
+    },
   },
 });
 
@@ -30,6 +36,7 @@ export const {
   loadAsset,
   loadAssetSuccess,
   loadAssetFailure,
+  setAssetId
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

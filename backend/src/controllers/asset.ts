@@ -111,15 +111,12 @@ exports.getAssets = async (req: Request, res: Response) => {
 
 exports.getAsset = async (req: Request, res: Response) => {
   const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
-
   if (!asset_data) {
     return res.status(422).json({
       error: "Asset does not exist",
     });
   }
-
   const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
-
   return res.status(200).json({
     data: {
       asset_data,

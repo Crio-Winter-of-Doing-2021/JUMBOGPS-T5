@@ -27,7 +27,7 @@ exports.createAsset = async (req: Request, res: Response) => {
       console.log(err);
       return res.status(422).json({
         data: {},
-        errors: err.message,
+        error: err.message,
       });
     }
     const asset_track = new AssetTrack({
@@ -38,12 +38,12 @@ exports.createAsset = async (req: Request, res: Response) => {
       if (err) {
         return res.status(422).json({
           data: {},
-          errors: error.message,
+          error: error.message,
         });
       }
       return res.status(201).json({
         data: result,
-        errors: {},
+        error: {},
       });
     });
   });
@@ -53,7 +53,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
   if (!req.body.lat || !req.body.lon || !req.body.timestamp) {
     return res.status(422).json({
       data: {},
-      errors: "Lat, lon and timestamp are required",
+      error: "Lat, lon and timestamp are required",
     });
   }
 
@@ -85,35 +85,46 @@ exports.updateLocation = async (req: Request, res: Response) => {
     data: {
       success: true,
     },
-    errors: {},
+    error: {},
   });
 };
 
 exports.getAssets = async (req: Request, res: Response) => {
-  // console.log(req);
-  const data = await Asset.find({});
+  
+  let data = {}
+
+  if(req.query.limit && req.query.type) {
+    data = await Asset.find({type: req.query.type}).limit(req.query.limit);
+  }
+  else if(req.query.type) {
+    data = await Asset.find({type: req.query.type}).limit(100);
+  }
+  else {
+    data = await Asset.find({})
+  }
+
   return res.status(200).json({
     data,
-    errors: {},
+    error: {},
   });
 };
 
 exports.getAsset = async (req: Request, res: Response) => {
-
-  const asset_data = await Asset.findOne({ _id: req.query._id }).exec();
+  const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
 
   if (!asset_data) {
     return res.status(422).json({
-      errors: "Asset does not exist",
+      error: "Asset does not exist",
     });
   }
 
-  const track_data = await AssetTrack.findOne({ _id: req.query._id }).exec();
+  const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
 
   return res.status(200).json({
     data: {
       asset_data,
-      track: track_data,
+      track: track_data.track,
     },
+    error: {},
   });
 };

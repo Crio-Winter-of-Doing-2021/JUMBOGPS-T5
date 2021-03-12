@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 
 const gpsSchema =  mongoose.Schema({
     lat: {
-        type: String,
+        type: Number,
     },
     lon: {
-        type: String,
+        type: Number,
     },
     timestamp: {
         type: Date,

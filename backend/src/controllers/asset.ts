@@ -108,7 +108,7 @@ exports.getAsset = async (req: Request, res: Response) => {
     });
   }
 
-  const track_data = await AssetTrack.findOne({ _id: req.query.id }).exec();
+  const track_data = await AssetTrack.findOne({ _id: req.query._id }).exec();
 
   return res.status(200).json({
     data: {

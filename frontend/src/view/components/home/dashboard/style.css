@@ -1,19 +1,19 @@
 .dashboard{
   position: absolute;
-  background-color: #1a237e;
+  background-color: #ababab;
   overflow: auto;
   top: 50px;
   right: 0px;
-  left:250px;
-  bottom: 0;
+  left:200px;
+  bottom: 0px;
 }
 
-.map-view{
-  margin: 30px auto;
-  height: 75%;
-  width: 90%;
-  border-radius: 20px;
-  box-shadow: 2px 2px 4px 4px #000051;
+.map-child{
+    margin: 30px auto;
+    height: 88%;
+    width: 90%;
+    border-radius: 20px;
+    box-shadow: 2px 2px 2px 2px #ababab ;
 }
 
 .info-view{

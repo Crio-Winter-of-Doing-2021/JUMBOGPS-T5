@@ -7,7 +7,7 @@ import Info from "../widget/info";
 import { getAssets } from "../../../../controller/reducer/asset";
 import { pageLoaded, getLoading } from "../../../../controller/reducer/ui";
 
-const Dashboard = () => {
+const Dashboard = ({onSelectAsset}) => {
   const dispatch = useDispatch();
   const assets = useSelector(getAssets);
 
@@ -35,13 +35,13 @@ const Dashboard = () => {
   const onSelect = (asset) => setAsset(asset);
 
   return (
-    <div className="dashboard">
-      <div className="map-view">
-        <Map assets={assets} loc={(alat, alon)} onSelect={onSelect} />
+    <div className="dashboard bg-light">
+      <div className="map-child">
+        <Map assets={assets} loc={(alat, alon)} onSelect={onSelect} onSelectAsset={onSelectAsset}/>
       </div>
-      <div className="info-view">
+      {/* <div className="info-view">
         <Info asset={asset} />
-      </div>
+      </div> */}
     </div>
   );
 };

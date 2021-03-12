@@ -99,7 +99,7 @@ exports.getAssets = async (req: Request, res: Response) => {
 };
 
 exports.getAsset = async (req: Request, res: Response) => {
-
+  // console.log(req.query);
   const asset_data = await Asset.findOne({ _id: req.query._id }).exec();
 
   if (!asset_data) {

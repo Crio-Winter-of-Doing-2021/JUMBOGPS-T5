@@ -6,10 +6,10 @@ function Header() {
   return (
     <Navbar className="header justify-content-between" bg="dark" variant="dark">
     <Navbar.Brand href="#home">Trasset</Navbar.Brand>
-    <Form inline >
+    {/* <Form inline >
       <FormControl type="text" placeholder="Search" className="mr-sm-2" />
       <Button variant="outline-info">Search</Button>
-    </Form>
+    </Form> */}
   </Navbar>
   );
 }

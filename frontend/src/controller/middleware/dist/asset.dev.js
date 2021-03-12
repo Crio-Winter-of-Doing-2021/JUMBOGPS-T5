@@ -18,7 +18,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var loadAssetsFlow = function loadAssetsFlow(_ref) {
   var getAssetList = _ref.getAssetList;
   return function (_ref2) {
-    var dispatch = _ref2.dispatch;
+    var dispatch = _ref2.dispatch,
+        getState = _ref2.getState;
     return function (next) {
       return function _callee(action) {
         var response;
@@ -36,7 +37,7 @@ var loadAssetsFlow = function loadAssetsFlow(_ref) {
                 dispatch(uiActions.setLoading(true));
                 _context.prev = 3;
                 _context.next = 6;
-                return regeneratorRuntime.awrap(getAssetList('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlcnVsMzY1QGdtYWlsLmNvbSIsImlhdCI6MTYxNTQ3NTc3MH0.OgPINiPGMGz432TeWiCk5AC967JTRU1sOr-wuyOKfTc'));
+                return regeneratorRuntime.awrap(getAssetList(getState().asset.token));
 
               case 6:
                 response = _context.sent;
@@ -67,7 +68,8 @@ var loadAssetsFlow = function loadAssetsFlow(_ref) {
 var trackAssetFlow = function trackAssetFlow(_ref3) {
   var getAssetTrack = _ref3.getAssetTrack;
   return function (_ref4) {
-    var dispatch = _ref4.dispatch;
+    var dispatch = _ref4.dispatch,
+        getState = _ref4.getState;
     return function (next) {
       return function _callee2(action) {
         var response;
@@ -85,7 +87,7 @@ var trackAssetFlow = function trackAssetFlow(_ref3) {
                 dispatch(uiActions.setLoading(true));
                 _context2.prev = 3;
                 _context2.next = 6;
-                return regeneratorRuntime.awrap(getAssetTrack('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlcnVsMzY1QGdtYWlsLmNvbSIsImlhdCI6MTYxNTQ3NTc3MH0.OgPINiPGMGz432TeWiCk5AC967JTRU1sOr-wuyOKfTc', '604657ccc2a35f68848d01eb'));
+                return regeneratorRuntime.awrap(getAssetTrack(getState().asset.token, action.payload));
 
               case 6:
                 response = _context2.sent;

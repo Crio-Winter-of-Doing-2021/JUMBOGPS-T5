@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { Card, Button } from "react-bootstrap";
+import { getAsset } from "../../../../../controller/reducer/ui";
+import { useSelector } from "react-redux";
 import "./styles.css";
 
-function Info() {
+function Info({asset}) {
+  // const asset = useSelector(getAsset);
+
   return (
     <Card className="text-center info">
     <Card.Header>Description</Card.Header>
-    <Card.Body>
-      <Card.Title>Asset Name Here</Card.Title>
+    <Card.Body> 
+      <Card.Title>{asset ? asset.name : "Asset Name"}</Card.Title>
       <Card.Text>
-        Asset Descritption: With supporting text below as a natural lead-in to additional content.
+        {asset ? asset.desc : "Asset Desc"}
       </Card.Text>
       <Button variant="primary">Check History</Button>
     </Card.Body>
-    <Card.Footer className="text-muted">Last Updated 15 mins ago</Card.Footer>
+    <Card.Footer className="text-muted">{asset ? asset.timestamp : "Asset Time"}</Card.Footer>
   </Card>
   );
 }

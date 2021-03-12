@@ -1,8 +1,10 @@
 import {combineReducers} from 'redux';
-import todosReducer from './todos';
+import assetReducer from './asset';
+import userReducer from './user';
 import uiReducer from './ui';
 
 export default combineReducers({
-    todos:todosReducer,
+    asset:assetReducer,
+    user:userReducer,
     ui:uiReducer
 })

@@ -4,8 +4,9 @@
   overflow: auto;
   top: 50px;
   right: 0px;
-  left:250px;
+  left:200px;
   bottom: 0;
+  padding: 20px;
 }
 
 .map-view{
@@ -13,5 +14,5 @@
   height: 75%;
   width: 90%;
   border-radius: 20px;
-  box-shadow: 2px 2px 4px 4px #000051;
+  box-shadow: 2px 2px 2px 2px #ababab ;
 }

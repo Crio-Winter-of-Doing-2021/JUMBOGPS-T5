@@ -7,17 +7,27 @@ import Header from "./widget/header";
 import LogoutModal from "./widget/LogoutModal";
 import SideBar from "./widget/sidebar";
 
+let aid = '';
+
 const Home = () => {
   const [activeKey, setActiveKey] = useState("1");
   const [show, setShow] = useState(false);
-
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSelect = (eventKey) => setActiveKey(eventKey);
-  let component = <Dashboard />;
-  if (activeKey === "2") component = <Track />;
-  else if (activeKey === "3") component = <AssetList />;
+  const onSelectAsset = (assetId) => {
+    aid = assetId;
+    setActiveKey("2");
+  }
+
+  let component = <Dashboard onSelectAsset={onSelectAsset}/>;
+  
+  if (activeKey === "2") component = <Track ID={aid}/>;
+  else if (activeKey === "3") component = <AssetList onSelectAsset={onSelectAsset}/>;
+
+
 
   return (
     <div className="home">

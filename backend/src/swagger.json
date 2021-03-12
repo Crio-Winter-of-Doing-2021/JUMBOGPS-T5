@@ -157,7 +157,18 @@
           {
             "name": "Authorization",
             "in": "header",
+            "required": "true",
             "description": "Token <token>"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Get limit number of assets"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of asset"
           }
         ],
         "summary": "Get Assets List",
@@ -172,7 +183,7 @@
         }
       }
     },
-    "/api/asset/track/": {
+    "/api/asset/track/{_id}": {
       "get": {
         "tags": ["Assets"],
         "description": "Get Asset",
@@ -184,7 +195,7 @@
           },
           {
             "name": "_id",
-            "in": "query"
+            "in": "path"
           }
         ],
         "summary": "Get Asset ",
@@ -373,7 +384,6 @@
           "type": "string"
         }
       }
-     
     },
     "AssetUpdate": {
       "properties": {
@@ -402,7 +412,6 @@
           "type": "string"
         }
       }
-      
     },
     "AssetsList": {
       "properties": {

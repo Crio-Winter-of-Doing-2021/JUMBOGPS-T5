@@ -11,6 +11,6 @@ route.patch('/asset/:id', updateLocation)
 
 route.get('/asset/list', authByToken, getAssets)
 
-route.get('/asset/track', authByToken, getAsset)
+route.get('/asset/track/:_id', authByToken, getAsset)
 
 export const assetRoute = route

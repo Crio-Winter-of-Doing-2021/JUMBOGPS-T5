@@ -30,8 +30,8 @@ const assetSchema = mongoose.Schema({
     body: {
         type: bodySchema
     },
-    lat: String,
-    lon: String,
+    lat: Number,
+    lon: Number,
     timestamp: {
         type: Date,
         default: Date.now()

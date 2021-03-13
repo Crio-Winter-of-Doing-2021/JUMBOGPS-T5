@@ -12,19 +12,16 @@ export const counterSlice = createSlice({
   reducers: {
     loadAssets: () => {},
     loadAssetsSuccess: (state, action) => {
-      // console.log(action);
       state.assetList = action.payload.data;
     },
     loadAssetsFailure: () => {},
     loadAsset: () => {},
     loadAssetSuccess: (state, action) => {
-      // console.log(action);
       state.asset = action.payload.data;
     },
     loadAssetFailure: () => {},
     setAssetId:  (state, action) => {
-      // console.log(action);
-      state.assetId = action.payload.assetId;
+      state.assetId = action.payload;
     },
   },
 });
@@ -44,3 +41,5 @@ export default counterSlice.reducer;
 export const getAssets = (state) => state.asset.assetList;
 
 export const getAsset = (state) => state.asset.asset;
+
+export const getAssetId = (state) => state.asset.assetId;

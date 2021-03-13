@@ -1,8 +1,6 @@
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./styles.css";
-import Info from "../info";
-import { loadAssetCard } from "../../../../../controller/reducer/ui";
 
 
 const markers = [
@@ -36,8 +34,8 @@ function Map({ asset, locArray}) {
     >
       {asset && locArray.map((loc, id) => (
         <Marker
-          latitude={parseFloat(loc.lat)}
-          longitude={parseFloat(loc.lon)}
+          latitude={(loc.lat)}
+          longitude={(loc.lon)}
           key={id}
         >
           <img
@@ -51,8 +49,8 @@ function Map({ asset, locArray}) {
       {point && (
         <Popup
           className="popup"
-          latitude={parseFloat(point.lat)}
-          longitude={parseFloat(point.lon)}
+          latitude={(point.lat)}
+          longitude={(point.lon)}
           closeButton={true}
           onClose={()=>setPoint(null)}
         >

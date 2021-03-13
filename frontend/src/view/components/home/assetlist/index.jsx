@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "./style.css";
 import { Table,Button } from "react-bootstrap";
-import { getAssets } from "../../../../controller/reducer/asset";
+import { getAssets, setAssetId } from "../../../../controller/reducer/asset";
 import { pageLoaded, getLoading } from "../../../../controller/reducer/ui";
 
-const AssetList = ({onSelectAsset}) => {
-  const dispatch = useDispatch();
+const AssetList = ({dispatch}) => {
   const assets = useSelector(getAssets);
-  const loading = useSelector(getLoading);
-  const [asset, setAsset] = useState(null);
 
   useEffect(() => {
     dispatch(pageLoaded());
@@ -40,14 +37,9 @@ const AssetList = ({onSelectAsset}) => {
               <td >{asset.lat}</td>
               <td >{asset.lon}</td>
               <td >{new Date(asset.timestamp).toUTCString()}</td>
-              <td ><Button variant="outline-primary" onClick={()=>onSelectAsset(asset._id)}>Track</Button></td>
+              <td ><Button variant="outline-primary" onClick={()=>dispatch(setAssetId(asset._id))}>Track</Button></td>
             </tr>
           ))}
-          {/* <tr>
-            <td>3</td>
-            <td colSpan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr> */}
         </tbody>
    
       </Table>

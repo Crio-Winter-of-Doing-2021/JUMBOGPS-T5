@@ -16,7 +16,7 @@ var ASSET_LIST_URL = "".concat(BASE_URL, "/api/asset/list");
 exports.ASSET_LIST_URL = ASSET_LIST_URL;
 
 var trackUrl = function trackUrl(id) {
-  return "".concat(BASE_URL, "/api/asset/track?_id=").concat(id);
+  return "".concat(BASE_URL, "/api/asset/track/").concat(id);
 };
 
 exports.trackUrl = trackUrl;

@@ -1,4 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getShowLogout,
+  setshowLogoutModal,
+  getTabId,
+  setTabId,
+  getError,
+  setError
+} from "../../../controller/reducer/ui";
 import AssetList from "./assetlist";
 import Dashboard from "./dashboard";
 import "./style.css";
@@ -6,39 +15,50 @@ import Track from "./track";
 import Header from "./widget/header";
 import LogoutModal from "./widget/LogoutModal";
 import SideBar from "./widget/sidebar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-let aid = '';
+let aid = "";
+
+const notify = (message) => toast.dark(message, { autoClose: 3000 });
 
 const Home = () => {
-  const [activeKey, setActiveKey] = useState("1");
-  const [show, setShow] = useState(false);
-  
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const dispatch = useDispatch();
 
-  const handleSelect = (eventKey) => setActiveKey(eventKey);
-  const onSelectAsset = (assetId) => {
-    aid = assetId;
-    setActiveKey("2");
+  const showLogoutModal = useSelector(getShowLogout);
+
+  const tabId = useSelector(getTabId);
+  const err = useSelector(getError);
+
+  if(err) {
+    notify(err);
   }
 
-  let component = <Dashboard onSelectAsset={onSelectAsset}/>;
-  
-  if (activeKey === "2") component = <Track ID={aid}/>;
-  else if (activeKey === "3") component = <AssetList onSelectAsset={onSelectAsset}/>;
+  const handleClose = () => dispatch(setshowLogoutModal(false));
+  const handleShow = () => dispatch(setshowLogoutModal(true));
 
+  const handleSelect = (eventKey) => dispatch(setTabId(eventKey));
 
+  // const onSelectAsset = (assetId) => {
+  //   aid = assetId;
+  //   dispatch(setTabId("2"));
+  // };
+
+  let component = (
+    <Dashboard dispatch={dispatch} />
+  );
+
+  if (tabId === "2") component = <Track dispatch={dispatch} ID={aid} />;
+  else if (tabId === "3")
+    component = <AssetList dispatch={dispatch}  />;
 
   return (
     <div className="home">
       <Header />
-      <SideBar
-        activeKey={activeKey}
-        onSelect={handleSelect}
-        onShow={handleShow}
-      />
+      <SideBar activeKey={tabId} onSelect={handleSelect} onShow={handleShow} />
       <div className="child">{component}</div>
-      <LogoutModal show={show} onClose={handleClose} />
+      <LogoutModal show={showLogoutModal} onClose={handleClose} />
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

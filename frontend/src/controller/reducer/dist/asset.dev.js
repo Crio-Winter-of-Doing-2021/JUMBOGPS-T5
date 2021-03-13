@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAsset = exports.getAssets = exports["default"] = exports.setAssetId = exports.loadAssetFailure = exports.loadAssetSuccess = exports.loadAsset = exports.loadAssetsFailure = exports.loadAssetsSuccess = exports.loadAssets = exports.counterSlice = void 0;
+exports.getAssetId = exports.getAsset = exports.getAssets = exports["default"] = exports.setAssetId = exports.loadAssetFailure = exports.loadAssetSuccess = exports.loadAsset = exports.loadAssetsFailure = exports.loadAssetsSuccess = exports.loadAssets = exports.counterSlice = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
 
@@ -19,19 +19,16 @@ var counterSlice = (0, _toolkit.createSlice)({
   reducers: {
     loadAssets: function loadAssets() {},
     loadAssetsSuccess: function loadAssetsSuccess(state, action) {
-      // console.log(action);
       state.assetList = action.payload.data;
     },
     loadAssetsFailure: function loadAssetsFailure() {},
     loadAsset: function loadAsset() {},
     loadAssetSuccess: function loadAssetSuccess(state, action) {
-      // console.log(action);
       state.asset = action.payload.data;
     },
     loadAssetFailure: function loadAssetFailure() {},
     setAssetId: function setAssetId(state, action) {
-      // console.log(action);
-      state.assetId = action.payload.assetId;
+      state.assetId = action.payload;
     }
   }
 });
@@ -65,3 +62,9 @@ var getAsset = function getAsset(state) {
 };
 
 exports.getAsset = getAsset;
+
+var getAssetId = function getAssetId(state) {
+  return state.asset.assetId;
+};
+
+exports.getAssetId = getAssetId;

@@ -5,20 +5,14 @@ import {
 }from "../reducer/user";
 
 const performSignInFlow = () => ({ dispatch, getState }) => next => action => {
-    
-
   next(action);
 }
 
 const performSignUpFlow = () => ({ dispatch, getState }) => next => action => {
-    
-
   next(action);
 }
 
 const getProfileFlow = () => ({ dispatch, getState }) => next => action => {
-    
-
   next(action);
 }
 

@@ -1,32 +1,33 @@
-import React, { useState } from "react";
-import { Card, Button, Row } from "react-bootstrap";
-import { getAsset } from "../../../../../controller/reducer/ui";
-import { useSelector } from "react-redux";
+import React from "react";
+import { Card, Button, } from "react-bootstrap";
 import "./styles.css";
 
 const properties = ["modelNo", "companyName", "employeeId", "address"];
 const propValues = ["Model Number", "Company Name", "Employee Id", "Address"];
 
-
-function Info({ asset, onClose, onSelectAsset}) {
+function Info({ asset, onClose, onSelectAsset }) {
   if (!asset) return <div> </div>;
   return (
     <div className="d-flex align-items-center">
-  
-        <Card.Img src={asset.image_url} style={{ height: "300px", width: "300px " }}/>
+      <Card.Img
+        src={asset.image_url}
+        style={{ height: "300px", width: "300px " }}
+      />
       <div className="info" style={{ width: "18rem" }}>
         <Card.Body>
           <Card.Title>{asset.name}</Card.Title>
           <Card.Text>{asset.desc}</Card.Text>
           {properties
-            .map((prop, id) => ({prop,id}))
-            .filter(({prop}) => asset.body[prop])
-            .map(({prop, id}) => (
+            .map((prop, id) => ({ prop, id }))
+            .filter(({ prop }) => asset.body[prop])
+            .map(({ prop, id }) => (
               <p key={id}>
                 <strong>{propValues[id]}</strong>: {asset.body[prop]}
               </p>
             ))}
-          <Button variant="primary" onClick={()=>onSelectAsset(asset._id)}>Track</Button>
+          <Button variant="primary" onClick={() => onSelectAsset(asset._id)}>
+            Track
+          </Button>
           <Button
             variant="outline-secondary"
             className="ml-2"

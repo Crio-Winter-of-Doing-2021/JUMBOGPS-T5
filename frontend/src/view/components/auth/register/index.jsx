@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./styles.css";
 import { Form, Button } from "react-bootstrap";
+import { performSignUp } from "../../../../controller/reducer/user";
 
-const SignIn = ({ toggle, notify }) => {
+const SignIn = ({ toggle, notify, dispatch }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,13 +15,14 @@ const SignIn = ({ toggle, notify }) => {
     if(password!==confirmPassword) {
       notify("Both passwoord should match");
     } else {
-      notify("register successful");
+      // notify("register successful");
+      dispatch(performSignUp({name,email,password}))
     }
   };
 
   return (
-    <div className="auth d-flex text-left justify-content-center align-items-center ">
-      <Form className="auth-box  p-4" onSubmit={register}>
+    <div className="outer-box-layout d-flex text-left flex-column justify-content-center align-items-center ">
+      <Form className="inner-box-layout p-4" onSubmit={register}>
         <h1>Register</h1>
         <hr className="hr-light" />
         <Form.Group>
@@ -63,7 +65,7 @@ const SignIn = ({ toggle, notify }) => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
-        <Button variant="primary" type="submit" block>
+        <Button variant="light" type="submit" block>
           Sign Up
         </Button>
         <Button variant="outline-light" onClick={toggle} block>

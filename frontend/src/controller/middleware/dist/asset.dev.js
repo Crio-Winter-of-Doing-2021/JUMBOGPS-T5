@@ -39,7 +39,7 @@ var loadAssetsFlow = function loadAssetsFlow(_ref) {
                 dispatch(uiActions.setLoading(true));
                 _context.prev = 3;
                 _context.next = 6;
-                return regeneratorRuntime.awrap(getAssetList(getState().asset.token));
+                return regeneratorRuntime.awrap(getAssetList(getState().user.token, getState().asset.assetType));
 
               case 6:
                 response = _context.sent;
@@ -89,7 +89,7 @@ var trackAssetFlow = function trackAssetFlow(_ref3) {
                 dispatch(uiActions.setLoading(true));
                 _context2.prev = 3;
                 _context2.next = 6;
-                return regeneratorRuntime.awrap(getAssetTrack(getState().asset.token, getState().asset.assetId));
+                return regeneratorRuntime.awrap(getAssetTrack(getState().user.token, getState().asset.assetInfo.id));
 
               case 6:
                 response = _context2.sent;
@@ -121,12 +121,11 @@ var trackAssetFlow = function trackAssetFlow(_ref3) {
   };
 };
 
-var setAssetIdFlow = function setAssetIdFlow(_ref5) {
+var setAssetInfoFlow = function setAssetInfoFlow(_ref5) {
   _objectDestructuringEmpty(_ref5);
 
   return function (_ref6) {
-    var dispatch = _ref6.dispatch,
-        getState = _ref6.getState;
+    var dispatch = _ref6.dispatch;
     return function (next) {
       return function _callee3(action) {
         return regeneratorRuntime.async(function _callee3$(_context3) {
@@ -135,7 +134,7 @@ var setAssetIdFlow = function setAssetIdFlow(_ref5) {
               case 0:
                 next(action);
 
-                if (action.type === _asset.setAssetId.type) {
+                if (action.type === _asset.setAssetInfo.type) {
                   dispatch(uiActions.setTabId("2"));
                 }
 
@@ -150,6 +149,6 @@ var setAssetIdFlow = function setAssetIdFlow(_ref5) {
   };
 };
 
-var assetFlow = [loadAssetsFlow, trackAssetFlow, setAssetIdFlow];
+var assetFlow = [loadAssetsFlow, trackAssetFlow, setAssetInfoFlow];
 var _default = assetFlow;
 exports["default"] = _default;

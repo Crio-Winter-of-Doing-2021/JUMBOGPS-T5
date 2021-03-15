@@ -5,7 +5,7 @@ import {
   loadAsset,
   loadAssetSuccess,
   loadAssetFailure,
-  setAssetId,
+  setAssetInfo,
 } from "../reducer/asset";
 import * as uiActions from "../reducer/ui";
 
@@ -16,7 +16,7 @@ const loadAssetsFlow = ({ getAssetList }) => ({ dispatch,getState }) => (next) =
   if (action.type === loadAssets.type) {
     dispatch(uiActions.setLoading(true));
     try {
-      const response = await getAssetList(getState().asset.token);
+      const response = await getAssetList(getState().user.token,getState().asset.assetType);
       console.log(response.data);
       dispatch(loadAssetsSuccess(response.data));
     } catch (error) {
@@ -33,7 +33,7 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
   if (action.type === loadAsset.type) {
     dispatch(uiActions.setLoading(true));
     try {
-      const response = await getAssetTrack(getState().asset.token,getState().asset.assetId);
+      const response = await getAssetTrack(getState().user.token,getState().asset.assetInfo.id);
       // if(response.error) {
       //   dispatch(uiActions.setError("some error occurred"));
       // } else {
@@ -47,15 +47,15 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
   }
 };
 
-const setAssetIdFlow = ({  }) => ({ dispatch, getState }) => (
+const setAssetInfoFlow = ({  }) => ({ dispatch }) => (
   next
 ) => async (action) => {
   next(action);
-  if (action.type === setAssetId.type) {
+  if (action.type === setAssetInfo.type) {
     dispatch(uiActions.setTabId("2"));
   }
 };
 
-const assetFlow = [loadAssetsFlow, trackAssetFlow, setAssetIdFlow];
+const assetFlow = [loadAssetsFlow, trackAssetFlow, setAssetInfoFlow];
 
 export default assetFlow;

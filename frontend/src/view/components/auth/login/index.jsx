@@ -1,22 +1,23 @@
 import React, {useState} from "react";
 import "./styles.css";
 import { Form, Button } from "react-bootstrap";
+import { getRemember, performSignin,setRemember  } from "../../../../controller/reducer/user";
+import { useSelector } from "react-redux";
 
-const SignIn = ({ toggle, notify }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
+const SignIn = ({ toggle, notify, dispatch }) => {
+  const [email, setEmail] = useState("tazrilparvez96@gmail.com");
+  const [password, setPassword] = useState("1234");
+  const remember = useSelector(getRemember);
   
   const login = (e)=>{
     e.preventDefault();
-    // console.log(email,password,remember);
-    notify('login successful');
+    dispatch(performSignin({email,password}))
   }
 
   return (
-    <div className="auth d-flex text-left flex-column justify-content-center align-items-center ">
-      <h1 className="headline">Trasset</h1>
-      <Form onSubmit={login} className="auth-box  p-4" >
+    <div className="outer-box-layout d-flex text-left flex-column justify-content-center align-items-center ">
+      <h1 className="headline">TRASSET</h1>
+      <Form onSubmit={login} className="inner-box-layout p-4" >
         <h1>Login</h1>
         <hr className="hr-light" />
         <Form.Group>
@@ -41,11 +42,11 @@ const SignIn = ({ toggle, notify }) => {
         </Form.Group>
         <Form.Group>
           <Form.Check type="checkbox" label="Remember Me" 
-          value={remember}
-          onChange={() => setRemember(!remember)}
+          checked={remember}
+          onChange={() => dispatch(setRemember(!remember))}
           />
         </Form.Group>
-        <Button variant="primary" type="submit" block>
+        <Button variant="light" type="submit" block>
           Sign In
         </Button>
         <Button variant="outline-light" onClick={toggle} block>

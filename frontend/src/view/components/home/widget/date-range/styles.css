@@ -1,0 +1,13 @@
+#reportrange{
+    background: #fff;
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    width: 100%;
+    color: black;
+}
+
+.outer-box{
+    color:white;
+    padding: 10px;
+}

@@ -10,16 +10,14 @@
 
 .map-child{
     margin: 30px auto;
-    height: 88%;
+    height: 80%;
     width: 90%;
     border-radius: 20px;
     box-shadow: 2px 2px 2px 2px #ababab ;
 }
 
-.info-view{
-  width: 75%;
-  margin: 12px auto;
-  border-radius: 6px;
-  box-shadow: 2px 2px 4px 4px #000051;
+.type-child{
+  margin: 30px auto;
+  width: 90%;
 }
 

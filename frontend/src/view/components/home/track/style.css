@@ -16,3 +16,13 @@
   border-radius: 20px;
   box-shadow: 2px 2px 2px 2px #ababab ;
 }
+
+.card-view{
+  margin: 30px auto;
+  width: 90%;
+}
+
+.table-view{
+  margin: 30px auto;
+  width: 90%;
+}

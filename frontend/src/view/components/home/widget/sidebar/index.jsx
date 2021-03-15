@@ -1,6 +1,10 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
 import "./styles.css";
+import dashboardIcon from '../../../../../assets/icons/dashboard.png';
+import trackIcon from '../../../../../assets/icons/track.png';
+import tableIcon from '../../../../../assets/icons/table.png';
+import logoutIcon from '../../../../../assets/icons/logout.png';
 
 function SideBar({ activeKey, onSelect, onShow }) {
   return (
@@ -15,7 +19,7 @@ function SideBar({ activeKey, onSelect, onShow }) {
           <Nav.Link eventKey="1">
             <img
               className="icon"
-              src="https://cdn.iconscout.com/icon/premium/png-256-thumb/dashboard-maps-2728134-2263575.png"
+              src={dashboardIcon}
             />
             <p className=" h5 font-weight-light">Dashboard </p>
           </Nav.Link>
@@ -24,7 +28,7 @@ function SideBar({ activeKey, onSelect, onShow }) {
           <Nav.Link eventKey="2">
             <img
               className="icon"
-              src="https://cdn.iconscout.com/icon/premium/png-512-thumb/route-location-track-1705468-1446011.png"
+              src={trackIcon}
             />
             <p className=" h5 font-weight-light">Track Asset</p>
           </Nav.Link>
@@ -33,7 +37,7 @@ function SideBar({ activeKey, onSelect, onShow }) {
           <Nav.Link eventKey="3">
             <img
               className="icon"
-              src="https://cdn3.iconfinder.com/data/icons/miscellaneous-1-line/64/datatable_table_excel_sheet_database_sql-512.png"
+              src={tableIcon}
             />
             <p className=" h5 font-weight-light">All Assets</p>
           </Nav.Link>
@@ -42,7 +46,7 @@ function SideBar({ activeKey, onSelect, onShow }) {
           <Nav.Link onClick={onShow}>
             <img
               className="icon"
-              src="http://iconsetc.com/icons-watermarks/flat-circle-white-on-red/bfa/bfa_sign-out/bfa_sign-out_flat-circle-white-on-red_512x512.png"
+              src={logoutIcon}
             />
             <p className="h5 font-weight-light">Logout</p>
           </Nav.Link>

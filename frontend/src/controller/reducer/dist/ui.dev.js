@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getError = exports.getTabId = exports.getShowLogout = exports.getAsset = exports.getLoading = exports["default"] = exports.setError = exports.setTabId = exports.setshowLogoutModal = exports.loadAssetCard = exports.setLoading = exports.pageLoaded = exports.counterSlice = void 0;
+exports.getError = exports.getTabId = exports.getShowLogout = exports.getLoading = exports["default"] = exports.setError = exports.setTabId = exports.setshowLogoutModal = exports.setLoading = exports.pageLoaded = exports.counterSlice = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
 
@@ -17,7 +17,6 @@ var counterSlice = (0, _toolkit.createSlice)({
   name: "ui",
   initialState: {
     loading: false,
-    asset: {},
     showLogoutModal: false,
     tabId: "1",
     error: ""
@@ -27,11 +26,6 @@ var counterSlice = (0, _toolkit.createSlice)({
     setLoading: function setLoading(state, action) {
       return _objectSpread({}, state, {
         loading: action.payload
-      });
-    },
-    loadAssetCard: function loadAssetCard(state, action) {
-      return _objectSpread({}, state, {
-        asset: action.payload
       });
     },
     setshowLogoutModal: function setshowLogoutModal(state, action) {
@@ -55,14 +49,12 @@ exports.counterSlice = counterSlice;
 var _counterSlice$actions = counterSlice.actions,
     pageLoaded = _counterSlice$actions.pageLoaded,
     setLoading = _counterSlice$actions.setLoading,
-    loadAssetCard = _counterSlice$actions.loadAssetCard,
     setshowLogoutModal = _counterSlice$actions.setshowLogoutModal,
     setTabId = _counterSlice$actions.setTabId,
     setError = _counterSlice$actions.setError;
 exports.setError = setError;
 exports.setTabId = setTabId;
 exports.setshowLogoutModal = setshowLogoutModal;
-exports.loadAssetCard = loadAssetCard;
 exports.setLoading = setLoading;
 exports.pageLoaded = pageLoaded;
 var _default = counterSlice.reducer;
@@ -73,12 +65,6 @@ var getLoading = function getLoading(state) {
 };
 
 exports.getLoading = getLoading;
-
-var getAsset = function getAsset(state) {
-  return state.ui.asset;
-};
-
-exports.getAsset = getAsset;
 
 var getShowLogout = function getShowLogout(state) {
   return state.ui.showLogoutModal;

@@ -5,14 +5,14 @@ import "./styles.css";
 const properties = ["modelNo", "companyName", "employeeId", "address"];
 const propValues = ["Model Number", "Company Name", "Employee Id", "Address"];
 
-function Info({ asset, onClose, onSelectAsset }) {
+function Info({ asset, onClose, onSelectAsset, minimal }) {
   if (!asset) return <div> </div>;
   return (
     <div className="d-flex align-items-center">
-      <Card.Img
+      {!minimal && <Card.Img
         src={asset.image_url}
         style={{ height: "300px", width: "300px " }}
-      />
+      />}
       <div className="info" style={{ width: "18rem" }}>
         <Card.Body>
           <Card.Title>{asset.name}</Card.Title>
@@ -25,16 +25,16 @@ function Info({ asset, onClose, onSelectAsset }) {
                 <strong>{propValues[id]}</strong>: {asset.body[prop]}
               </p>
             ))}
-          <Button variant="primary" onClick={() => onSelectAsset(asset._id)}>
+          {!minimal && <Button variant="primary" onClick={() => onSelectAsset(asset._id)}>
             Track
-          </Button>
-          <Button
+          </Button>}
+         {!minimal &&  <Button
             variant="outline-secondary"
             className="ml-2"
             onClick={onClose}
           >
             Close
-          </Button>
+          </Button>}
         </Card.Body>
       </div>
     </div>
@@ -42,3 +42,10 @@ function Info({ asset, onClose, onSelectAsset }) {
 }
 
 export default Info;
+
+Info.defaultProps = {
+  minimal : false,
+  onSelectAsset : ()=>{},
+  onClose : ()=>{},
+  asset : null
+}

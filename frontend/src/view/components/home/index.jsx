@@ -8,12 +8,19 @@ import {
   getError,
   setError
 } from "../../../controller/reducer/ui";
+import {
+  removeUser,
+  getUser,
+  setRemember,
+  loadUser,
+  performLogout
+} from "../../../controller/reducer/user";
 import AssetList from "./assetlist";
 import Dashboard from "./dashboard";
 import "./style.css";
 import Track from "./track";
 import Header from "./widget/header";
-import LogoutModal from "./widget/LogoutModal";
+import LogoutModal from "./widget/logout";
 import SideBar from "./widget/sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,10 +32,9 @@ const notify = (message) => toast.dark(message, { autoClose: 3000 });
 const Home = () => {
   const dispatch = useDispatch();
 
-  const showLogoutModal = useSelector(getShowLogout);
-
   const tabId = useSelector(getTabId);
   const err = useSelector(getError);
+
 
   if(err) {
     notify(err);
@@ -39,10 +45,7 @@ const Home = () => {
 
   const handleSelect = (eventKey) => dispatch(setTabId(eventKey));
 
-  // const onSelectAsset = (assetId) => {
-  //   aid = assetId;
-  //   dispatch(setTabId("2"));
-  // };
+  const logout = ()=> dispatch(performLogout());
 
   let component = (
     <Dashboard dispatch={dispatch} />
@@ -57,7 +60,7 @@ const Home = () => {
       <Header />
       <SideBar activeKey={tabId} onSelect={handleSelect} onShow={handleShow} />
       <div className="child">{component}</div>
-      <LogoutModal show={showLogoutModal} onClose={handleClose} />
+      <LogoutModal onClose={handleClose} logout={logout} />
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );

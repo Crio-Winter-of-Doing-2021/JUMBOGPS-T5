@@ -161,11 +161,6 @@
             "description": "Token <token>"
           },
           {
-            "name": "limit",
-            "in": "query",
-            "description": "Get limit number of assets"
-          },
-          {
             "name": "type",
             "in": "query",
             "description": "Type of asset"
@@ -196,6 +191,45 @@
           {
             "name": "_id",
             "in": "path"
+          }
+        ],
+        "summary": "Get Asset ",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Get Asset",
+            "schema": {
+              "$ref": "#/definitions/AssetTrackResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/asset/trackbytime/{_id}": {
+      "get": {
+        "tags": ["Assets"],
+        "description": "Get Asset",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          },
+          {
+            "name": "_id",
+            "in": "path"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "start-timestamp",
+            "required": "true"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "end-timestamp",
+            "required": "true"
           }
         ],
         "summary": "Get Asset ",

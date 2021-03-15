@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAssetId = exports.getAsset = exports.getAssets = exports["default"] = exports.setAssetId = exports.loadAssetFailure = exports.loadAssetSuccess = exports.loadAsset = exports.loadAssetsFailure = exports.loadAssetsSuccess = exports.loadAssets = exports.counterSlice = void 0;
+exports.getAssetInfo = exports.getAssetType = exports.getAsset = exports.getAssets = exports["default"] = exports.setAssetType = exports.setAssetInfo = exports.loadAssetFailure = exports.loadAssetSuccess = exports.loadAsset = exports.loadAssetsFailure = exports.loadAssetsSuccess = exports.loadAssets = exports.counterSlice = void 0;
 
 var _toolkit = require("@reduxjs/toolkit");
 
@@ -12,8 +12,11 @@ var counterSlice = (0, _toolkit.createSlice)({
   initialState: {
     assetList: [],
     asset: {},
-    assetId: '',
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlcnVsMzY1QGdtYWlsLmNvbSIsImlhdCI6MTYxNTQ3NTc3MH0.OgPINiPGMGz432TeWiCk5AC967JTRU1sOr-wuyOKfTc',
+    assetType: "",
+    assetInfo: {
+      id: '',
+      name: ''
+    },
     error: null
   },
   reducers: {
@@ -27,8 +30,12 @@ var counterSlice = (0, _toolkit.createSlice)({
       state.asset = action.payload.data;
     },
     loadAssetFailure: function loadAssetFailure() {},
-    setAssetId: function setAssetId(state, action) {
-      state.assetId = action.payload;
+    setAssetInfo: function setAssetInfo(state, action) {
+      state.assetInfo.id = action.payload.id;
+      state.assetInfo.name = action.payload.name;
+    },
+    setAssetType: function setAssetType(state, action) {
+      state.assetType = action.payload;
     }
   }
 });
@@ -40,8 +47,10 @@ var _counterSlice$actions = counterSlice.actions,
     loadAsset = _counterSlice$actions.loadAsset,
     loadAssetSuccess = _counterSlice$actions.loadAssetSuccess,
     loadAssetFailure = _counterSlice$actions.loadAssetFailure,
-    setAssetId = _counterSlice$actions.setAssetId;
-exports.setAssetId = setAssetId;
+    setAssetInfo = _counterSlice$actions.setAssetInfo,
+    setAssetType = _counterSlice$actions.setAssetType;
+exports.setAssetType = setAssetType;
+exports.setAssetInfo = setAssetInfo;
 exports.loadAssetFailure = loadAssetFailure;
 exports.loadAssetSuccess = loadAssetSuccess;
 exports.loadAsset = loadAsset;
@@ -63,8 +72,14 @@ var getAsset = function getAsset(state) {
 
 exports.getAsset = getAsset;
 
-var getAssetId = function getAssetId(state) {
-  return state.asset.assetId;
+var getAssetType = function getAssetType(state) {
+  return state.asset.assetType;
 };
 
-exports.getAssetId = getAssetId;
+exports.getAssetType = getAssetType;
+
+var getAssetInfo = function getAssetInfo(state) {
+  return state.asset.assetInfo;
+};
+
+exports.getAssetInfo = getAssetInfo;

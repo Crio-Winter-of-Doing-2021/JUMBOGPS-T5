@@ -1,20 +1,22 @@
-@import url('https://fonts.googleapis.com/css?family=Orbitron&display=swap');
 
-.auth{
-    position: absolute;
-    background: #1a237e;
-    height:100%;
+.outer-box-layout{
+    height:100vh;
     width: 100%;
+    background-image: url('../../../../assets/images/intro.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
   }
-  
-  .auth-box{
-    width: 33%;
-    background-color: #000051;
-    box-shadow: 3px 3px 5px 6px #000051;
-    border-radius: 8px;
+ 
+.inner-box-layout{
+    width: 40%;
     color:white;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 3px 3px 5px 6px #000; 
+    border-radius: 8px;
+
   }
-  
+
+
   .hr-light {
     height: 2px;
     background-color: white;
@@ -22,11 +24,12 @@
   
   .headline {
     color: white;
-    font-size: 62px;
-    letter-spacing: 4px;
+    font-size: 70px;
+    letter-spacing: 2px;
+    text-shadow: 4px 4px #000;
     font-weight: bold;
-    margin: 0px 0px 2px 0px;
-    font-family: 'Orbitron';
+    margin: 4px;
+    font-family: 'Roboto';
   }
   
   

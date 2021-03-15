@@ -1,0 +1,11 @@
+.overlay{
+    background-color: black;
+    color:rgba(255, 255, 255, 0.8);
+    opacity: 0.8;
+    padding:30px;
+    height: 100%;
+}
+
+.img{
+    object-fit: cover;
+}

@@ -5,8 +5,8 @@ export const counterSlice = createSlice({
   initialState: {
     assetList: [],
     asset: {},
-    assetId:'',
-    token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlcnVsMzY1QGdtYWlsLmNvbSIsImlhdCI6MTYxNTQ3NTc3MH0.OgPINiPGMGz432TeWiCk5AC967JTRU1sOr-wuyOKfTc',
+    assetType:"",
+    assetInfo:{id:'',name:''},
     error: null,
   },
   reducers: {
@@ -20,8 +20,12 @@ export const counterSlice = createSlice({
       state.asset = action.payload.data;
     },
     loadAssetFailure: () => {},
-    setAssetId:  (state, action) => {
-      state.assetId = action.payload;
+    setAssetInfo:  (state, action) => {
+      state.assetInfo.id = action.payload.id;
+      state.assetInfo.name = action.payload.name;
+    },
+    setAssetType: (state, action) => {
+      state.assetType = action.payload;
     },
   },
 });
@@ -33,7 +37,8 @@ export const {
   loadAsset,
   loadAssetSuccess,
   loadAssetFailure,
-  setAssetId
+  setAssetInfo,
+  setAssetType
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -42,4 +47,6 @@ export const getAssets = (state) => state.asset.assetList;
 
 export const getAsset = (state) => state.asset.asset;
 
-export const getAssetId = (state) => state.asset.assetId;
+export const getAssetType = (state) => state.asset.assetType;
+
+export const getAssetInfo = (state) => state.asset.assetInfo;

@@ -2,13 +2,8 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import React, { useState } from "react";
 import "./styles.css";
 import Info from "../info";
-import { setAssetId } from "../../../../../controller/reducer/asset";
-
-const markers = [
-  "https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png",
-  "https://cdn3.iconfinder.com/data/icons/line-color-vol-1/100/63_-512.png",
-  "https://w7.pngwing.com/pngs/899/659/png-transparent-salesman-telemarketing-miscellaneous-text-logo-thumbnail.png",
-];
+import { setAssetInfo } from "../../../../../controller/reducer/asset";
+import Markers from "../../../../../data/constants/Markers";
 
 function Map({ assets, dispatch }) {
   const [viewport, setViewport] = useState({
@@ -23,6 +18,8 @@ function Map({ assets, dispatch }) {
     // onSelect(asset);
     setAsset(asset);
   };
+
+  if (!assets) return <></>;
 
   return (
     <ReactMapGL
@@ -39,7 +36,13 @@ function Map({ assets, dispatch }) {
           <img
             className="marker"
             onClick={() => handleClick(asset)}
-            src={asset.type === "truck" ? markers[1] : markers[2]}
+            src={
+              asset.type === "truck"
+                ? Markers.truck
+                : asset.type === "salesman"
+                ? Markers.salesman
+                : Markers.simple
+            }
             alt="marker"
           />
         </Marker>
@@ -55,7 +58,9 @@ function Map({ assets, dispatch }) {
           <Info
             asset={asset}
             onClose={() => setAsset(null)}
-            onSelectAsset={(id) => dispatch(setAssetId(id))}
+            onSelectAsset={(id) =>
+              dispatch(setAssetInfo({ id: id, name: asset.name }))
+            }
           />
         </Popup>
       )}

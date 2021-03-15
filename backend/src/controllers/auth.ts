@@ -9,9 +9,7 @@ exports.signup = async (req: Request, res: Response) => {
 
   if (!errors.isEmpty()) {
     return res.status(422).json({
-      error: { 
-        message: errors.array()[0].msg
-      },
+      error: errors.array()[0].msg,
       data: {}
     });
   }
@@ -28,9 +26,7 @@ exports.signup = async (req: Request, res: Response) => {
   await user.save(async (err: any) => {
     if (err) {
       return res.status(422).json({
-        error: { 
-          message: err.message
-        },
+        error: err.message,
         data: {}
       });
     }
@@ -50,9 +46,7 @@ exports.login = async (req: Request, res: Response) => {
 
   if (!errors.isEmpty()) {
     return res.status(422).json({
-      error: { 
-        message: errors.array()[0].msg
-      },
+      error:  errors.array()[0].msg,
       data: {}
     });
   }
@@ -63,9 +57,7 @@ exports.login = async (req: Request, res: Response) => {
   User.findOne({ email: email }, async (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        error: { 
-          message: "User not found"
-        },
+        error:  "User not found",
         data: {}
       });
     }
@@ -73,9 +65,7 @@ exports.login = async (req: Request, res: Response) => {
 
     if (passwordMatch == false) {
       return res.status(401).json({
-        error: { 
-          message: "Wrong password"
-        },
+        error: "Wrong password",
         data: {}
       });
     }
@@ -96,9 +86,7 @@ exports.getUser = async (req: Request, res: Response) => {
   User.findOne({ email: data.email }, (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        error: {
-          message: "No user with this email exists",
-        },
+        error:  "No user with this email exists",
         data: {}
       });
     }

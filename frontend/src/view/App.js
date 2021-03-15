@@ -1,15 +1,15 @@
-import { profile, signin } from "../service/api/user";
 import { useEffect } from "react";
+import { getRemember, getToken, getUser, loadUser, setRemember } from "../controller/reducer/user";
 import AuthPage from "./components/auth";
 import Home from "./components/home";
-import Dashboard from "./components/home/dashboard";
-import axios from 'axios';
+import {useSelector,useDispatch} from "react-redux";
 
 function App() {
- 
+  const token = useSelector(getToken);
+
   return (
     <div className="App">
-      <Home />
+      {token?<Home/>:<AuthPage/>}
     </div>
   );
 }

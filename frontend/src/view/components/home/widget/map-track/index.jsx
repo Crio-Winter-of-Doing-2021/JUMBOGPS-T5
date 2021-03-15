@@ -1,13 +1,10 @@
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import React, { useState } from "react";
 import "./styles.css";
+import Markers from "../../../../../data/constants/Markers";
 
 
-const markers = [
-  "https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png",
-  "https://cdn3.iconfinder.com/data/icons/line-color-vol-1/100/63_-512.png",
-  "https://w7.pngwing.com/pngs/899/659/png-transparent-salesman-telemarketing-miscellaneous-text-logo-thumbnail.png"
-]
+
 
 function Map({ asset, locArray}) {
   const [viewport, setViewport] = useState({
@@ -41,7 +38,13 @@ function Map({ asset, locArray}) {
           <img
             className="marker"
             onClick={() => handleClick(loc)}
-            src={asset.type==="truck"?markers[1]:markers[2]}
+            src={
+              asset.type === "truck"
+                ? Markers.truck
+                : asset.type === "salesman"
+                ? Markers.salesman
+                : Markers.simple
+            }
             alt="marker"
           />
         </Marker>

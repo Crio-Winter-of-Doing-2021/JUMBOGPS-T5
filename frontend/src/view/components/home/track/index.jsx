@@ -43,7 +43,7 @@ const Track = ({ dispatch }) => {
         <span className="h6 font-weight-light">{"[" + assetInfo.id + "]"}</span>
       </h1>
       <AutoSearch dispatch={dispatch} />
-      <DateRangeSelector /> 
+      <DateRangeSelector dispatch={dispatch}/> 
       <hr />
       
       <div className="map-view">

@@ -14,3 +14,14 @@ export const getList = (authToken,type) =>
       Authorization: `Token ${authToken}`,
     },
   });
+
+  export const  trackByTime = (authToken,assetId,range) =>
+  axios.get(Urls.trackUrlByTime(assetId), {
+    headers: {
+      Authorization: `Token ${authToken}`,
+    },
+    params: {
+      start: range.start,
+      end:range.end
+    }
+  });

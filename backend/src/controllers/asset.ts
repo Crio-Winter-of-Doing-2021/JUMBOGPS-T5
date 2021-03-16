@@ -107,9 +107,7 @@ exports.getAssets = async (req: Request, res: Response) => {
   else {
     return res.status(200).json({
       data,
-      error: {
-        "message": "Type is wrong"
-      },
+      error: "Type is wrong"
     });
   }
 };

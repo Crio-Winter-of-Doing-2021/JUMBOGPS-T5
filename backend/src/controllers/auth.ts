@@ -57,7 +57,7 @@ exports.login = async (req: Request, res: Response) => {
   User.findOne({ email: email }, async (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        error:  "User not found",
+        error:  "User not found" + "and"+ err.message,
         data: {}
       });
     }

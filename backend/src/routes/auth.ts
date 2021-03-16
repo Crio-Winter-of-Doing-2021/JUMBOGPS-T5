@@ -8,9 +8,6 @@ const route = Router();
 route.post(
   "/signup",
   [
-    // check("name")
-    //   .isLength({ min: 5 })
-    //   .withMessage("Name should be atleast 5 characters"),
     check("email").isEmail().withMessage("Email is Invalid"),
     check("password")
       .isLength({ min: 3 })

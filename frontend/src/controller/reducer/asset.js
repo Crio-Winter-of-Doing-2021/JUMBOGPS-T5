@@ -6,6 +6,7 @@ export const counterSlice = createSlice({
     assetList: [],
     asset: {},
     assetType:"",
+    dateRange:{start:"",end:""},
     assetInfo:{id:'',name:''},
     error: null,
   },
@@ -27,6 +28,9 @@ export const counterSlice = createSlice({
     setAssetType: (state, action) => {
       state.assetType = action.payload;
     },
+    setDateRange: (state, action) => {
+      // state.dateRange = action.payload;
+    },
   },
 });
 
@@ -38,7 +42,8 @@ export const {
   loadAssetSuccess,
   loadAssetFailure,
   setAssetInfo,
-  setAssetType
+  setAssetType,
+  setDateRange
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

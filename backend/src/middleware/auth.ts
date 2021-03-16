@@ -7,12 +7,12 @@ export async function authByToken(req: Request, res: Response, next: NextFunctio
   // check if 'Authorization' header exists
   const authHeader = req.header('Authorization')?.split(' ')
   if (!authHeader) return res.status(401).json({
-    errors: { body: [ 'Authorization failed', 'Not Authorization header' ] }
+    error: { body: [ 'Authorization failed', 'Not Authorization header' ] }
   })
 
   // Check if Authorization type is Token
   if (authHeader[0] != 'Token') return res.status(401).json({
-    errors: { body: [ 'Authorization failed', 'Token missing' ] }
+    error: { body: [ 'Authorization failed', 'Token missing' ] }
   })
 
   // Check if token is valid
@@ -24,7 +24,7 @@ export async function authByToken(req: Request, res: Response, next: NextFunctio
     return next()
   } catch (e) {
     return res.status(401).json({
-      errors: { body: [ 'Authorization failed', e.message ] }
+      error: { body: [ 'Authorization failed', e.message ] }
     })
   }
 

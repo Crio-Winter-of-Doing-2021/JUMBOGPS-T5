@@ -90,23 +90,26 @@ exports.updateLocation = async (req: Request, res: Response) => {
 };
 
 exports.getAssets = async (req: Request, res: Response) => {
-  
-  let data = {}
+  let data = null;
 
-  if(req.query.limit && req.query.type) {
-    data = await Asset.find({type: req.query.type}).limit(req.query.limit);
+  if (req.query.type) {
+    data = await Asset.find({ type: req.query.type }).limit(100);
+  } else {
+    data = await Asset.find({});
   }
-  else if(req.query.type) {
-    data = await Asset.find({type: req.query.type}).limit(100);
+
+  if (data.length!==0) {
+    return res.status(200).json({
+      data,
+      error: {},
+    });
   }
   else {
-    data = await Asset.find({})
+    return res.status(200).json({
+      data,
+      error: "Type is wrong"
+    });
   }
-
-  return res.status(200).json({
-    data,
-    error: {},
-  });
 };
 
 exports.getAsset = async (req: Request, res: Response) => {
@@ -117,6 +120,37 @@ exports.getAsset = async (req: Request, res: Response) => {
     });
   }
   const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
+
+  return res.status(200).json({
+    data: {
+      asset_data,
+      track: track_data.track,
+    },
+    error: {},
+  });
+};
+
+exports.getAssetByTime = async (req: Request, res: Response) => {
+  const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
+  if (!asset_data) {
+    return res.status(422).json({
+      error: "Asset does not exist",
+    });
+  }
+  const track_data = await AssetTrack.findOne(
+    { _id: req.params._id },
+    {
+      track: {
+        $elemMatch: {
+          timestamp: {
+            $gte: req.query.start,
+            $lte: req.query.end,
+          },
+        },
+      },
+    }
+  ).exec();
+
   return res.status(200).json({
     data: {
       asset_data,

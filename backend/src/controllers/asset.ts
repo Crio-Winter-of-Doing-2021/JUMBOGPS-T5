@@ -54,7 +54,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
   if (!req.body.lat || !req.body.lon || !req.body.timestamp) {
     return res.status(422).json({
       data: {},
-      error: "Lat, lon and timestamp are required",
+      error: { message: "Lat, lon and timestamp are required"},
     });
   }
 
@@ -99,13 +99,12 @@ exports.getAssets = async (req: Request, res: Response) => {
     data = await Asset.find({});
   }
 
-  if (data.length!==0) {
+  if (data.length !== 0) {
     return res.status(200).json({
       data,
       error: {},
     });
-  }
-  else {
+  } else {
     return res.status(200).json({
       data,
       error: {
@@ -119,7 +118,7 @@ exports.getAsset = async (req: Request, res: Response) => {
   const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
   if (!asset_data) {
     return res.status(422).json({
-      error: "Asset does not exist",
+      error: { message: "Asset does not exist"},
     });
   }
   const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
@@ -139,24 +138,11 @@ exports.getAssetByTime = async (req: Request, res: Response) => {
   const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
   if (!asset_data) {
     return res.status(422).json({
-      error: "Asset does not exist",
+      error: { message: "Asset does not exist"},
     });
   }
-  // const track_data = await AssetTrack.findOne(
-  //   { _id: req.params._id },
-  //   {
-  //     track: {
-  //       $elemMatch: {
-  //         timestamp: {
-  //           $gte: new Date(String(req.query.start)),
-  //           $lte: new Date(String(req.query.end)),
-  //         },
-  //       },
-  //     },
-  //   }
-  // ).exec();
-
-  const track_data = await AssetTrack.findOne(
+ 
+  const track_data = await AssetTrack.find(
     { _id: req.params._id } ,
     {
       track: {$filter: {
@@ -169,13 +155,12 @@ exports.getAssetByTime = async (req: Request, res: Response) => {
       }
   }},
   );
-  // console.log("track_data");
-  // console.log(track_data);
+  
 
   return res.status(200).json({
     data: {
       asset_data,
-      track: track_data.track,
+      track: track_data[0].track,
     },
     error: {},
   });

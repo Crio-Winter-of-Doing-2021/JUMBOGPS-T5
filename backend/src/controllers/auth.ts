@@ -57,7 +57,7 @@ exports.login = async (req: Request, res: Response) => {
   User.findOne({ email: email }, async (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        error:  "User not found" + "and"+ err.message,
+        error:  { message: "User not found" + "and"+ String(err.message)},
         data: {}
       });
     }
@@ -65,7 +65,7 @@ exports.login = async (req: Request, res: Response) => {
 
     if (passwordMatch == false) {
       return res.status(401).json({
-        error: "Wrong password",
+        error:{ message: "Wrong password"},
         data: {}
       });
     }
@@ -86,7 +86,9 @@ exports.getUser = async (req: Request, res: Response) => {
   User.findOne({ email: data.email }, (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        error:  "No user with this email exists",
+        error:  {
+          message: "No user with this email exists"
+        },
         data: {}
       });
     }

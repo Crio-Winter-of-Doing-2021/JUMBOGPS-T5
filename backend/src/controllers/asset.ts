@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 const Asset = require("../models/Asset");
 const AssetTrack = require("../models/AssetTrack");
+var mongoose = require('mongoose');
 
 exports.createAsset = async (req: Request, res: Response) => {
   const data_asset = {
@@ -53,7 +54,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
   if (!req.body.lat || !req.body.lon || !req.body.timestamp) {
     return res.status(422).json({
       data: {},
-      error: "Lat, lon and timestamp are required",
+      error: { message: "Lat, lon and timestamp are required"},
     });
   }
 
@@ -106,7 +107,9 @@ exports.getAssets = async (req: Request, res: Response) => {
   } else {
     return res.status(200).json({
       data,
-      error: "Type is wrong",
+      error: {
+        "message": "Type is wrong"
+      },
     });
   }
 };
@@ -115,7 +118,7 @@ exports.getAsset = async (req: Request, res: Response) => {
   const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
   if (!asset_data) {
     return res.status(422).json({
-      error: "Asset does not exist",
+      error: { message: "Asset does not exist"},
     });
   }
   const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
@@ -129,32 +132,30 @@ exports.getAsset = async (req: Request, res: Response) => {
   });
 };
 
+
+
 exports.getAssetByTime = async (req: Request, res: Response) => {
   const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
   if (!asset_data) {
     return res.status(422).json({
-      error: "Asset does not exist",
+      error: { message: "Asset does not exist"},
     });
   }
+ 
   const track_data = await AssetTrack.find(
-    { _id: req.params._id },
+    { _id: req.params._id } ,
     {
-      track: {
-        $filter: {
-          input: "$track",
-          as: "track",
-          cond: {
-            $and: [
-              { $gte: ["$$track.timestamp",  req.query.start] },
-              { $lte: ["$$track.timestamp", req.query.end] },
-            ],
-          },
-        },
-      },
-    }
-  ).exec();
-
-  console.log(track_data[0].track)  
+      track: {$filter: {
+          input: '$track',
+          as: 'item',
+          cond:{ "$and": [ 
+            { "$gte": [ "$$item.timestamp", new Date(String(req.query.start)) ] },
+            { "$lte": [  "$$item.timestamp", new Date(String(req.query.end)) ] }
+        ]}
+      }
+  }},
+  );
+  
 
   return res.status(200).json({
     data: {

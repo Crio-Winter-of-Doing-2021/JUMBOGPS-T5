@@ -98,16 +98,15 @@ exports.getAssets = async (req: Request, res: Response) => {
     data = await Asset.find({});
   }
 
-  if (data.length!==0) {
+  if (data.length !== 0) {
     return res.status(200).json({
       data,
       error: {},
     });
-  }
-  else {
+  } else {
     return res.status(200).json({
       data,
-      error: "Type is wrong"
+      error: "Type is wrong",
     });
   }
 };
@@ -137,24 +136,30 @@ exports.getAssetByTime = async (req: Request, res: Response) => {
       error: "Asset does not exist",
     });
   }
-  const track_data = await AssetTrack.findOne(
+  const track_data = await AssetTrack.find(
     { _id: req.params._id },
     {
       track: {
-        $elemMatch: {
-          timestamp: {
-            $gte: req.query.start,
-            $lte: req.query.end,
+        $filter: {
+          input: "$track",
+          as: "track",
+          cond: {
+            $and: [
+              { $gte: ["$$track.timestamp",  req.query.start] },
+              { $lte: ["$$track.timestamp", req.query.end] },
+            ],
           },
         },
       },
     }
   ).exec();
 
+  console.log(track_data[0].track)  
+
   return res.status(200).json({
     data: {
       asset_data,
-      track: track_data.track,
+      track: track_data[0].track,
     },
     error: {},
   });

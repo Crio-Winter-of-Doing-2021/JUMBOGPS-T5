@@ -43,7 +43,7 @@ const DateRangeSelector = ({ dispatch }) => {
   const { start, end } = state;
   const handleCallback = (start, end) => {
     setState({ start, end });
-    dispatch(setDateRange({ start: start.format(), end: end.format() }));
+    dispatch(setDateRange({ start: start.utc().format(), end: end.utc().format() }));
   };
   const label =
     start.format("MMMM D, YYYY h:mm a") +

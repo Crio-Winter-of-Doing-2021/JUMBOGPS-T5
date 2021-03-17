@@ -156,9 +156,9 @@ exports.getAssetByTime = async (req: Request, res: Response) => {
   //   }
   // ).exec();
 
-  const track_data = await AssetTrack.aggregate([
-    { $match: { _id: new mongoose.Types.ObjectId(req.params._id) } },
-    { $project: {
+  const track_data = await AssetTrack.findOne(
+    { _id: req.params._id } ,
+    {
       track: {$filter: {
           input: '$track',
           as: 'item',
@@ -166,16 +166,16 @@ exports.getAssetByTime = async (req: Request, res: Response) => {
             { "$gte": [ "$$item.timestamp", new Date(String(req.query.start)) ] },
             { "$lte": [  "$$item.timestamp", new Date(String(req.query.end)) ] }
         ]}
-      }}
+      }
   }},
-  ]);
+  );
   // console.log("track_data");
   // console.log(track_data);
 
   return res.status(200).json({
     data: {
       asset_data,
-      track: track_data[0].track,
+      track: track_data.track,
     },
     error: {},
   });

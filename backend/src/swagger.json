@@ -243,7 +243,43 @@
           }
         }
       }
+    },
+    "/api/asset/geofence/{id}": {
+      "put": {
+        "tags": ["Assets"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": "true",
+            "description": "Token <token>"
+          },
+          {
+            "name": "geofence",
+            "in": "body",
+            "description": "Update geofence",
+            "schema": {
+              "$ref": "#/definitions/Geofence"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
+          }
+        ],
+        "summary": "Update Geofence",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetUpdateResponse"
+            }
+          }
+        }
+      }
     }
+
   },
   "definitions": {
     "User": {
@@ -509,6 +545,41 @@
         },
         "error": {
           "type": "string"
+        }
+      }
+    },
+    "Geofence": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object"
+        },
+        "geometry": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "coordinates": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "lat": {
+                      "type": "integer"
+                    },
+                    "lon": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

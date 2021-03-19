@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 const Asset = require("../models/Asset");
+const GeoFence = require("../models/GeoFence");
 const AssetTrack = require("../models/AssetTrack");
-var mongoose = require('mongoose');
+const Notification = require("../models/Notification");
+var mongoose = require("mongoose");
 
 exports.createAsset = async (req: Request, res: Response) => {
   const data_asset = {
@@ -31,10 +33,40 @@ exports.createAsset = async (req: Request, res: Response) => {
         error: err.message,
       });
     }
+
+    const geofence = new GeoFence({
+      _id: result._id,
+      type: "Feature",
+    });
+
+    await geofence.save((error: any, results: any) => {
+      if (err) {
+        return res.status(422).json({
+          data: {},
+          error: error.message,
+        });
+      }
+    });
+
+    const notification = new Notification({
+      _id: result._id,
+      name: req.body.name,
+    });
+
+    notification.save((error: any, results: any) => {
+      if (err) {
+        return res.status(422).json({
+          data: {},
+          error: error.message,
+        });
+      }
+    });
+
     const asset_track = new AssetTrack({
       _id: result._id,
       track: [track_data_asset],
     });
+
     await asset_track.save((error: any, results: any) => {
       if (err) {
         return res.status(422).json({
@@ -54,7 +86,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
   if (!req.body.lat || !req.body.lon || !req.body.timestamp) {
     return res.status(422).json({
       data: {},
-      error: { message: "Lat, lon and timestamp are required"},
+      error: { message: "Lat, lon and timestamp are required" },
     });
   }
 
@@ -82,6 +114,36 @@ exports.updateLocation = async (req: Request, res: Response) => {
     }
   );
 
+  let data = await GeoFence.find({
+    $and: [
+      { _id: req.params.id },
+      {
+        geometry: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [req.body.lon, req.body.lat],
+            },
+            $maxDistance: 50000,
+          },
+        },
+      },
+    ],
+  });
+
+  if(data.length==0) {
+    let updateNotification = await Notification.updateOne({_id: req.params.id}, 
+      {
+        $push: {
+          track: {
+            lat: req.body.lat,
+            lon: req.body.lon,
+            timestamp: req.body.timestamp
+          },
+        },
+      })
+  }
+
   return res.status(200).json({
     data: {
       success: true,
@@ -108,7 +170,7 @@ exports.getAssets = async (req: Request, res: Response) => {
     return res.status(200).json({
       data,
       error: {
-        "message": "Type is wrong"
+        message: "Type is wrong",
       },
     });
   }
@@ -118,49 +180,72 @@ exports.getAsset = async (req: Request, res: Response) => {
   const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
   if (!asset_data) {
     return res.status(422).json({
-      error: { message: "Asset does not exist"},
+      error: { message: "Asset does not exist" },
     });
   }
   const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
+
+  const geofence_data = await GeoFence.findOne({ _id: req.params._id }).exec();
 
   return res.status(200).json({
     data: {
       asset_data,
       track: track_data.track,
+      geofence: geofence_data,
     },
     error: {},
   });
 };
 
-
-
 exports.getAssetByTime = async (req: Request, res: Response) => {
   const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
   if (!asset_data) {
     return res.status(422).json({
-      error: { message: "Asset does not exist"},
+      error: { message: "Asset does not exist" },
     });
   }
- 
+
   const track_data = await AssetTrack.find(
-    { _id: req.params._id } ,
+    { _id: req.params._id },
     {
-      track: {$filter: {
-          input: '$track',
-          as: 'item',
-          cond:{ "$and": [ 
-            { "$gte": [ "$$item.timestamp", new Date(String(req.query.start)) ] },
-            { "$lte": [  "$$item.timestamp", new Date(String(req.query.end)) ] }
-        ]}
-      }
-  }},
+      track: {
+        $filter: {
+          input: "$track",
+          as: "item",
+          cond: {
+            $and: [
+              { $gte: ["$$item.timestamp", new Date(String(req.query.start))] },
+              { $lte: ["$$item.timestamp", new Date(String(req.query.end))] },
+            ],
+          },
+        },
+      },
+    }
   );
-  
 
   return res.status(200).json({
     data: {
       asset_data,
       track: track_data[0].track,
+    },
+    error: {},
+  });
+};
+
+exports.updateGeoFence = async (req: Request, res: Response) => {
+  const data = await GeoFence.updateOne(
+    { _id: req.params.id },
+    {
+      $set: {
+        properties: req.body.properties,
+        geometry: req.body.geometry,
+      },
+    }
+  );
+
+  return res.status(200).json({
+    data: {
+      success: true,
     },
     error: {},
   });

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authByToken } from "../middleware/auth";
 
-const {createAsset, updateLocation, getAssets, getAsset, getAssetByTime, updateGeoFence} = require('../controllers/asset')
+const {createAsset, updateLocation, getAssets, getAsset, getAssetByTime, updateGeoFence, updateGeoRoute, getNotification} = require('../controllers/asset')
 
 const route = Router()
 
@@ -16,5 +16,9 @@ route.get('/asset/track/:_id', authByToken, getAsset)
 route.get('/asset/trackbytime/:_id', authByToken, getAssetByTime)
 
 route.put('/asset/geofence/:id', authByToken, updateGeoFence)
+
+route.put('/asset/georoute/:id', authByToken, updateGeoRoute)
+
+route.get('/asset/notification/:id', authByToken, getNotification)
 
 export const assetRoute = route

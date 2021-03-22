@@ -278,8 +278,69 @@
           }
         }
       }
+    },
+    "/api/asset/georoute/{id}": {
+      "put": {
+        "tags": ["Assets"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": "true",
+            "description": "Token <token>"
+          },
+          {
+            "name": "georoute",
+            "in": "body",
+            "description": "Update georoute",
+            "schema": {
+              "$ref": "#/definitions/Geofence"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
+          }
+        ],
+        "summary": "Update Georoute",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetUpdateResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/asset/notification/{id}": {
+      "get": {
+        "tags": ["Assets"],
+        "description": "Get Notification",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          },
+          {
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "summary": "Get Notification ",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Get Notification",
+            "schema": {
+              "$ref": "#/definitions/Notification"
+            }
+          }
+        }
+      }
     }
-
   },
   "definitions": {
     "User": {
@@ -580,6 +641,47 @@
               }
             }
           }
+        }
+      }
+    },
+    "NotificationGps": {
+      "properties": {
+        "lat": {
+          "type": "string"
+        },
+        "lon": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "Notification": {
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "track": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "#/definitions/NotificationGps"
+              }
+            }
+          }
+        },
+        "error": {
+          "type" : "string"
         }
       }
     }

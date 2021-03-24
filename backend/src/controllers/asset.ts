@@ -348,3 +348,36 @@ exports.getNotification = async (req: Request, res: Response)=>{
     error: {}
   })
 }
+
+exports.getGeofence = async (req: Request, res: Response)=>{
+  
+  const data = await GeoFence.findOne({_id: req.params.id}).exec()
+  
+  if (!data) {
+    return res.status(422).json({
+      error: { message: "Geofence Id does not exist" },
+    });
+  }
+  return res.status(200).json({
+    data: data,
+    error: {}
+  })
+}
+
+exports.getGeoroute = async (req: Request, res: Response)=>{
+  
+  const data = await GeoRoute.findOne({_id: req.params.id}).exec()
+
+  
+  if (!data) {
+    return res.status(422).json({
+      error: { message: "Georoute Id does not exist" },
+    });
+  }
+  return res.status(200).json({
+    data: parses(data),
+    error: {}
+  })
+}
+
+

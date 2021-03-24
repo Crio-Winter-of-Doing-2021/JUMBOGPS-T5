@@ -314,19 +314,19 @@
         }
       }
     },
-    "/api/asset/getgeofence/{id}": {
+    "/api/asset/geofence/{id}": {
       "get": {
         "tags": ["Assets"],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": "true"
-          },
-          {
             "name": "Authorization",
             "in": "header",
             "description": "Token <token>"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
           }
         ],
         "summary": "Get Geofence",
@@ -340,19 +340,19 @@
         }
       }
     },
-    "/api/asset/getgeoroute/{id}": {
+    "/api/asset/georoute/{id}": {
       "get": {
         "tags": ["Assets"],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": "true"
-          },
-          {
             "name": "Authorization",
             "in": "header",
             "description": "Token <token>"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
           }
         ],
         "summary": "Get Georoute",

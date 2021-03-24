@@ -314,6 +314,58 @@
         }
       }
     },
+    "/api/asset/getgeofence/{id}": {
+      "get": {
+        "tags": ["Assets"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          }
+        ],
+        "summary": "Get Geofence",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Geofence"
+            }
+          }
+        }
+      }
+    },
+    "/api/asset/getgeoroute/{id}": {
+      "get": {
+        "tags": ["Assets"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          }
+        ],
+        "summary": "Get Georoute",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Geofence"
+            }
+          }
+        }
+      }
+    },
     "/api/asset/notification/{id}": {
       "get": {
         "tags": ["Assets"],

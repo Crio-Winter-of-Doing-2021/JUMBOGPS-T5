@@ -4,14 +4,14 @@ import {
   Table,
   Button,
   OverlayTrigger,
-  Tooltip,
   Popover,
 } from "react-bootstrap";
-import { getAssets, setAssetId, setAssetInfo } from "../../../../../controller/reducer/asset";
-import Info from "../info";
+import { getAssets } from "../../../../../controller/reducer/assets";
+import { setAssetInfo } from "../../../../../controller/reducer/asset";
+import Info from "../../widget/info";
 import moment from 'moment';
 
-const DataTable = ({dispatch}) => {
+const DataTable = ({onSelect}) => {
     const assets = useSelector(getAssets);
 
     const renderDetailsOverlay = (asset) => (
@@ -53,7 +53,7 @@ const DataTable = ({dispatch}) => {
                 <td>
                   <Button
                     variant="outline-primary"
-                    onClick={() => dispatch(setAssetInfo({id:asset._id,name:asset.name}))}
+                    onClick={() => onSelect(asset._id,asset.name)}
                   >
                     Track
                   </Button>

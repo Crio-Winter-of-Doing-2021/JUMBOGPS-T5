@@ -1,7 +1,7 @@
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import React, { useState } from "react";
 import "./styles.css";
-import Info from "../info";
+import Info from "../../widget/info";
 import { setAssetInfo } from "../../../../../controller/reducer/asset";
 import Markers from "../../../../../data/constants/Markers";
 

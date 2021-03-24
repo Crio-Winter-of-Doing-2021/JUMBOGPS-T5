@@ -25,3 +25,5 @@ export const getList = (authToken,type) =>
       end:range.end
     }
   });
+
+  

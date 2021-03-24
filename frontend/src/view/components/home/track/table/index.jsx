@@ -7,8 +7,8 @@ import {
   Tooltip,
   Popover,
 } from "react-bootstrap";
-import { getAssets, setAssetId } from "../../../../../controller/reducer/asset";
-import Info from "../info";
+import { getAssets } from "../../../../../controller/reducer/assets";
+import Info from "../../widget/info";
 import moment from 'moment';
 
 const DataTable = ({dispatch,  track}) => {

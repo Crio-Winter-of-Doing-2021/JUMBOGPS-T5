@@ -1,7 +1,7 @@
 var geojson = require('geojson-tools')
 
 var convert = (coordinates)=>{
-    var array = geojson.complexify(coordinates[0], 0.5)
+    var array = geojson.complexify(coordinates, 0.5)
     return geojson.toGeoJSON(array, 'LineString')
 }
 

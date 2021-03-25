@@ -1,4 +1,4 @@
-import { loadAssets } from "../reducer/asset";
+import { loadAssets } from "../reducer/assets";
 import { pageLoaded } from "../reducer/ui";
 
 const pageLoadedFlow = ()=> ({ dispatch }) => next => action => {

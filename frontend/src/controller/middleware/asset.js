@@ -1,33 +1,29 @@
 import {
-  loadAssets,
-  loadAssetsSuccess,
-  loadAssetsFailure,
   loadAsset,
   loadAssetSuccess,
   setAssetInfo,
   setDateRange,
+  setGeoJSON,
 } from "../reducer/asset";
 import * as uiActions from "../reducer/ui";
+import moment from "moment";
+import { loadGeoFence, loadGeoRoute, loadNotifications } from "../reducer/geo";
 
-const loadAssetsFlow = ({ getAssetList }) => ({ dispatch, getState }) => (
-  next
-) => async (action) => {
-  next(action);
-  if (action.type === loadAssets.type) {
-    dispatch(uiActions.setLoading(true));
-    try {
-      const response = await getAssetList(
-        getState().user.token,
-        getState().asset.assetType
-      );
-      console.log(response.data);
-      dispatch(loadAssetsSuccess(response.data));
-    } catch (error) {
-      dispatch(loadAssetsFailure(error));
+
+function arrayToGeoJSON(track) {
+  const ts = track[0].timestamp;
+  const features = track.map((item) => ({
+    type: "Feature",
+    geometry: { type: "Point", coordinates: [item.lon,item.lat] },
+    properties:{
+      lastUpdated:moment.duration(moment(item.timestamp).diff(ts)).asDays()
     }
-    dispatch(uiActions.setLoading(false));
-  }
-};
+  }));
+  return {
+    type: "FeatureCollection",
+    features: features,
+  };
+}
 
 const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
   next
@@ -42,6 +38,11 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
       );
       console.log(response.data);
       dispatch(loadAssetSuccess(response.data));
+      const geoJSON = arrayToGeoJSON(response.data.data.track);
+      dispatch(setGeoJSON(geoJSON));
+      dispatch(loadNotifications());
+      dispatch(loadGeoFence());
+      dispatch(loadGeoRoute());
     } catch (error) {
       dispatch(uiActions.setError(error));
     }
@@ -79,7 +80,6 @@ const setDateRangeFlow = ({ getAssetTrackByTime }) => ({ dispatch, getState }) =
 };
 
 const assetFlow = [
-  loadAssetsFlow,
   trackAssetFlow,
   setAssetInfoFlow,
   setDateRangeFlow,

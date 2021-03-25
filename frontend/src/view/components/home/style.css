@@ -6,3 +6,15 @@
 .child{
   margin-left: 200px;
 }
+
+div::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
+}
+
+div::-webkit-scrollbar-track {
+  background: transparent;        /* color of the tracking area */
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: rgb(50, 50, 50);    /* color of the scroll thumb */
+}

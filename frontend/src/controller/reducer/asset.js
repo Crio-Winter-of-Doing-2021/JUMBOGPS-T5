@@ -3,30 +3,24 @@ import { createSlice } from "@reduxjs/toolkit";
 export const counterSlice = createSlice({
   name: "asset",
   initialState: {
-    assetList: [],
     asset: {},
-    assetType:"",
     dateRange:{start:"",end:""},
     assetInfo:{id:'',name:''},
+    geoJSON: null,
     error: null,
   },
   reducers: {
-    loadAssets: () => {},
-    loadAssetsSuccess: (state, action) => {
-      state.assetList = action.payload.data;
-    },
-    loadAssetsFailure: () => {},
     loadAsset: () => {},
     loadAssetSuccess: (state, action) => {
       state.asset = action.payload.data;
+    },
+    setGeoJSON:(state, action) => {
+      state.geoJSON = action.payload;
     },
     loadAssetFailure: () => {},
     setAssetInfo:  (state, action) => {
       state.assetInfo.id = action.payload.id;
       state.assetInfo.name = action.payload.name;
-    },
-    setAssetType: (state, action) => {
-      state.assetType = action.payload;
     },
     setDateRange: (state, action) => {
       // state.dateRange = action.payload;
@@ -35,23 +29,19 @@ export const counterSlice = createSlice({
 });
 
 export const {
-  loadAssets,
-  loadAssetsSuccess,
-  loadAssetsFailure,
   loadAsset,
   loadAssetSuccess,
   loadAssetFailure,
   setAssetInfo,
-  setAssetType,
-  setDateRange
+  setDateRange,
+  setGeoJSON
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
 
-export const getAssets = (state) => state.asset.assetList;
 
 export const getAsset = (state) => state.asset.asset;
 
-export const getAssetType = (state) => state.asset.assetType;
-
 export const getAssetInfo = (state) => state.asset.assetInfo;
+
+export const getGeoJSON = (state) => state.asset.geoJSON;

@@ -6,6 +6,7 @@ export const counterSlice = createSlice({
     loading: false,
     showLogoutModal: false,
     tabId: "1",
+    trackTabId: "1",
     error: "",
   },
   reducers: {
@@ -16,6 +17,7 @@ export const counterSlice = createSlice({
       showLogoutModal: action.payload,
     }),
     setTabId: (state, action) => ({ ...state, tabId: action.payload }),
+    setTrackTabId: (state, action) => ({ ...state, trackTabId: action.payload }),
     setError: (state, action) => ({ ...state, error: action.payload }),
   },
 });
@@ -26,6 +28,7 @@ export const {
   setshowLogoutModal,
   setTabId,
   setError,
+  setTrackTabId,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -37,3 +40,5 @@ export const getShowLogout = (state) => state.ui.showLogoutModal;
 export const getTabId = (state) => state.ui.tabId;
 
 export const getError = (state) => state.ui.error;
+
+export const getTrackTabId = (state) => state.ui.trackTabId;

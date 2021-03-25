@@ -366,7 +366,7 @@ exports.getGeofence = async (req: Request, res: Response)=>{
 
 exports.getGeoroute = async (req: Request, res: Response)=>{
   
-  const data = await GeoRoute.findOne({_id: req.params.id}).exec()
+  let data = await GeoRoute.findOne({_id: req.params.id}).exec()
 
   
   if (!data) {
@@ -374,6 +374,9 @@ exports.getGeoroute = async (req: Request, res: Response)=>{
       error: { message: "Georoute Id does not exist" },
     });
   }
+
+  data = parses(data)
+
   return res.status(200).json({
     data: { 
       geometry:data.geometry,

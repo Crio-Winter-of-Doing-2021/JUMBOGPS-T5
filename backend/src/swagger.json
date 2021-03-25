@@ -314,7 +314,7 @@
         }
       }
     },
-    "/api/asset/geofence/{id}": {
+    "/api/asset/getgeofence/{id}": {
       "get": {
         "tags": ["Assets"],
         "parameters": [
@@ -340,7 +340,7 @@
         }
       }
     },
-    "/api/asset/georoute/{id}": {
+    "/api/asset/getgeoroute/{id}": {
       "get": {
         "tags": ["Assets"],
         "parameters": [

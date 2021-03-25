@@ -19,9 +19,9 @@ route.put('/asset/geofence/:id', authByToken, updateGeoFence)
 
 route.put('/asset/georoute/:id', authByToken, updateGeoRoute)
 
-route.get('/asset/geofence/:id', authByToken, getGeofence)
+route.get('/asset/getgeofence/:id', authByToken, getGeofence)
 
-route.get('/asset/georoute/:id', authByToken, getGeoroute)
+route.get('/asset/getgeoroute/:id', authByToken, getGeoroute)
 
 route.get('/asset/notification/:id', authByToken, getNotification)
 

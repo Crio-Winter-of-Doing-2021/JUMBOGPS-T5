@@ -375,14 +375,9 @@ exports.getGeoroute = async (req: Request, res: Response)=>{
     });
   }
 
-  data = parses(data)
 
   return res.status(200).json({
-    data: { 
-      geometry:data.geometry,
-      properties:data.properties,
-      _id:data._id
-    },
+    data: parses(data),
     error: {}
   })
 }

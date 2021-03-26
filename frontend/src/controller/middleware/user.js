@@ -1,86 +1,159 @@
+import * as uiActions from "../reducer/ui";
 import {
+  loadLocalUser,
+  loadProfile,
+  loadProfileSuccess,
+  loadUser,
+  performLogout,
   performSignin,
   performSignUp,
-  loadUser,
-  loadError,
-  loadLocalUser,
-  performLogout,
   removeUser,
-}from "../reducer/user";
-import * as uiActions from "../reducer/ui";
+} from "../reducer/user";
 
-const performSignInFlow =  ({postSignin}) => ({ dispatch,getState }) => (next) => async (
-  action
-) => {
+/**
+* Sign In Middleware
+* @description
+* Performs Signin API call. If call is successful, user is saved locally.
+* Otherwise error handling is done.
+* Dispatches setLoading, loadUser and setError
+* @param {function} services.postSignin perform Sign In
+* @param {function} services.saveLocalUser save user locally
+*/ 
+const performSignInFlow = ({ postSignin, saveLocalUser }) => ({
+  dispatch,
+  getState,
+}) => (next) => async (action) => {
   next(action);
   if (action.type === performSignin.type) {
     dispatch(uiActions.setLoading(true));
     try {
-      console.log(action.payload);
       const response = await postSignin(action.payload);
-      console.log(response);
+      
       dispatch(loadUser(response.data.data));
-
-      if(getState().user.token && getState().user.remember) {
-        localStorage.setItem('user',JSON.stringify(getState().user));
-        // dispatch(setRemember(false));
+      if (getState().user.token && getState().user.remember) {
+        saveLocalUser(getState().user);
       }
     } catch (error) {
       if (error.response) {
         dispatch(uiActions.setError(error.response.data.error));
-      }  else {
+      } else {
         dispatch(uiActions.setError(error.message));
       }
     }
     dispatch(uiActions.setLoading(false));
   }
-}
+};
 
-const performSignUpFlow = ({postSignup}) => ({ dispatch }) => next =>  async (action)  => {
+/**
+* Sign Up Middleware
+* @description
+* Performs SignUp API call. If call is successful, user is saved locally.
+* Otherwise error handling is done.
+* Dispatches setLoading, loadUser and setError
+* @param {function} services.postSignup perform Sign Up
+* @param {function} services.saveLocalUser save user locally
+*/ 
+const performSignUpFlow = ({ postSignup, saveLocalUser }) => ({
+  dispatch,
+  getState,
+}) => (next) => async (action) => {
   next(action);
   if (action.type === performSignUp.type) {
-    console.log(action.payload);
     dispatch(uiActions.setLoading(true));
     try {
       const response = await postSignup(action.payload);
-      console.log(response);
       dispatch(loadUser(response.data.data));
+      if (getState().user.token && getState().user.remember) {
+        saveLocalUser(getState().user);
+      }
+      dispatch(
+        uiActions.setSuccessToast(
+          "Registration Successful, Welcome aboard " + getState().user.name
+        )
+      );
     } catch (error) {
       if (error.response) {
         dispatch(uiActions.setError(error.response.data.error));
-      }  else {
+      } else {
         dispatch(uiActions.setError(error.message));
       }
     }
     dispatch(uiActions.setLoading(false));
   }
-}
+};
 
-const getProfileFlow = () => ({ dispatch, getState }) => next => action => {
+/**
+* Load Profile Middleware
+* @description
+* Performs GET Profile API call. If call is successful, profile data  is saved locally.
+* Otherwise error handling is done.
+* Dispatches setLoading, loadProfileSuccess and setError
+* @param {function} services.getProfile perform get profile api call
+*/ 
+const getProfileFlow = ({ getProfile }) => ({ dispatch, getState }) => (
+  next
+) => async (action) => {
   next(action);
-}
+  if (action.type === loadProfile.type) {
+    try {
+      const response = await getProfile(getState().user.token);
+      dispatch(loadProfileSuccess(response.data.data));
+    } catch (error) {
+      if (error.response) {
+        dispatch(uiActions.setError(error.response.data.error));
+      } else {
+        dispatch(uiActions.setError(error.message));
+      }
+    }
+  }
+};
 
-const loadLocalUserFlow = () => ({ dispatch, getState }) => next => action => {
+/**
+* Load Local User Middleware
+* @description
+* Retrieves locally saved user. If  successful, user data loaded into application.
+* Dispatches loadUser,setSuccessToast
+* @param {function} services.getLocalUser retrieve user saved locally
+*/ 
+const loadLocalUserFlow = ({ getLocalUser }) => ({ dispatch, getState }) => (
+  next
+) => (action) => {
   next(action);
   if (action.type === loadLocalUser.type) {
-      if(!getState().user.token) {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if(user) dispatch(loadUser(user));
-      }   
+    if (!getState().user.token) {
+      const user = JSON.parse(getLocalUser());
+      if (user) {
+        dispatch(loadUser(user));
+        dispatch(uiActions.setSuccessToast("Welcome " + user.name));
+      }
+    }
   }
-}
+};
 
-const performLogoutFlow = () => ({ dispatch, getState }) => next => action => {
+/**
+* Logout  Middleware
+* @description
+* Deletes locally saved user.
+* Dispatches loadUser,setSuccessToast, setshowLogoutModal
+* @param {function} services.deleteLocalUser deletes local user
+*/ 
+const performLogoutFlow = ({ deleteLocalUser }) => ({ dispatch, getState }) => (
+  next
+) => (action) => {
   next(action);
   if (action.type === performLogout.type) {
     dispatch(removeUser());
-    localStorage.removeItem('user');   
+    deleteLocalUser();
     dispatch(uiActions.setshowLogoutModal(false));
   }
-}
+};
 
-const userFlow = [performSignInFlow, performSignUpFlow,getProfileFlow,loadLocalUserFlow,performLogoutFlow];
+const userFlow = [
+  performSignInFlow,
+  performSignUpFlow,
+  getProfileFlow,
+  loadLocalUserFlow,
+  performLogoutFlow,
+];
 
 export default userFlow;
-
-

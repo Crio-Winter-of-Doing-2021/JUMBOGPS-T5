@@ -7,6 +7,7 @@
   left:200px;
   bottom: 0;
   padding: 20px;
+  transition: left 0.5s;
 }
 
 .tabs-view {
@@ -34,3 +35,6 @@
   width: 90%;
 }
 
+/* @media screen and (max-width: 750px) {
+  .track {left: 0px;}
+} */

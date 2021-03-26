@@ -1,51 +1,72 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { Col, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import "./style.css";
-import Map from "./map";
 import {
-  loadAsset,
   getAsset,
   getAssetInfo,
   getGeoJSON,
+  loadAsset,
 } from "../../../../controller/reducer/asset";
-import { getLoading, setTrackTabId } from "../../../../controller/reducer/ui";
-import Info from "./info";
-import DataTable from "./table";
-import AutoSearch from "./search";
-import DateRangeSelector from "./date-range";
-import { ButtonGroup, ToggleButton } from "react-bootstrap";
-import Toggle from "../widget/toggle";
-import Tabs from "./tabs";
-import { setGeoFence, setGeoRoute, updateGeoFence,updateGeoRoute } from "../../../../controller/reducer/geo";
+import {
+  setGeoFence,
+  setGeoRoute,
+  updateGeoFence,
+  updateGeoRoute,
+} from "../../../../controller/reducer/geo";
+import {
+  getLoading,
+  getShowSidenav,
+  setTrackTabId,
+} from "../../../../controller/reducer/ui";
+import Loader from "../widget/loader";
 import Notifications from "../widget/notifications";
+import DateRangeSelector from "./date-range";
+import Info from "./info";
+import Map from "./map";
+import AutoSearch from "./search";
+import "./style.css";
+import DataTable from "./table";
+import Tabs from "./tabs";
 
+/**
+ * Track Component
+ * @description
+ * For a particular asset:
+ * 1. shows map locating all previous location
+ * 2. shows information about it.
+ * 3. shows Table data for  previous locations
+ * 4. allows user to choose date range for locations
+ * 5. allows user to geofence and/or georoute the asset
+ * @component
+ * @example
+ * return (
+ *   <Track dispatch={dispatch}/>
+ * )
+ */
 const Track = ({ dispatch }) => {
   const asset = useSelector(getAsset);
   const assetInfo = useSelector(getAssetInfo);
   const geoJSON = useSelector(getGeoJSON);
-  const loading = useSelector(getLoading);
-
-  const [visualize, setVisualize] = useState(false);
-  const [bound, setBound] = useState(false);
 
   const setGeoFenceData = (data) => dispatch(setGeoFence(data));
   const setGeoRouteData = (data) => dispatch(setGeoRoute(data));
-  const submitGeoFence = () => {
-    dispatch(updateGeoFence());
-  }
-  const submitGeoRoute = () => {
-    dispatch(updateGeoRoute());
-  }
+  const submitGeoFence = () => dispatch(updateGeoFence());
+  const submitGeoRoute = () => dispatch(updateGeoRoute());
   const onSelectTab = (key) => dispatch(setTrackTabId(key));
-  
 
   useEffect(() => {
     if (assetInfo.id) dispatch(loadAsset());
   }, [dispatch]);
 
+  const sidenav = useSelector(getShowSidenav);
+  if (useSelector(getLoading)) return <Loader />;
+
   if (!assetInfo.name || !asset) {
     return (
-      <div className="track bg-light">
+      <div
+        className="track bg-light"
+        style={{ left: sidenav ? "200px" : "0px" }}
+      >
         <h1 className="h2 font-weight-normal m-2">Asset : None</h1>
         <AutoSearch dispatch={dispatch} />
         <hr />
@@ -56,26 +77,30 @@ const Track = ({ dispatch }) => {
     );
   }
 
-  console.log("asset ", asset, "loading", loading);
+  console.log("asset ", asset);
   return (
-    <div className="track bg-light">
+    <div className="track bg-light" style={{ left: sidenav ? "200px" : "0px" }}>
       <h1 className="h2 font-weight-normal m-2">
         Asset : {assetInfo.name}
         <span className="h6 font-weight-light">{"[" + assetInfo.id + "]"}</span>
       </h1>
-      <AutoSearch dispatch={dispatch} />
-      <DateRangeSelector dispatch={dispatch} />
+      <Row>
+        <Col lg={6}>
+          <AutoSearch dispatch={dispatch} />
+        </Col>
+        <Col lg={6}>
+          <DateRangeSelector dispatch={dispatch} />
+        </Col>
+      </Row>
       <hr />
       <div className="d-flex justify-content-center ">
-      <Tabs  onSelect={onSelectTab}/>
+        <Tabs onSelect={onSelectTab} />
       </div>
 
       <div className="map-view">
         <Map
           asset={asset.asset_data}
-          geoJSON={visualize ? geoJSON : null}
           locArray={asset.track}
-          bound={bound}
           setGeoFence={setGeoFenceData}
           setGeoRoute={setGeoRouteData}
           submitGeoFence={submitGeoFence}
@@ -85,7 +110,7 @@ const Track = ({ dispatch }) => {
       <div className="card-view ">
         <h1 className="h3 font-weight-normal">Notifications</h1>
         <hr />
-        <Notifications/>
+        <Notifications />
       </div>
       <br />
       <div className="card-view ">

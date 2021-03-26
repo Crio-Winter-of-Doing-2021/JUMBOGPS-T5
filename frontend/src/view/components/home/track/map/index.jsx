@@ -1,20 +1,45 @@
-import ReactMapGL, { Marker, Popup, Source, Layer } from "react-map-gl";
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import "./styles.css";
-import Markers from "../../../../../data/constants/Markers";
-import { heatmapLayer } from "./common/map-style";
-import { Editor, EditingMode } from "react-map-gl-draw";
-import { getFeatureStyle, getEditHandleStyle } from "./common/draw-styles";
-import DrawRouteTools from "./common/DrawRouteTools";
-import DrawFenceTools from "./common/DrawFenceTools";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import ReactMapGL, { Layer, Marker, Popup, Source } from "react-map-gl";
+import { EditingMode, Editor } from "react-map-gl-draw";
 import { useSelector } from "react-redux";
-import { getTrackTabId } from "../../../../../controller/reducer/ui";
 import { getGeoJSON } from "../../../../../controller/reducer/asset";
 import {
   getGeoFence,
   getGeoRoute,
 } from "../../../../../controller/reducer/geo";
+import { getTrackTabId } from "../../../../../controller/reducer/ui";
+import Markers from "../../../../../data/constants/Markers";
+import { getEditHandleStyle, getFeatureStyle } from "./common/draw-styles";
+import DrawFenceTools from "./common/DrawFenceTools";
+import DrawRouteTools from "./common/DrawRouteTools";
+import { heatmapLayer } from "./common/map-style";
+import "./styles.css";
 
+/**
+ * Map Component
+ * @description
+ * For a particular asset:
+ * 1. shows map locating all previous locations
+ * 2. allows user to choose date range for locations
+ * 3. allows user to geofence and/or georoute the asset
+ * @param {Object} props.asset   Asset Information
+ * @param {object[]} props.locArray   contains Location (lat,lon,timestamp)
+ * @param {function} props.setGeoFence   Update Geo Fence Locally
+ * @param {function} props.setGeoRoute  Update Geo Route Locally
+ * @param {function} props.submitGeoFence   Update Geo Fence in Db
+ * @param {function} props.submitGeoRoute   Update Geo Route in Db
+ * @component
+ * @example
+ * return (
+ *  <Map asset={asset}
+ *    locArray={locArray}
+ *    setGeoFence={setGeoFence}
+ *    setGeoRoute={setGeoRoute}
+ *    submitGeoFence={submitGeoFence}
+ *    submitGeoRoute={submitGeoRoute}
+ *   />
+ * )
+ */
 function Map({
   asset,
   locArray,
@@ -24,9 +49,9 @@ function Map({
   submitGeoRoute,
 }) {
   const [viewport, setViewport] = useState({
-    latitude: 24,
-    longitude: 78,
-    zoom: 3,
+    latitude: locArray && locArray.length > 1 ? locArray[0].lat : 24,
+    longitude: locArray && locArray.length > 1 ? locArray[0].lon : 24,
+    zoom: locArray && locArray.length > 1 ? 3 : 1,
   });
 
   const [modeFence, setModeFence] = useState(null);
@@ -45,6 +70,7 @@ function Map({
   useEffect(() => {
     if (tabId === "3" && fenceEditorRef.current && geoFence) {
       fenceEditorRef.current.addFeatures(geoFence);
+      console.log(geoFence);
       console.log(fenceEditorRef.current.getFeatures());
     }
     if (tabId === "4" && routeEditorRef.current && geoRoute) {
@@ -68,18 +94,15 @@ function Map({
         if (ref === fenceEditorRef) {
           setGeoFence(data[0]);
           setModeFence(new EditingMode());
-        }
-        else {
+        } else {
+          console.log(data[0]);
           setGeoRoute(data[0]);
           setModeRoute(new EditingMode());
         }
-        
       }
     },
     []
   );
-
-
 
   const setModeValue = (ref) => (mode) => {
     ref.current.deleteFeatures(0);

@@ -1,16 +1,31 @@
-import "./style.css";
-import Map from "./map";
-import TypeSelector from "../widget/type";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getAssets, loadAssets, setAssetType } from "../../../../controller/reducer/assets";
-import { pageLoaded, getLoading } from "../../../../controller/reducer/ui";
+import {
+  getAssets,
+  loadAssets,
+  setAssetType
+} from "../../../../controller/reducer/assets";
+import {
+  getLoading,
+  getShowSidenav, pageLoaded
+} from "../../../../controller/reducer/ui";
+import Loader from "../widget/loader";
+import TypeSelector from "../widget/type";
+import Map from "./map";
+import "./style.css";
+import "./style.css";
 
-
-const Dashboard = ({dispatch}) => {
+/**
+ * Dashboard Component
+ * @description Shows Map with markers of all asset locations
+ * @component
+ * @example
+ * return (
+ *   <Dashboard dispatch={dispatch}/>
+ * )
+ */
+const Dashboard = ({ dispatch }) => {
   const assets = useSelector(getAssets);
-
-  const loading = useSelector(getLoading);
 
   useEffect(() => {
     dispatch(pageLoaded());
@@ -20,16 +35,22 @@ const Dashboard = ({dispatch}) => {
   const onSelect = (assetType) => {
     dispatch(setAssetType(assetType));
     dispatch(loadAssets());
-  }
+  };
+  const sidenav = useSelector(getShowSidenav);
+
+  if (useSelector(getLoading)) return <Loader />;
 
   return (
-    <div className="dashboard bg-light">
-       <div className="type-child">
-       <TypeSelector  onSelect={onSelect}/>
-       </div>
-   
+    <div
+      className="dashboard bg-light"
+      style={{ left: sidenav ? "200px" : "0px" }}
+    >
+      <div className="type-child">
+        <TypeSelector onSelect={onSelect} />
+      </div>
+
       <div className="map-child">
-        <Map assets={assets} dispatch={dispatch}/>
+        <Map assets={assets} dispatch={dispatch} />
       </div>
     </div>
   );

@@ -5,29 +5,39 @@ export const counterSlice = createSlice({
   initialState: {
     name: "",
     email: "",
-    token:'',//'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBlcnVsMzY1QGdtYWlsLmNvbSIsImlhdCI6MTYxNTQ3NTc3MH0.OgPINiPGMGz432TeWiCk5AC967JTRU1sOr-wuyOKfTc',
-    remember:false,
+    token: "", 
+    remember: false,
+    profile: {
+      male: true,
+      phone: 0,
+      address: "",
+      role: "Site Administrator",
+      about: "",
+    },
   },
   reducers: {
-    performSignin: ()=>{},
-    performSignUp:()=>{},
-    loadUser: (state,action) => {
-      console.log(action.payload);
-      state.name =  action.payload.name;
-      state.email =  action.payload.email;
-      state.token =  action.payload.token;
+    performSignin: () => {},
+    performSignUp: () => {},
+    loadUser: (state, action) => {
+      state.name = action.payload.name;
+      state.email = action.payload.email;
+      state.token = action.payload.token;
     },
     loadProfile: () => {},
-    removeUser: (state,action) =>  {
-      state.name =  '';
-      state.email =  '';
-      state.token =  '';
+    loadProfileSuccess: (state, action) => {
+      state.name = action.payload.name;
+      state.email = action.payload.email;
     },
-    setRemember:(state,action) =>  {
-      state.remember =  action.payload;
+    removeUser: (state, action) => {
+      state.name = "";
+      state.email = "";
+      state.token = "";
     },
-    loadLocalUser:()=>{},
-    performLogout:()=>{},
+    setRemember: (state, action) => {
+      state.remember = action.payload;
+    },
+    loadLocalUser: () => {},
+    performLogout: () => {},
   },
 });
 
@@ -35,11 +45,12 @@ export const {
   performSignin,
   performSignUp,
   loadProfile,
+  loadProfileSuccess,
   loadUser,
   removeUser,
   setRemember,
   loadLocalUser,
-  performLogout
+  performLogout,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

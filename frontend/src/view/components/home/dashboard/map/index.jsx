@@ -1,15 +1,27 @@
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import React, { useState } from "react";
-import "./styles.css";
-import Info from "../../widget/info";
+import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { setAssetInfo } from "../../../../../controller/reducer/asset";
 import Markers from "../../../../../data/constants/Markers";
+import Info from "../../widget/info";
+import "./styles.css";
 
+/**
+ * Map Component for Dashboard
+ * @description
+ * For all  assets, it shows map locating current locations
+ * @param {object[]} props.assets   contains Assets' Information
+ * @param {function} props.dispatch   Dispatch redux action
+ * @component
+ * @example
+ * return (
+ *  <Map assets={assets} dispatch={dispatch}/>
+ * )
+ */
 function Map({ assets, dispatch }) {
   const [viewport, setViewport] = useState({
-    latitude: 24,
-    longitude: 78,
-    zoom: 3,
+    latitude: assets && assets.length > 1 ? assets[0].lat : 24,
+    longitude: assets && assets.length > 1 ? assets[0].lon : 76,
+    zoom: assets && assets.length > 1 ? 3 : 1,
   });
 
   const [asset, setAsset] = useState(null);

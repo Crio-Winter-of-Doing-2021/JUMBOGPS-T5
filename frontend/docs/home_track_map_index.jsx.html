@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: home/track/map/index.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: home/track/map/index.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useCallback, useEffect, useRef, useState } from "react";
+import ReactMapGL, { Layer, Marker, Popup, Source } from "react-map-gl";
+import { EditingMode, Editor } from "react-map-gl-draw";
+import { useSelector } from "react-redux";
+import { getGeoJSON } from "../../../../../controller/reducer/asset";
+import {
+  getGeoFence,
+  getGeoRoute,
+} from "../../../../../controller/reducer/geo";
+import { getTrackTabId } from "../../../../../controller/reducer/ui";
+import Markers from "../../../../../data/constants/Markers";
+import { getEditHandleStyle, getFeatureStyle } from "./common/draw-styles";
+import DrawFenceTools from "./common/DrawFenceTools";
+import DrawRouteTools from "./common/DrawRouteTools";
+import { heatmapLayer } from "./common/map-style";
+import "./styles.css";
+
+/**
+ * Map Component
+ * @description
+ * For a particular asset:
+ * 1. shows map locating all previous locations
+ * 2. allows user to choose date range for locations
+ * 3. allows user to geofence and/or georoute the asset
+ * @param {Object} props.asset   Asset Information
+ * @param {object[]} props.locArray   contains Location (lat,lon,timestamp)
+ * @param {Function} props.setGeoFence   Update Geo Fence Locally
+ * @param {Function} props.setGeoRoute  Update Geo Route Locally
+ * @param {Function} props.submitGeoFence   Update Geo Fence in Db
+ * @param {Function} props.submitGeoRoute   Update Geo Route in Db
+ * @component
+ * @example
+ * return (
+ *  &lt;Map asset={asset}
+ *    locArray={locArray}
+ *    setGeoFence={setGeoFence}
+ *    setGeoRoute={setGeoRoute}
+ *    submitGeoFence={submitGeoFence}
+ *    submitGeoRoute={submitGeoRoute}
+ *   />
+ * )
+ */
+function Map({
+  asset,
+  locArray,
+  setGeoFence,
+  setGeoRoute,
+  submitGeoFence,
+  submitGeoRoute,
+}) {
+  const [viewport, setViewport] = useState({
+    latitude: locArray &amp;&amp; locArray.length > 1 ? locArray[0].lat : 24,
+    longitude: locArray &amp;&amp; locArray.length > 1 ? locArray[0].lon : 24,
+    zoom: locArray &amp;&amp; locArray.length > 1 ? 3 : 1,
+  });
+
+  const [modeFence, setModeFence] = useState(null);
+  const [modeRoute, setModeRoute] = useState(null);
+  const [point, setPoint] = useState(null);
+
+  const handleClick = (point) => setPoint(point);
+  const fenceEditorRef = useRef(null);
+  const routeEditorRef = useRef(null);
+
+  const tabId = useSelector(getTrackTabId);
+  const geoJSON = useSelector(getGeoJSON);
+  const geoFence = useSelector(getGeoFence);
+  const geoRoute = useSelector(getGeoRoute);
+
+  useEffect(() => {
+    if (tabId === "3" &amp;&amp; fenceEditorRef.current &amp;&amp; geoFence) {
+      fenceEditorRef.current.addFeatures(geoFence);
+      console.log(geoFence);
+      console.log(fenceEditorRef.current.getFeatures());
+    }
+    if (tabId === "4" &amp;&amp; routeEditorRef.current &amp;&amp; geoRoute) {
+      routeEditorRef.current.addFeatures(geoRoute);
+      console.log(routeEditorRef.current.getFeatures());
+    }
+  }, [tabId]);
+
+  const onDelete = useCallback(
+    (ref) => () => {
+      if (ref === fenceEditorRef) setGeoFence(null);
+      else setGeoRoute(null);
+      ref.current.deleteFeatures(0);
+    },
+    []
+  );
+
+  const onUpdate = useCallback(
+    (ref) => ({ editType, data }) => {
+      if (editType === "addFeature") {
+        if (ref === fenceEditorRef) {
+          setGeoFence(data[0]);
+          setModeFence(new EditingMode());
+        } else {
+          console.log(data[0]);
+          setGeoRoute(data[0]);
+          setModeRoute(new EditingMode());
+        }
+      }
+    },
+    []
+  );
+
+  const setModeValue = (ref) => (mode) => {
+    ref.current.deleteFeatures(0);
+    if (ref === fenceEditorRef) setModeFence(mode);
+    else setModeRoute(mode);
+  };
+
+  return (
+    &lt;ReactMapGL
+      className="map"
+      {...viewport}
+      width="100%"
+      height="100%"
+      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      mapStyle="mapbox://styles/tazril/cklo46zze4zoz17pg8tp1oyms"
+      onViewportChange={(nextViewport) => setViewport(nextViewport)}
+    >
+      {tabId !== "2" &amp;&amp;
+        asset &amp;&amp;
+        locArray.map((loc, id) => (
+          &lt;Marker latitude={loc.lat} longitude={loc.lon} key={id}>
+            &lt;img
+              className="marker "
+              onClick={() => (tabId === "1" ? handleClick(loc) : null)}
+              src={
+                asset.type === "truck"
+                  ? Markers.truck
+                  : asset.type === "salesman"
+                  ? Markers.salesman
+                  : Markers.simple
+              }
+              alt="marker"
+            />
+          &lt;/Marker>
+        ))}
+      {tabId === "1" &amp;&amp; point &amp;&amp; (
+        &lt;Popup
+          className="popup"
+          latitude={point.lat}
+          longitude={point.lon}
+          closeButton={true}
+          onClose={() => setPoint(null)}
+        >
+          &lt;p className="font-weight-normal">
+            Latitude : {point.lat}
+            &lt;br />
+            Longitude : {point.lat} &lt;br /> Reached:{" "}
+            {new Date(point.timestamp).toUTCString()}
+          &lt;/p>
+        &lt;/Popup>
+      )}
+      {tabId === "2" &amp;&amp; (
+        &lt;Source type="geojson" data={geoJSON}>
+          &lt;Layer {...heatmapLayer} />
+        &lt;/Source>
+      )}
+      {tabId === "3" &amp;&amp; (
+        &lt;Editor
+          ref={fenceEditorRef}
+          style={{ width: "100%", height: "100%" }}
+          clickRadius={12}
+          mode={modeFence}
+          onUpdate={onUpdate(fenceEditorRef)}
+          editHandleShape={"circle"}
+          featureStyle={getFeatureStyle}
+          editHandleStyle={getEditHandleStyle}
+        />
+      )}
+      {tabId === "3" &amp;&amp; (
+        &lt;DrawFenceTools
+          onDelete={onDelete(fenceEditorRef)}
+          setMode={setModeValue(fenceEditorRef)}
+          submit={submitGeoFence}
+        />
+      )}
+      {tabId === "4" &amp;&amp; (
+        &lt;Editor
+          ref={routeEditorRef}
+          style={{ width: "100%", height: "100%" }}
+          clickRadius={12}
+          mode={modeRoute}
+          onUpdate={onUpdate(routeEditorRef)}
+          editHandleShape={"circle"}
+          featureStyle={getFeatureStyle}
+          editHandleStyle={getEditHandleStyle}
+        />
+      )}
+      {tabId === "4" &amp;&amp; (
+        &lt;DrawRouteTools
+          onDelete={onDelete(routeEditorRef)}
+          setMode={setModeValue(routeEditorRef)}
+          submit={submitGeoRoute}
+        />
+      )}
+    &lt;/ReactMapGL>
+  );
+}
+
+export default Map;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#notify">notify</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Mar 26 2021 19:00:58 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

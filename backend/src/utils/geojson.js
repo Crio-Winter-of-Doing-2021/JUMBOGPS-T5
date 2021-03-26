@@ -7,9 +7,10 @@ var convert = (coordinates)=>{
 
 var parses = (data)=>{
     
-    data.geometry = geojson.toGeoJSON(data.coordinates[0], 'LineString')
-
-    return data
+    return { 
+        geometry:{type:data.geometry.type,coordinates:data.coordinates[0]},
+        properties:data.properties
+    };
 }
 
 module.exports = [convert, parses]

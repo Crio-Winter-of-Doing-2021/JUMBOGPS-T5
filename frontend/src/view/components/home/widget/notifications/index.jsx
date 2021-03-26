@@ -1,9 +1,10 @@
+import moment from "moment";
 import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { getNotifications } from "../../../../../controller/reducer/geo";
 import "./styles.css";
-import moment from "moment";
+
 
 const message = (item) => {
   return (
@@ -22,10 +23,11 @@ function Notifications({}) {
         notifications.map((item, id) => (
           <ListGroup.Item key={id}>{message(item)}</ListGroup.Item>
         ))}
-      {/* <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-      <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-      <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-      <ListGroup.Item>Vestibulum at eros</ListGroup.Item> */}
+      {notifications.length===0 && (
+        <h1 className="h4 font-weight-light">
+          No Notifications available for this Asset
+        </h1>
+      )}
     </ListGroup>
   );
 }

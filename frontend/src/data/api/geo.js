@@ -3,14 +3,14 @@ import * as Urls from "../constants/Urls";
 
 
 export const getGeoFence = (authToken,assetId) =>
-  axios.get(Urls.geoFenceUrl(assetId), {
+  axios.get(Urls.getGeoFenceUrl(assetId), {
     headers: {
       Authorization: `Token ${authToken}`,
     },
   });
 
   export const getGeoRoute = (authToken,assetId) =>
-  axios.get(Urls.geoRouteUrl(assetId), {
+  axios.get(Urls.getGeoRouteUrl(assetId), {
     headers: {
       Authorization: `Token ${authToken}`,
     },

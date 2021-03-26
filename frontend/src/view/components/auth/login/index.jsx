@@ -5,8 +5,8 @@ import { getRemember, performSignin, setRemember } from "../../../../controller/
 import "./styles.css";
 
 const SignIn = ({ toggle, notify, dispatch }) => {
-  const [email, setEmail] = useState("tazrilparvez96@gmail.com");
-  const [password, setPassword] = useState("1234");
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const remember = useSelector(getRemember);
   
   const login = (e)=>{

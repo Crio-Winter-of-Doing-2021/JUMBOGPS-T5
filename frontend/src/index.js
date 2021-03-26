@@ -5,7 +5,7 @@ import App from './view/App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import  configStore  from './controller/configStore';
-import services from './data/api/index';
+import services from './data/index';
 import { Provider } from "react-redux";
 
 ReactDOM.render(

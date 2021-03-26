@@ -4,7 +4,7 @@ export const counterSlice = createSlice({
   name: "assets",
   initialState: {
     assetList: [],
-    assetType:"",
+    assetType: "",
     error: null,
   },
   reducers: {
@@ -16,7 +16,6 @@ export const counterSlice = createSlice({
     setAssetType: (state, action) => {
       state.assetType = action.payload;
     },
-
   },
 });
 
@@ -32,5 +31,3 @@ export default counterSlice.reducer;
 export const getAssets = (state) => state.assets.assetList;
 
 export const getAssetType = (state) => state.assets.assetType;
-
-

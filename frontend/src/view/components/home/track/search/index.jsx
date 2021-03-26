@@ -7,9 +7,7 @@ import {
   loadAsset,
   setAssetInfo,
 } from "../../../../../controller/reducer/asset";
-import {
-  getAssets,
-} from "../../../../../controller/reducer/assets";
+import { getAssets } from "../../../../../controller/reducer/assets";
 
 const controlStyles = {
   padding: "10px",

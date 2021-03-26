@@ -1,10 +1,17 @@
 import {
   loadAssets,
   loadAssetsSuccess,
-  loadAssetsFailure,
 } from "../reducer/assets";
 import * as uiActions from "../reducer/ui";
 
+/**
+* Asset List  Middleware
+* @description
+* Make API Call to get all assets
+* Dispatches loadAssetsSuccess(response.data) ,setGeoJSON(geoJSON), 
+* Dispatches setError(err) on failure.
+* @param {function} services.getAssetList get asset list api 
+*/
 const loadAssetsFlow = ({ getAssetList }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -16,18 +23,14 @@ const loadAssetsFlow = ({ getAssetList }) => ({ dispatch, getState }) => (
         getState().user.token,
         getState().assets.assetType
       );
-      console.log(response.data);
       dispatch(loadAssetsSuccess(response.data));
     } catch (error) {
-      dispatch(loadAssetsFailure(error));
+      dispatch(uiActions.setError(error));
     }
     dispatch(uiActions.setLoading(false));
   }
 };
 
-
-const assetsFlow = [
-  loadAssetsFlow,
-];
+const assetsFlow = [loadAssetsFlow];
 
 export default assetsFlow;

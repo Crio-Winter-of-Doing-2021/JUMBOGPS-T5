@@ -28,7 +28,6 @@ export const counterSlice = createSlice({
     setGeoRoute: (state, action) => {
       state.geoRoute = action.payload;
     },
-
   },
 });
 
@@ -43,15 +42,13 @@ export const {
   updateGeoFence,
   updateGeoRoute,
   setGeoFence,
-  setGeoRoute
+  setGeoRoute,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
-
 
 export const getGeoFence = (state) => state.geo.geoFence;
 
 export const getGeoRoute = (state) => state.geo.geoRoute;
 
 export const getNotifications = (state) => state.geo.notifications;
-

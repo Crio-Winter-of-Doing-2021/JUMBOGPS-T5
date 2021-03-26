@@ -3,11 +3,22 @@ import { Button, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { getShowLogout } from "../../../../../controller/reducer/ui";
 
-const LogoutModal = ({onClose,logout}) => {
+/**
+ * Logout Modal Component
+ * @description Displays a overlay for confirming logout action
+ * @param {function} props.onClose   Close Logout Modal
+ * @param {function} props.logout   perform logout
+ * @component
+ * @example
+ * return (
+ *   <LogoutModal onClose={onClose} logout={logout}/>
+ * )
+ */
+const LogoutModal = ({ onClose, logout }) => {
   const showLogoutModal = useSelector(getShowLogout);
 
   return (
-    <Modal show={showLogoutModal}  onHide={onClose}>
+    <Modal show={showLogoutModal} animation={false} onHide={onClose}>
       <Modal.Header closeButton>
         <Modal.Title>Sign Out</Modal.Title>
       </Modal.Header>

@@ -3,16 +3,12 @@ import { Nav } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { getTrackTabId } from "../../../../../controller/reducer/ui";
 
-function Tabs({onSelect}) {
+function Tabs({ onSelect }) {
   const tabId = useSelector(getTrackTabId);
   return (
-    <Nav
-      variant="pills"
-      activeKey={tabId}
-      onSelect={onSelect}
-    >
-      <Nav.Item  >
-        <Nav.Link  eventKey="1">Normal</Nav.Link>
+    <Nav variant="pills" activeKey={tabId} onSelect={onSelect}>
+      <Nav.Item>
+        <Nav.Link eventKey="1">Normal</Nav.Link>
       </Nav.Item>
       <Nav.Item>
         <Nav.Link eventKey="2">Heatmap</Nav.Link>

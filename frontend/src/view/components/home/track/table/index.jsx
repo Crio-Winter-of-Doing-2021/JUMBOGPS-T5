@@ -1,41 +1,33 @@
-import React from 'react';
-import { useSelector } from "react-redux";
-import {
-  Table,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-  Popover,
-} from "react-bootstrap";
-import { getAssets } from "../../../../../controller/reducer/assets";
-import Info from "../../widget/info";
-import moment from 'moment';
+import moment from "moment";
+import React from "react";
+import { Table } from "react-bootstrap";
 
-const DataTable = ({dispatch,  track}) => {
-
-    if(!track)  return <div></div>
-    return (
-        <Table striped bordered hover variant="light">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Reached</th>
+const DataTable = ({ dispatch, track }) => {
+  if (!track) return <div></div>;
+  return (
+    <Table striped bordered hover variant="light">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Reached</th>
+        </tr>
+      </thead>
+      <tbody>
+        {track.map((point, id) => (
+          <tr key={id}>
+            <td>{id}</td>
+            <td>{point.lat}</td>
+            <td>{point.lon}</td>
+            <td>
+              {moment(point.timestamp).format("dddd, MMMM Do YYYY, h:mm:ss a")}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {track.map((point, id) => (
-              <tr key={id}>
-                <td>{id}</td>
-                <td>{point.lat}</td>
-                <td>{point.lon}</td>
-                <td>{moment(point.timestamp).format("dddd, MMMM Do YYYY, h:mm:ss a")}</td>
-              </tr>
-          ))}
-        </tbody>
-      </Table>
-    )
-}
+        ))}
+      </tbody>
+    </Table>
+  );
+};
 
 export default DataTable;

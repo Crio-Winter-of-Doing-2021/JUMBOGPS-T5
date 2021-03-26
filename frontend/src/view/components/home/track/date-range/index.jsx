@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import "./styles.css";
-import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import moment from "moment";
-import { setDateRange } from "../../../../../controller/reducer/asset";
+import React, { useState } from "react";
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import { useSelector } from "react-redux";
+import { setDateRange, getDateRange } from "../../../../../controller/reducer/asset";
+import "./styles.css";
 
 const momentStart = () =>
   moment().set("hour", 0).set("minute", 0).set("second", 0);
@@ -36,9 +37,11 @@ const dateRanges = {
 };
 
 const DateRangeSelector = ({ dispatch }) => {
+  const dateRange = useSelector(getDateRange);
+
   const [state, setState] = useState({
-    start: dateRanges.Whole[0],
-    end: dateRanges.Whole[1],
+    start: dateRange.start ? moment(dateRange.start) :  dateRanges.Whole[0],
+    end: dateRange.end ? moment(dateRange.end) :  dateRanges.Whole[1],
   });
   const { start, end } = state;
   const handleCallback = (start, end) => {

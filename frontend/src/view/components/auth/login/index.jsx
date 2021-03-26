@@ -1,8 +1,8 @@
-import React, {useState} from "react";
-import "./styles.css";
-import { Form, Button } from "react-bootstrap";
-import { getRemember, performSignin,setRemember  } from "../../../../controller/reducer/user";
+import React, { useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { getRemember, performSignin, setRemember } from "../../../../controller/reducer/user";
+import "./styles.css";
 
 const SignIn = ({ toggle, notify, dispatch }) => {
   const [email, setEmail] = useState("tazrilparvez96@gmail.com");

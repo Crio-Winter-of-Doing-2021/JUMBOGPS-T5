@@ -1,40 +1,59 @@
 import React from "react";
-import { Card, Button, } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
+import { AssetProperties } from "../../../../../data/constants/Asset";
 import "./styles.css";
 
-const properties = ["modelNo", "companyName", "employeeId", "address"];
-const propValues = ["Model Number", "Company Name", "Employee Id", "Address"];
-
+/**
+ * Info Component
+ * @description
+ * Card containing all information about the asset. It is used by
+ * 1. Dashboard with minimal = false
+ * 2. AssetList with minimal = true
+ * @param {Object} props.asset   Asset information
+ * @param {function} props.onClose   Close Popup
+ * @param {function} props.onSelectAsset   Track selected asset
+ * @param {function} props.minimal   Toggle UIs
+ * @component
+ * @example
+ * return (
+ *   <Info asset={asset} onClose={onClose} onSelectAsset={onSelectAsset} minimal={true}/>
+ * )
+ */
 function Info({ asset, onClose, onSelectAsset, minimal }) {
   if (!asset) return <div> </div>;
   return (
     <div className="d-flex align-items-center">
-      {!minimal && <Card.Img
-        src={asset.image_url}
-        style={{ height: "300px", width: "300px " }}
-      />}
+      {!minimal && (
+        <Card.Img
+          src={asset.image_url}
+          style={{ height: "300px", width: "300px " }}
+        />
+      )}
       <div className="info" style={{ width: "18rem" }}>
         <Card.Body>
           <Card.Title>{asset.name}</Card.Title>
           <Card.Text>{asset.desc}</Card.Text>
-          {properties
-            .map((prop, id) => ({ prop, id }))
-            .filter(({ prop }) => asset.body[prop])
-            .map(({ prop, id }) => (
-              <p key={id}>
-                <strong>{propValues[id]}</strong>: {asset.body[prop]}
+          {AssetProperties.filter(({ value, label }) => asset.body[value]).map(
+            ({ value, label }) => (
+              <p key={value}>
+                <strong>{label}</strong>: {asset.body[value]}
               </p>
-            ))}
-          {!minimal && <Button variant="primary" onClick={() => onSelectAsset(asset._id)}>
-            Track
-          </Button>}
-         {!minimal &&  <Button
-            variant="outline-secondary"
-            className="ml-2"
-            onClick={onClose}
-          >
-            Close
-          </Button>}
+            )
+          )}
+          {!minimal && (
+            <Button variant="primary" onClick={() => onSelectAsset(asset._id)}>
+              Track
+            </Button>
+          )}
+          {!minimal && (
+            <Button
+              variant="outline-secondary"
+              className="ml-2"
+              onClick={onClose}
+            >
+              Close
+            </Button>
+          )}
         </Card.Body>
       </div>
     </div>
@@ -42,10 +61,3 @@ function Info({ asset, onClose, onSelectAsset, minimal }) {
 }
 
 export default Info;
-
-Info.defaultProps = {
-  minimal : false,
-  onSelectAsset : ()=>{},
-  onClose : ()=>{},
-  asset : null
-}

@@ -5,11 +5,19 @@ import {
   loadGeoRouteSuccess,
   loadNotifications,
   loadNotificationsSuccess,
-  updateGeoRoute,
   updateGeoFence,
+  updateGeoRoute,
 } from "../reducer/geo";
 import * as uiActions from "../reducer/ui";
 
+/**
+* Geo Fence Middleware
+* @description
+* Make API Call to get geofence object for selected asset
+* Dispatches loadGeoFenceSuccess(response.data) on success
+* Dispatches setError(err) on failure.
+* @param {function} services.getGeoFence get asset geofence api 
+*/
 const geoFenceFlow = ({ getGeoFence }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -21,7 +29,7 @@ const geoFenceFlow = ({ getGeoFence }) => ({ dispatch, getState }) => (
         getState().user.token,
         getState().asset.assetInfo.id
       );
-      console.log(response.data);
+      
       dispatch(loadGeoFenceSuccess(response.data));
     } catch (error) {
       dispatch(uiActions.setError(error));
@@ -30,6 +38,14 @@ const geoFenceFlow = ({ getGeoFence }) => ({ dispatch, getState }) => (
   }
 };
 
+/**
+* Geo Route Middleware
+* @description
+* Make API Call to get georoute object for selected asset
+* Dispatches loadGeoRouteSuccess(response.data) on success
+* Dispatches setError(err) on failure.
+* @param {function} services.getGeoRoute get asset georoute api 
+*/
 const geoRouteFlow = ({ getGeoRoute }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -41,7 +57,7 @@ const geoRouteFlow = ({ getGeoRoute }) => ({ dispatch, getState }) => (
         getState().user.token,
         getState().asset.assetInfo.id
       );
-      console.log(response.data);
+      
       dispatch(loadGeoRouteSuccess(response.data));
     } catch (error) {
       dispatch(uiActions.setError(error));
@@ -50,49 +66,72 @@ const geoRouteFlow = ({ getGeoRoute }) => ({ dispatch, getState }) => (
   }
 };
 
+/**
+* Updated Geo Fence Middleware
+* @description
+* Make API Call to put geofence object for selected asset
+* Dispatches setSuccessToast(message) on success
+* Dispatches setError(err) on failure. 
+* @param {function} services.putGeoFence put asset geofence api 
+*/
 const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
   next(action);
-  // console.log("put", getState().geo.geoFence);
   if (action.type === updateGeoFence.type) {
-    dispatch(uiActions.setLoading(true));
     try {
       const response = await putGeoFence(
         getState().user.token,
         getState().asset.assetInfo.id,
         getState().geo.geoFence
       );
-      console.log(response.data);
-      // dispatch(putGeoFenceFlow(response.data));
+      
+      const message =
+        "Geo Fence Updated for Asset " + getState().asset.assetInfo.name;
+      dispatch(uiActions.setSuccessToast(message));
     } catch (error) {
       dispatch(uiActions.setError(error));
     }
-    dispatch(uiActions.setLoading(false));
   }
 };
 
+/**
+* Updated Geo Route Middleware
+* @description
+* Make API Call to put georoute object for selected asset
+* Dispatches setSuccessToast(message)  on success
+* Dispatches setError(err) on failure.
+* @param {function} services.putGeoRoute put asset georoute api 
+*/
 const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
   next(action);
   if (action.type === updateGeoRoute.type) {
-    dispatch(uiActions.setLoading(true));
     try {
       const response = await putGeoRoute(
         getState().user.token,
         getState().asset.assetInfo.id,
         getState().geo.geoRoute
       );
-      console.log(response.data);
-      // dispatch(putGeoFenceFlow(response.data));
+      
+      const message =
+        "Geo Route Updated for Asset " + getState().asset.assetInfo.name;
+      dispatch(uiActions.setSuccessToast(message));
     } catch (error) {
       dispatch(uiActions.setError(error));
     }
-    dispatch(uiActions.setLoading(false));
   }
 };
 
+/**
+* Notifications Middleware
+* @description
+* Make API Call to get notification list for selected asset
+* Dispatches loadNotificationsSuccess(response.data) on success
+* Dispatches setError(err) on failure.
+* @param {function} services.getGeoFence get asset geofence api 
+*/
 const geoNotificationsFlow = ({ getNotifications }) => ({
   dispatch,
   getState,
@@ -105,7 +144,7 @@ const geoNotificationsFlow = ({ getNotifications }) => ({
         getState().user.token,
         getState().asset.assetInfo.id
       );
-      console.log(response.data);
+      
       dispatch(loadNotificationsSuccess(response.data));
     } catch (error) {
       dispatch(uiActions.setError(error));

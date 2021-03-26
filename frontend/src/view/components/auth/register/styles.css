@@ -20,3 +20,12 @@
   height: 2px;
   background-color: white;
 }
+
+@media screen and (max-width: 1200px) {
+  .inner-box-layout{
+    width: 60%;
+  }
+  .headline {
+    font-size: 60px;
+  }
+}

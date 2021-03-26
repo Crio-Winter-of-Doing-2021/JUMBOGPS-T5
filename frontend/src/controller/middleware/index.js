@@ -1,8 +1,8 @@
-import ui from './ui';
 import asset from './asset';
 import assets from './assets';
-import user from './user';
 import geo from './geo';
+import ui from './ui';
+import user from './user';
 
 const flows = [
     ...ui,

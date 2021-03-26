@@ -1,9 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { ButtonGroup, ToggleButton } from "react-bootstrap";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getAssetType } from "../../../../../controller/reducer/assets";
 import Toggle from "../toggle";
 
+/**
+ * Type Selector Component
+ * @description
+ * Select Types of Asset to be shown
+ * @param {function} props.onSelect   selects asset type
+ * @component
+ * @example
+ * return (
+ *   <TypeSelector onSelect={onSelect} />
+ * )
+ */
 const TypeSelector = ({ onSelect }) => {
   const assetType = useSelector(getAssetType);
 

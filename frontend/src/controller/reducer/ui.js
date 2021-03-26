@@ -8,6 +8,8 @@ export const counterSlice = createSlice({
     tabId: "1",
     trackTabId: "1",
     error: "",
+    message: "",
+    showSideNav: true,
   },
   reducers: {
     pageLoaded: () => {},
@@ -17,18 +19,27 @@ export const counterSlice = createSlice({
       showLogoutModal: action.payload,
     }),
     setTabId: (state, action) => ({ ...state, tabId: action.payload }),
-    setTrackTabId: (state, action) => ({ ...state, trackTabId: action.payload }),
+    setTrackTabId: (state, action) => ({
+      ...state,
+      trackTabId: action.payload,
+    }),
     setError: (state, action) => ({ ...state, error: action.payload }),
+    setSuccessToast: (state, action) => ({ ...state, message: action.payload }),
+    toggleSidenav: (state) => {
+      state.showSideNav = !state.showSideNav;
+    },
   },
 });
 
 export const {
+  setSuccessToast,
   pageLoaded,
   setLoading,
   setshowLogoutModal,
   setTabId,
   setError,
   setTrackTabId,
+  toggleSidenav,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -41,4 +52,8 @@ export const getTabId = (state) => state.ui.tabId;
 
 export const getError = (state) => state.ui.error;
 
+export const getToastMessage = (state) => state.ui.message;
+
 export const getTrackTabId = (state) => state.ui.trackTabId;
+
+export const getShowSidenav = (state) => state.ui.showSideNav;

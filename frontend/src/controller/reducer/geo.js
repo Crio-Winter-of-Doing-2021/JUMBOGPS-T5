@@ -11,6 +11,7 @@ export const counterSlice = createSlice({
     loadGeoFence: () => {},
     loadGeoFenceSuccess: (state, action) => {
       state.geoFence = action.payload.data;
+      if(!state.geoFence.properties) state.geoFence.properties = {};
     },
     updateGeoFence: () => {},
     loadGeoRoute: () => {},

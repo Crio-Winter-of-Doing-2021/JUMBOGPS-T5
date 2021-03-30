@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { getUser } from "../../../../controller/reducer/user";
 import maleIcon from "../../../../assets/illustrations/male.svg";
 import femaleIcon from "../../../../assets/illustrations/female.svg";
@@ -18,7 +18,8 @@ import { getLoading, getShowSidenav } from "../../../../controller/reducer/ui";
  *   <Profile dispatch={dispatch}/>
  * )
  */
-const Profile = ({ dispatch }) => {
+const Profile = ({  }) => {
+  const dispatch = useDispatch();
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const user = useSelector(getUser);

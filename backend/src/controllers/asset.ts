@@ -230,27 +230,33 @@ exports.getAssets = async (req: Request, res: Response) => {
 };
 
 exports.getAsset = async (req: Request, res: Response) => {
-  const asset_data = await Asset.findOne({ _id: req.params._id }).exec();
-  if (!asset_data) {
-    return res.status(422).json({
-      error: { message: "Asset does not exist" },
-    });
-  }
-  const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
+ 
+   await Asset.findOne({ _id: req.params._id },
+    async (err: any, asset_data: any) => {
+      if (err || !asset_data) {
+        return res.status(401).json({
+          error:  { message: "Asset does not exist" },
+          data: {}
+        });
+      }
 
-  const geofence_data = await GeoFence.findOne({ _id: req.params._id }).exec();
+      const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
 
-  const georoute_data = await GeoRoute.findOne({ _id: req.params._id }).exec();
+      const geofence_data = await GeoFence.findOne({ _id: req.params._id }).exec();
 
-  return res.status(200).json({
-    data: {
-      asset_data,
-      track: track_data.track,
-      geofence: geofence_data,
-      georoute: parses(georoute_data)
-    },
-    error: {},
-  });
+      const georoute_data = await GeoRoute.findOne({ _id: req.params._id }).exec();
+
+      return res.status(200).json({
+        data: {
+          asset_data,
+          track: track_data.track,
+          geofence: geofence_data,
+          georoute: parses(georoute_data)
+        },
+        error: {},
+      });
+    })
+
 };
 
 exports.getAssetByTime = async (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getAssets,
   loadAssets,
@@ -24,15 +24,16 @@ import "./style.css";
  *   <Dashboard dispatch={dispatch}/>
  * )
  */
-const Dashboard = ({ dispatch }) => {
+const Dashboard = ({ }) => {
   const assets = useSelector(getAssets);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(pageLoaded());
   }, [dispatch]);
 
   // console.log("assets ", assets, "loading", loading);
-  const onSelect = (assetType) => {
+  const onSelect =  (assetType) => {
     dispatch(setAssetType(assetType));
     dispatch(loadAssets());
   };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAssetInfo } from "../../../../controller/reducer/asset";
 import { loadAssets, setAssetType } from "../../../../controller/reducer/assets";
 import { getLoading, getShowSidenav, pageLoaded } from "../../../../controller/reducer/ui";
@@ -17,7 +17,9 @@ import DataTable from "./table";
  *   <AssetList dispatch={dispatch}/>
  * )
  */
-const AssetList = ({ dispatch }) => {
+const AssetList = ({  }) => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(pageLoaded());
   }, [dispatch]);
@@ -27,9 +29,9 @@ const AssetList = ({ dispatch }) => {
     dispatch(loadAssets());
   };
 
-  const onSelectTableItem = (id, name) => {
-    dispatch(setAssetInfo({ id, name }));
-  };
+  // const onSelectTableItem = (id, name) => {
+  //   dispatch(setAssetInfo({ id, name }));
+  // };
   const sidenav = useSelector(getShowSidenav);
   if (useSelector(getLoading)) return <Loader />;
 
@@ -41,7 +43,7 @@ const AssetList = ({ dispatch }) => {
       <h1 className="h2  font-weight-normal">All Assets</h1>
       <hr></hr>
       <TypeSelector onSelect={onSelectTypeSelector} />
-      <DataTable onSelect={onSelectTableItem} />
+      <DataTable />
     </div>
   );
 };

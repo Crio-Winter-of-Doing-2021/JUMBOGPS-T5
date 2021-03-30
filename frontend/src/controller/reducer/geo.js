@@ -10,13 +10,14 @@ export const counterSlice = createSlice({
   reducers: {
     loadGeoFence: () => {},
     loadGeoFenceSuccess: (state, action) => {
-      state.geoFence = action.payload.data;
-      if(!state.geoFence.properties) state.geoFence.properties = {};
+      state.geoFence = action.payload;
+      if (!state.geoFence.properties)
+        state.geoFence = { ...state.geoFence, properties: {} };
     },
     updateGeoFence: () => {},
     loadGeoRoute: () => {},
     loadGeoRouteSuccess: (state, action) => {
-      state.geoRoute = action.payload.data;
+      state.geoRoute = action.payload;
     },
     setGeoFence: (state, action) => {
       state.geoFence = action.payload;

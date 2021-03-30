@@ -70,9 +70,9 @@ function Map({ assets, dispatch }) {
           <Info
             asset={asset}
             onClose={() => setAsset(null)}
-            onSelectAsset={(id) =>
-              dispatch(setAssetInfo({ id: id, name: asset.name }))
-            }
+            // onSelectAsset={(id) =>
+            //   dispatch(setAssetInfo({ id: id, name: asset.name }))
+            // }
           />
         </Popup>
       )}

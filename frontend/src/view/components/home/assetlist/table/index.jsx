@@ -2,11 +2,13 @@ import moment from "moment";
 import React from "react";
 import { Button, OverlayTrigger, Popover, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { getAssets } from "../../../../../controller/reducer/assets";
 import Info from "../../widget/info";
 
-const DataTable = ({ onSelect }) => {
+const DataTable = ({  }) => {
   const assets = useSelector(getAssets);
+  const history = useHistory();
 
   const renderDetailsOverlay = (asset) => (
     <Popover className="popover">
@@ -49,7 +51,10 @@ const DataTable = ({ onSelect }) => {
               <td>
                 <Button
                   variant="outline-primary"
-                  onClick={() => onSelect(asset._id, asset.name)}
+                  onClick={() => {
+                    // onSelect(asset._id, asset.name);
+                    history.push("/track/"+asset._id);
+                  }}
                 >
                   Track
                 </Button>

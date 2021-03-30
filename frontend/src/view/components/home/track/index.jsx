@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getAsset,
   getAssetInfo,
   getGeoJSON,
   loadAsset,
+  setAssetInfo,
 } from "../../../../controller/reducer/asset";
+import { getAssetsLength, loadAssets } from "../../../../controller/reducer/assets";
 import {
   setGeoFence,
   setGeoRoute,
@@ -16,6 +18,8 @@ import {
 import {
   getLoading,
   getShowSidenav,
+  getTabId,
+  setTabId,
   setTrackTabId,
 } from "../../../../controller/reducer/ui";
 import Loader from "../widget/loader";
@@ -43,10 +47,12 @@ import Tabs from "./tabs";
  *   <Track dispatch={dispatch}/>
  * )
  */
-const Track = ({ dispatch }) => {
+const Track = ({ match }) => {
+  const dispatch = useDispatch();
   const asset = useSelector(getAsset);
+  const noOfAssets = useSelector(getAssetsLength);
   const assetInfo = useSelector(getAssetInfo);
-  const geoJSON = useSelector(getGeoJSON);
+  const tabId = useSelector(getTabId);
 
   const setGeoFenceData = (data) => dispatch(setGeoFence(data));
   const setGeoRouteData = (data) => dispatch(setGeoRoute(data));
@@ -55,13 +61,18 @@ const Track = ({ dispatch }) => {
   const onSelectTab = (key) => dispatch(setTrackTabId(key));
 
   useEffect(() => {
-    if (assetInfo.id) dispatch(loadAsset());
-  }, [dispatch]);
+    if (match.params.id !== "none" || match.params.id!==assetInfo.id) {
+      dispatch(loadAsset(match.params.id));
+    }
+    if(tabId!=="2") dispatch(setTabId("2"));
+    if(noOfAssets===0) dispatch(loadAssets());
+  }, [match.params.id]);
+
 
   const sidenav = useSelector(getShowSidenav);
   if (useSelector(getLoading)) return <Loader />;
 
-  if (!assetInfo.name || !asset) {
+  if (match.params.id === "none" ||  !asset.asset_data) {
     return (
       <div
         className="track bg-light"
@@ -107,19 +118,19 @@ const Track = ({ dispatch }) => {
           submitGeoRoute={submitGeoRoute}
         />
       </div>
-      <div className="card-view ">
+      <div className="card-view" id="notifications">
         <h1 className="h3 font-weight-normal">Notifications</h1>
         <hr />
         <Notifications />
       </div>
       <br />
-      <div className="card-view ">
+      <div className="card-view " id="information">
         <h1 className="h3 font-weight-normal">Information</h1>
         <hr />
         <Info asset={asset.asset_data} />
       </div>
       <br />
-      <div className="table-view">
+      <div className="table-view" id="table">
         <h1 className="h3 font-weight-normal">Track List</h1>
         <hr />
         <DataTable dispatch={dispatch} track={asset.track} />

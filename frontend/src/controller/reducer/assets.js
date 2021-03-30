@@ -30,4 +30,6 @@ export default counterSlice.reducer;
 
 export const getAssets = (state) => state.assets.assetList;
 
+export const getAssetsLength = (state) => state.assets.assetList.length;
+
 export const getAssetType = (state) => state.assets.assetType;

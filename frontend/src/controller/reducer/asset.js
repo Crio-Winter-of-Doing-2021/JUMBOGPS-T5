@@ -13,6 +13,8 @@ export const counterSlice = createSlice({
     loadAsset: () => {},
     loadAssetSuccess: (state, action) => {
       state.asset = action.payload.data;
+      state.assetInfo.id = state.asset.asset_data._id;
+      state.assetInfo.name = state.asset.asset_data.name;
     },
     setGeoJSON: (state, action) => {
       state.geoJSON = action.payload;

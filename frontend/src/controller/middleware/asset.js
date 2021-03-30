@@ -2,15 +2,18 @@ import moment from "moment";
 import {
   loadAsset,
   loadAssetSuccess,
-  setAssetInfo,
   setDateRange,
   setGeoJSON,
 } from "../reducer/asset";
-import { loadGeoFence, loadGeoRoute, loadNotifications } from "../reducer/geo";
+import {
+  loadGeoFenceSuccess,
+  loadGeoRouteSuccess,
+  loadNotifications,
+} from "../reducer/geo";
 import * as uiActions from "../reducer/ui";
 
 function arrayToGeoJSON(track) {
-  const ts = track[0].timestamp;
+  const ts = (track.length===0) ? 'invalid' : track[0].timestamp;
   const features = track.map((item) => ({
     type: "Feature",
     geometry: { type: "Point", coordinates: [item.lon, item.lat] },
@@ -25,14 +28,14 @@ function arrayToGeoJSON(track) {
 }
 
 /**
-* Track Asset  Middleware
-* @description
-* Make API Call to get all locations for a particular Asset. Performs converting to GeoJSON operation.
-* Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON), 
-* loadNotifications(), loadGeoFence(), loadGeoRoute() on success.
-* Dispatches setError(err) on failure.
-* @param {function} services.getAssetTrack get asset api 
-*/
+ * Track Asset  Middleware
+ * @description
+ * Make API Call to get all locations for a particular Asset. Performs converting to GeoJSON operation.
+ * Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON),
+ * loadNotifications(), loadGeoFence(), loadGeoRoute() on success.
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getAssetTrack get asset api
+ */
 const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -42,44 +45,36 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
     try {
       const response = await getAssetTrack(
         getState().user.token,
-        getState().asset.assetInfo.id
+        action.payload
       );
-      
+      console.log(response, action.payload);
       dispatch(loadAssetSuccess(response.data));
       const geoJSON = arrayToGeoJSON(response.data.data.track);
       dispatch(setGeoJSON(geoJSON));
       dispatch(loadNotifications());
-      dispatch(loadGeoFence());
-      dispatch(loadGeoRoute());
+      dispatch(loadGeoFenceSuccess(response.data.data.geofence));
+      dispatch(loadGeoRouteSuccess(response.data.data.georoute));
     } catch (error) {
-      dispatch(uiActions.setError(error));
+      if (error.response) {
+        dispatch(uiActions.setError(error.response.data.error.message));
+      } else {
+        dispatch(uiActions.setError(error.message));
+      }
     }
     dispatch(uiActions.setLoading(false));
   }
 };
 
-/**
-* Set Asset Info Middleware
-* @description
-* If an asset is selected for track, user is navigated to track component
-* Dispatches setTabId("2")
-*/
-const setAssetInfoFlow = ({}) => ({ dispatch }) => (next) => async (action) => {
-  next(action);
-  if (action.type === setAssetInfo.type) {
-    dispatch(uiActions.setTabId("2"));
-  }
-};
 
 /**
-* Track Asset Within Date Range Middleware
-* @description
-* Make API Call to get all locations for a particular Asset within given Date Range.
-* Performs converting to GeoJSON operation.
-* Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON)
-* Dispatches setError(err) on failure.
-* @param {function} services.getAssetTrackByTime get asset api by time
-*/
+ * Track Asset Within Date Range Middleware
+ * @description
+ * Make API Call to get all locations for a particular Asset within given Date Range.
+ * Performs converting to GeoJSON operation.
+ * Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON)
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getAssetTrackByTime get asset api by time
+ */
 const setDateRangeFlow = ({ getAssetTrackByTime }) => ({
   dispatch,
   getState,
@@ -94,7 +89,7 @@ const setDateRangeFlow = ({ getAssetTrackByTime }) => ({
         getState().asset.assetInfo.id,
         action.payload
       );
-      
+
       dispatch(loadAssetSuccess(response.data));
       const geoJSON = arrayToGeoJSON(response.data.data.track);
       dispatch(setGeoJSON(geoJSON));
@@ -105,6 +100,6 @@ const setDateRangeFlow = ({ getAssetTrackByTime }) => ({
   }
 };
 
-const assetFlow = [trackAssetFlow, setAssetInfoFlow, setDateRangeFlow];
+const assetFlow = [trackAssetFlow, setDateRangeFlow];
 
 export default assetFlow;

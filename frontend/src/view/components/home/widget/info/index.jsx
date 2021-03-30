@@ -2,6 +2,8 @@ import React from "react";
 import { Button, Card } from "react-bootstrap";
 import { AssetProperties } from "../../../../../data/constants/Asset";
 import "./styles.css";
+import { withRouter, useHistory } from "react-router-dom";
+
 
 /**
  * Info Component
@@ -19,7 +21,8 @@ import "./styles.css";
  *   <Info asset={asset} onClose={onClose} onSelectAsset={onSelectAsset} minimal={true}/>
  * )
  */
-function Info({ asset, onClose, onSelectAsset, minimal }) {
+function Info({ asset, onClose, minimal }) {
+  const history = useHistory();
   if (!asset) return <div> </div>;
   return (
     <div className="d-flex align-items-center">
@@ -41,7 +44,13 @@ function Info({ asset, onClose, onSelectAsset, minimal }) {
             )
           )}
           {!minimal && (
-            <Button variant="primary" onClick={() => onSelectAsset(asset._id)}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                // onSelectAsset(asset._id);
+                history.push("/track/"+asset._id);
+              }}
+            >
               Track
             </Button>
           )}

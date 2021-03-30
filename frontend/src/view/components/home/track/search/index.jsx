@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { useSelector } from "react-redux";
 import Select, { components } from "react-select";
@@ -8,6 +8,7 @@ import {
   setAssetInfo,
 } from "../../../../../controller/reducer/asset";
 import { getAssets } from "../../../../../controller/reducer/assets";
+import { useHistory } from "react-router";
 
 const controlStyles = {
   padding: "10px",
@@ -17,6 +18,8 @@ const controlStyles = {
 const AutoSearch = ({ dispatch }) => {
   const assetInfo = useSelector(getAssetInfo);
   const assets = useSelector(getAssets);
+  const history = useHistory()
+
 
   const assetOptions = assets.map((asset) => ({
     label: `${asset.name} [${asset._id}]`,
@@ -51,8 +54,8 @@ const AutoSearch = ({ dispatch }) => {
       value={item}
       onChange={(item) => {
         setItem(item);
-        dispatch(setAssetInfo({ id: item.id, name: item.name }));
-        dispatch(loadAsset());
+        history.push("/track/"+item.id);
+        // dispatch(setAssetInfo({ id: item.id, name: item.name }));
       }}
     />
   );

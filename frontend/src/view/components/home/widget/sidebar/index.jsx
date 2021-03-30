@@ -7,7 +7,9 @@ import profileIcon from "../../../../../assets/icons/profile.png";
 import tableIcon from "../../../../../assets/icons/table.png";
 import trackIcon from "../../../../../assets/icons/track.png";
 import { getShowSidenav } from "../../../../../controller/reducer/ui";
+import { Link } from "react-router-dom";
 import "./styles.css";
+import { getAssetInfo } from "../../../../../controller/reducer/asset";
 
 /**
  * Side Navigation Component
@@ -22,6 +24,7 @@ import "./styles.css";
  */
 function SideBar({ activeKey, onSelect, onShow }) {
   const show = useSelector(getShowSidenav);
+  const assetId = useSelector(getAssetInfo).id;
   return (
     <div
       id="mySidenav"
@@ -35,25 +38,25 @@ function SideBar({ activeKey, onSelect, onShow }) {
         className="flex-column"
       >
         <Nav.Item>
-          <Nav.Link eventKey="1">
+          <Nav.Link as={Link} to="/" eventKey="1">
             <img className="icon" src={dashboardIcon} />
-            <p className=" h5 font-weight-light">Dashboard </p>
+            <p className=" h5 font-weight-light">Dashboard </p>     
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="2">
+          <Nav.Link as={Link} to={`/track/${assetId ? assetId : "none"}`} eventKey="2">
             <img className="icon" src={trackIcon} />
             <p className=" h5 font-weight-light">Track Asset</p>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="3">
+          <Nav.Link as={Link} to="/asset-list" eventKey="3">
             <img className="icon" src={tableIcon} />
             <p className=" h5 font-weight-light">All Assets</p>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link eventKey="4">
+          <Nav.Link as={Link} to="/profile" href="/profile" eventKey="4">
             <img className="icon" src={profileIcon} />
             <p className=" h5 font-weight-light">Profile</p>
           </Nav.Link>

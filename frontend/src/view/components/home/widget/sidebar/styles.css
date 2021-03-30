@@ -50,6 +50,7 @@
     /* transition: margin-left .5s; */
     padding: 20px;
   }
+
   
   @media screen and (max-width: 750px) {
     .sidenav {width: 0px;}

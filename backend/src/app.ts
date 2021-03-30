@@ -5,6 +5,7 @@ import express from "express";
 
 import { authRoute } from "./routes/auth";
 import { assetRoute } from "./routes/asset";
+import {userRoute} from "./routes/user"
 
 const app = express();
 const swaggerUi = require("swagger-ui-express");
@@ -18,6 +19,7 @@ app.use(cors())
 
 app.use("/api", assetRoute);
 app.use("/auth", authRoute);
+app.use("/user", userRoute);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req, res) => {

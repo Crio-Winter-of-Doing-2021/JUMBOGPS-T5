@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authByToken } from "../middleware/auth";
 const { check } = require("express-validator");
-const { signup, login, getUser } = require("../controllers/auth");
+const { signup, login, updatePassword } = require("../controllers/auth");
 
 const route = Router();
 
@@ -31,6 +31,6 @@ route.get("/signout", async (req, res) => {
   res.send("signout");
 });
 
-route.get('/getuser', authByToken, getUser)
+route.put("/updatePassword", authByToken, updatePassword)
 
 export const authRoute = route;

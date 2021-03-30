@@ -23,7 +23,7 @@
   "paths": {
     "/auth/signin": {
       "post": {
-        "tags": ["Users"],
+        "tags": ["Authentication"],
         "parameters": [
           {
             "name": "user",
@@ -47,7 +47,7 @@
     },
     "/auth/signup": {
       "post": {
-        "tags": ["Users"],
+        "tags": ["Authentication"],
         "description": "Create new user in system",
         "parameters": [
           {
@@ -71,7 +71,39 @@
         }
       }
     },
-    "/auth/getuser": {
+    "/auth/updatePassword": {
+      "put": {
+        "tags": ["Authentication"],
+        "description": "Update Password",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": "true",
+            "description": "Token <token>"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/UpdatePassword"
+            }
+          }
+        ],
+        "summary": "update password",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Password updated",
+            "schema": {
+              "$ref": "#/definitions/AssetUpdateResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/getuser": {
       "get": {
         "tags": ["Users"],
         "description": "Create new user in system",
@@ -89,6 +121,37 @@
             "description": "Get Profile",
             "schema": {
               "$ref": "#/definitions/ProfileResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/updateprofile": {
+      "put": {
+        "tags": ["Users"],
+        "description": "Update profile in the system",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Profile"
+            }
+          }
+        ],
+        "summary": "update Profile",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "update Profile",
+            "schema": {
+              "$ref": "#/definitions/AssetUpdateResponse"
             }
           }
         }
@@ -448,6 +511,39 @@
           "type": "string"
         }
       }
+    },
+    "Profile": {
+      "properties": {
+        "phone": {
+          "type": "number"
+        },
+        "address": {
+          "type": "string"
+        },
+        "about": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "isMale": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        }
+        
+      }
+    },
+    "UpdatePassword": {
+          "properties": {
+            "oldPassword": {
+              "type": "string"
+            },
+            "newPassword": {
+              "type": "string"
+            }
+          }
     },
     "UserLogin": {
       "required": ["email", "password"],

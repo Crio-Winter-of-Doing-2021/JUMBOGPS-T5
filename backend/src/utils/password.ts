@@ -26,3 +26,7 @@ export function matchPassword(hash: string, password: string): Promise<boolean> 
     })
   })
 }
+
+export function parseData(data: any) {
+ return data
+} 

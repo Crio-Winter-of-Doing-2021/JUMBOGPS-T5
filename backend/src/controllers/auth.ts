@@ -25,6 +25,7 @@ exports.signup = async (req: Request, res: Response) => {
   });
   await user.save(async (err: any) => {
     if (err) {
+      console.log(err)
       return res.status(422).json({
         error: err.message,
         data: {}
@@ -61,6 +62,9 @@ exports.login = async (req: Request, res: Response) => {
         data: {}
       });
     }
+
+    
+
     const passwordMatch = await matchPassword(user.password!, password);
 
     if (passwordMatch == false) {
@@ -81,23 +85,46 @@ exports.login = async (req: Request, res: Response) => {
   });
 };
 
-exports.getUser = async (req: Request, res: Response) => {
-  let data = (req as any).email;
-  User.findOne({ email: data.email }, (err: any, user: any) => {
+exports.updatePassword = async(req: Request, res: Response) => {
+  
+  let oldPassword = req.body.oldPassword
+  let newPassword = req.body.newPassword
+  let data = (req as any).email
+  let hash_password = await hashPassword(newPassword)
+
+  User.findOne({ email: data.email }, async (err: any, user: any) => {
     if (err || !user) {
       return res.status(401).json({
-        error:  {
-          message: "No user with this email exists"
-        },
+        error:  { message: "User not found" + "and"+ String(err.message)},
         data: {}
       });
     }
-    return res.status(200).json({
-      data: {
-        email: user.email,
-        name: user.name,
-      },
-      error: {},
-    });
+    const passwordMatch = await matchPassword(user.password!, oldPassword);
+
+    if (passwordMatch == false) {
+      return res.status(401).json({
+        error:{ message: "Wrong password"},
+        data: {}
+      });
+    }
+
+    User.updateOne({email: data.email}, {password: hash_password}, (error: any, result: any)=> {
+
+      if(error) {
+        return res.status(401).json({
+          error:  { message: "password not updated"},
+          data: {}
+        });
+      }
+
+      return res.status(200).json({
+        data: {
+          success: true
+        },
+        error: {},
+      })
+    })
   });
+
+
 };

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { parseData } from "../utils/password";
 const User = require("../models/User");
 
 exports.getUser = async (req: Request, res: Response) => {

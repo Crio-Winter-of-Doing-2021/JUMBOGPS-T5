@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { authByToken } from "../middleware/auth";
 
-const {createAsset, updateLocation, getAssets, getAsset, getAssetByTime, updateGeoFence, updateGeoRoute, getNotification, getGeofence, getGeoroute} = require('../controllers/asset')
+const {createAsset, updateLocation, getAssets, getAsset, getAssetByTime} = require('../controllers/asset')
+const {updateGeoFence, updateGeoRoute, getGeofence, getGeoroute} = require('../controllers/geo')
+const {getNotification} = require('../controllers/notification')
 
 const route = Router()
 

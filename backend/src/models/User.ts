@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
         default: "Site admin"
     },
     isMale: {
-        type: String,
+        type: Boolean,
         default: true
     }
 })

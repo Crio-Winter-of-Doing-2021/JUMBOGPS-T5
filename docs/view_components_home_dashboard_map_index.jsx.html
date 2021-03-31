@@ -26,12 +26,47 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { setAssetInfo } from "../../../../../controller/reducer/asset";
+            <pre class="prettyprint source linenums"><code>import React, { useCallback, useState } from "react";
+import { Button, Card } from "react-bootstrap";
+import ReactMapGL, {
+  FlyToInterpolator,
+  Marker,
+  Popup,
+  NavigationControl,
+  FullscreenControl,
+  ScaleControl,
+  GeolocateControl,
+} from "react-map-gl";
+import { useSelector } from "react-redux";
+import { getAssets } from "../../../../../controller/reducer/assets";
 import Markers from "../../../../../data/constants/Markers";
+import logger from "../../../../../utils/logger";
 import Info from "../../widget/info";
 import "./styles.css";
+
+const geolocateStyle = {
+  top: 0,
+  left: 0,
+  padding: "10px",
+};
+
+const fullscreenControlStyle = {
+  top: 36,
+  left: 0,
+  padding: "10px",
+};
+
+const navStyle = {
+  top: 72,
+  left: 0,
+  padding: "10px",
+};
+
+const scaleControlStyle = {
+  top: 150,
+  left: 0,
+  padding: "10px",
+};
 
 /**
  * Map Component for Dashboard
@@ -45,11 +80,14 @@ import "./styles.css";
  *  &lt;Map assets={assets} dispatch={dispatch}/>
  * )
  */
-function Map({ assets, dispatch }) {
+function Map() {
+  const assets = useSelector(getAssets);
   const [viewport, setViewport] = useState({
     latitude: assets &amp;&amp; assets.length > 1 ? assets[0].lat : 24,
     longitude: assets &amp;&amp; assets.length > 1 ? assets[0].lon : 76,
     zoom: assets &amp;&amp; assets.length > 1 ? 3 : 1,
+    bearing: 0,
+    pitch: 0,
   });
 
   const [asset, setAsset] = useState(null);
@@ -58,6 +96,17 @@ function Map({ assets, dispatch }) {
     // onSelect(asset);
     setAsset(asset);
   };
+
+  const onSelectLocation = useCallback((longitude, latitude) => {
+    logger(longitude, latitude);
+    setViewport({
+      longitude,
+      latitude,
+      zoom: 8,
+      transitionInterpolator: new FlyToInterpolator({ speed: 1.2 }),
+      transitionDuration: "auto",
+    });
+  }, []);
 
   if (!assets) return &lt;>&lt;/>;
 
@@ -70,6 +119,7 @@ function Map({ assets, dispatch }) {
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       mapStyle="mapbox://styles/tazril/cklo46zze4zoz17pg8tp1oyms"
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
+      dragRotate={false}
     >
       {assets.map((asset, id) => (
         &lt;Marker latitude={asset.lat} longitude={asset.lon} key={id}>
@@ -98,12 +148,34 @@ function Map({ assets, dispatch }) {
           &lt;Info
             asset={asset}
             onClose={() => setAsset(null)}
-            onSelectAsset={(id) =>
-              dispatch(setAssetInfo({ id: id, name: asset.name }))
-            }
+            // onSelectAsset={(id) =>
+            //   dispatch(setAssetInfo({ id: id, name: asset.name }))
+            // }
           />
         &lt;/Popup>
       )}
+      &lt;div className="scrollmenu">
+        {assets &amp;&amp;
+          assets.map((asset, id) => (
+            &lt;Card
+              key={id}
+              className="item"
+              onClick={() => onSelectLocation(asset.lon, asset.lat)}
+            >
+              &lt;Card.Body>
+                &lt;Card.Text>{asset.name}&lt;/Card.Text>
+              &lt;/Card.Body>
+            &lt;/Card>
+          ))}
+      &lt;/div>
+      &lt;GeolocateControl
+        style={geolocateStyle}
+        positionOptions={{ enableHighAccuracy: true }}
+        trackUserLocation={true}
+      />
+      &lt;FullscreenControl style={fullscreenControlStyle} />
+      &lt;NavigationControl style={navStyle} showCompass={false} />
+      &lt;ScaleControl style={scaleControlStyle} />
     &lt;/ReactMapGL>
   );
 }
@@ -119,13 +191,13 @@ export default Map;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setAssetInfoFlow">setAssetInfoFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Mar 27 2021 11:15:29 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

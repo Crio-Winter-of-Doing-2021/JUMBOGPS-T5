@@ -28,24 +28,32 @@
         <article>
             <pre class="prettyprint source linenums"><code>import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { CSVLink } from "react-csv";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAsset,
   getAssetInfo,
-  getGeoJSON,
-  loadAsset,
+
+  loadAsset
 } from "../../../../controller/reducer/asset";
+import {
+  getAssetsLength,
+  loadAssets
+} from "../../../../controller/reducer/assets";
 import {
   setGeoFence,
   setGeoRoute,
   updateGeoFence,
-  updateGeoRoute,
+  updateGeoRoute
 } from "../../../../controller/reducer/geo";
 import {
   getLoading,
   getShowSidenav,
-  setTrackTabId,
+  getTabId,
+  setTabId,
+  setTrackTabId
 } from "../../../../controller/reducer/ui";
+import logger from "../../../../utils/logger";
 import Loader from "../widget/loader";
 import Notifications from "../widget/notifications";
 import DateRangeSelector from "./date-range";
@@ -55,6 +63,13 @@ import AutoSearch from "./search";
 import "./style.css";
 import DataTable from "./table";
 import Tabs from "./tabs";
+import csvIcon from "../../../../assets/icons/table.svg";
+
+const headers = [
+  { label: "Latitude", key: "lat" },
+  { label: "Longitude", key: "lon" },
+  { label: "Time", key: "timestamp" },
+];
 
 /**
  * Track Component
@@ -71,10 +86,12 @@ import Tabs from "./tabs";
  *   &lt;Track dispatch={dispatch}/>
  * )
  */
-const Track = ({ dispatch }) => {
+const Track = ({ match }) => {
+  const dispatch = useDispatch();
   const asset = useSelector(getAsset);
+  const noOfAssets = useSelector(getAssetsLength);
   const assetInfo = useSelector(getAssetInfo);
-  const geoJSON = useSelector(getGeoJSON);
+  const tabId = useSelector(getTabId);
 
   const setGeoFenceData = (data) => dispatch(setGeoFence(data));
   const setGeoRouteData = (data) => dispatch(setGeoRoute(data));
@@ -83,13 +100,20 @@ const Track = ({ dispatch }) => {
   const onSelectTab = (key) => dispatch(setTrackTabId(key));
 
   useEffect(() => {
-    if (assetInfo.id) dispatch(loadAsset());
-  }, [dispatch]);
+    if (
+      match.params.id !== "none" ||
+      (match.params.id !== "none" &amp;&amp; match.params.id !== assetInfo.id)
+    ) {
+      dispatch(loadAsset(match.params.id));
+    }
+    if (tabId !== "2") dispatch(setTabId("2"));
+    if (noOfAssets === 0) dispatch(loadAssets());
+  }, [match.params.id]);
 
   const sidenav = useSelector(getShowSidenav);
   if (useSelector(getLoading)) return &lt;Loader />;
 
-  if (!assetInfo.name || !asset) {
+  if (match.params.id === "none" || !asset.asset_data) {
     return (
       &lt;div
         className="track bg-light"
@@ -105,7 +129,7 @@ const Track = ({ dispatch }) => {
     );
   }
 
-  console.log("asset ", asset);
+  logger("asset ", asset);
   return (
     &lt;div className="track bg-light" style={{ left: sidenav ? "200px" : "0px" }}>
       &lt;h1 className="h2 font-weight-normal m-2">
@@ -121,7 +145,7 @@ const Track = ({ dispatch }) => {
         &lt;/Col>
       &lt;/Row>
       &lt;hr />
-      &lt;div className="d-flex justify-content-center ">
+      &lt;div className="d-flex justify-content-center " id="track" >
         &lt;Tabs onSelect={onSelectTab} />
       &lt;/div>
 
@@ -135,20 +159,29 @@ const Track = ({ dispatch }) => {
           submitGeoRoute={submitGeoRoute}
         />
       &lt;/div>
-      &lt;div className="card-view ">
+      &lt;div className="card-view" id="notifications">
         &lt;h1 className="h3 font-weight-normal">Notifications&lt;/h1>
         &lt;hr />
         &lt;Notifications />
       &lt;/div>
       &lt;br />
-      &lt;div className="card-view ">
+      &lt;div className="card-view " id="information">
         &lt;h1 className="h3 font-weight-normal">Information&lt;/h1>
         &lt;hr />
         &lt;Info asset={asset.asset_data} />
       &lt;/div>
       &lt;br />
-      &lt;div className="table-view">
-        &lt;h1 className="h3 font-weight-normal">Track List&lt;/h1>
+      &lt;div className="table-view" id="table">
+        &lt;h1 className="h3 font-weight-normal">Track List&lt;CSVLink
+          data={asset.track}
+          headers={headers}
+          filename={`${asset.asset_data.name}.csv`}
+          className="btn btn-dark btn-csv"
+          target="_blank"
+        >
+          &lt;img src={csvIcon} className="mr-2 mb-1" alt="csv icon"/>CSV
+        &lt;/CSVLink>&lt;/h1>
+        
         &lt;hr />
         &lt;DataTable dispatch={dispatch} track={asset.track} />
       &lt;/div>
@@ -167,13 +200,13 @@ export default Track;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setAssetInfoFlow">setAssetInfoFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Mar 27 2021 11:15:29 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

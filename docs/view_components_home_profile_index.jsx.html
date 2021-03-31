@@ -26,17 +26,31 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { getUser } from "../../../../controller/reducer/user";
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from "react";
+import { Button, Form } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getUser,
+  loadProfile,
+  updateProfile,
+  getProfile,
+  updatePassword,
+} from "../../../../controller/reducer/user";
 import maleIcon from "../../../../assets/illustrations/male.svg";
 import femaleIcon from "../../../../assets/illustrations/female.svg";
 import "./style.css";
 import Loader from "../widget/loader";
-import { getLoading, getShowSidenav } from "../../../../controller/reducer/ui";
+import {
+  getLoading,
+  getShowSidenav,
+  getTabId,
+  setError,
+  setTabId,
+} from "../../../../controller/reducer/ui";
+import ProfileForm from "./form";
+import PasswordForm from "./form-password";
 
-//TODO 
+//TODO
 /**
  * Profile Component
  * @description Shows profile of user and allow him/her to make changes
@@ -46,12 +60,39 @@ import { getLoading, getShowSidenav } from "../../../../controller/reducer/ui";
  *   &lt;Profile dispatch={dispatch}/>
  * )
  */
-const Profile = ({ dispatch }) => {
+const Profile = () => {
+  const dispatch = useDispatch();
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const user = useSelector(getUser);
+  const profile = useSelector(getProfile);
   const sidenav = useSelector(getShowSidenav);
-  if (useSelector(getLoading)) return &lt;Loader />;
+  const loading = useSelector(getLoading);
+
+  const closeProfile = () => setShowProfileForm(false);
+  const closePassword = () => setShowPasswordForm(false);
+
+  const notify = (msg) => dispatch(setError(msg));
+
+  const tabId = useSelector(getTabId);
+  useEffect(() => {
+    if (tabId !== "4") dispatch(setTabId("4"));
+  }, [tabId]);
+
+
+  useEffect(() => {
+    dispatch(loadProfile());
+  }, [dispatch]);
+
+
+  const profileSubmit = (data)=>{
+    dispatch(updateProfile(data));
+  }
+
+  const passwordSubmit = (data)=>{
+    dispatch(updatePassword(data));
+  }
+  if (loading) return &lt;Loader />;
 
   return (
     &lt;div
@@ -65,7 +106,7 @@ const Profile = ({ dispatch }) => {
               &lt;div className="col-md-3 text-center mb-5">
                 &lt;div className="avatar avatar-xl">
                   &lt;img
-                    src={user.profile.male ? maleIcon : femaleIcon}
+                    src={profile.isMale ? maleIcon : femaleIcon}
                     alt="user avatar"
                     className="avatar-img rounded-circle"
                   />
@@ -75,28 +116,21 @@ const Profile = ({ dispatch }) => {
                 &lt;div className="row align-items-center">
                   &lt;div className="col-md-7">
                     &lt;h4 className="mb-1">{user.name}&lt;/h4>
-                    &lt;p className="small mb-3">
-                      &lt;span className="badge badge-dark">Site Admin&lt;/span>
+                    &lt;p className=" mb-3">
+                      &lt;span className="p-1 badge badge-dark">{profile.role}&lt;/span>
                     &lt;/p>
                   &lt;/div>
                 &lt;/div>
                 &lt;div className="row mb-4">
                   &lt;div className="col-md-7">
-                    &lt;p className="text-muted">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Mauris blandit nisl ullamcorper, rutrum metus in, congue
-                      lectus. In hac habitasse platea dictumst. Cras urna quam,
-                      malesuada vitae risus at, pretium blandit sapien.
-                    &lt;/p>
+                    &lt;p className="text-muted">{profile.about}&lt;/p>
                   &lt;/div>
                   &lt;div className="col">
-                    &lt;p className="small mb-0 text-muted">
-                      Nec Urna Suscipit Ltd
-                    &lt;/p>
-                    &lt;p className="small mb-0 text-muted">
+                    &lt;p className="small mb-0 text-muted">{profile.address}&lt;/p>
+                    {/* &lt;p className="small mb-0 text-muted">
                       P.O. Box 464, 5975 Eget Avenue
                     &lt;/p>
-                    &lt;p className="small mb-0 text-muted">(537) 315-1481&lt;/p>
+                    &lt;p className="small mb-0 text-muted">(537) 315-1481&lt;/p> */}
                   &lt;/div>
                 &lt;/div>
               &lt;/div>
@@ -105,7 +139,7 @@ const Profile = ({ dispatch }) => {
             &lt;hr className="my-4" />
             {!showProfileForm &amp;&amp; (
               &lt;Button
-                onClick={() => setShowProfileForm(!showProfileForm)}
+                onClick={() => setShowProfileForm(true)}
                 className="p-20"
                 variant="outline-primary"
                 block
@@ -115,88 +149,7 @@ const Profile = ({ dispatch }) => {
             )}
             &lt;div>
               {showProfileForm &amp;&amp; (
-                &lt;form>
-                  &lt;div className="form-row ">
-                    &lt;div className="form-group col-md-8">
-                      &lt;label value="firstname">Full Name&lt;/label>
-                      &lt;input
-                        type="text"
-                        id="firstname"
-                        className="form-control"
-                        placeholder="Brown"
-                        value={user.name}
-                        onChange={()=>{}}
-                      />
-                    &lt;/div>
-                    &lt;div className="form-group col-md-4">
-                      &lt;label value="inputState5">Gender&lt;/label>
-                      &lt;select className="form-control">
-                        &lt;option value="">Choose...&lt;/option>
-                        &lt;option>Male&lt;/option>
-                        &lt;option>Female&lt;/option>
-                      &lt;/select>
-                    &lt;/div>
-                  &lt;/div>
-                  &lt;div className="form-group">
-                    &lt;label value="inputEmail4">Email&lt;/label>
-                    &lt;input
-                      type="email"
-                      className="form-control"
-                      id="inputEmail4"
-                      placeholder="brown@asher.me"
-                      value={user.email}
-                      readOnly={true}
-                    />
-                  &lt;/div>
-                  &lt;div className="form-group">
-                    &lt;label value="inputAddress5">Address&lt;/label>
-                    &lt;input
-                      type="text"
-                      className="form-control"
-                      id="inputAddress5"
-                      placeholder="P.O. Box 464, 5975 Eget Avenue"
-                    />
-                  &lt;/div>
-                  &lt;div className="form-group">
-                    &lt;label value="inputAbout5">About&lt;/label>
-                    &lt;input
-                      type="text"
-                      className="form-control"
-                      id="inputAbout"
-                      placeholder="I love exploring options"
-                    />
-                  &lt;/div>
-                  &lt;div className="form-row">
-                    &lt;div className="form-group col-md-6">
-                      &lt;label value="inputRole5">Role&lt;/label>
-                      &lt;input
-                        type="text"
-                        className="form-control"
-                        id="inputRole5"
-                        placeholder="Site Admin"
-                      />
-                    &lt;/div>
-                    &lt;div className="form-group col-md-6">
-                      &lt;label value="inputPhone5">Phone&lt;/label>
-                      &lt;input
-                        type="text"
-                        className="form-control"
-                        id="inputPhone5"
-                        placeholder="9101244685"
-                      />
-                    &lt;/div>
-                  &lt;/div>
-                  &lt;Button type="submit" variant="primary">
-                    Save Change
-                  &lt;/Button>
-                  &lt;Button
-                    className="ml-4"
-                    onClick={() => setShowProfileForm(!showProfileForm)}
-                    variant="outline-secondary"
-                  >
-                    Close Settings
-                  &lt;/Button>
-                &lt;/form>
+                &lt;ProfileForm onSubmit={profileSubmit} onClose={closeProfile}/>
               )}
               &lt;br />
               &lt;br />
@@ -204,7 +157,7 @@ const Profile = ({ dispatch }) => {
               &lt;hr className="my-4" />
               {!showPasswordForm &amp;&amp; (
                 &lt;Button
-                  onClick={() => setShowPasswordForm(!showPasswordForm)}
+                  onClick={() => setShowPasswordForm(true)}
                   className="m-20"
                   variant="outline-primary"
                   block
@@ -214,59 +167,7 @@ const Profile = ({ dispatch }) => {
               )}
               &lt;br />
               {showPasswordForm &amp;&amp; (
-                &lt;form>
-                  &lt;div className="row mb-4">
-                    &lt;div className="col-md-6">
-                      &lt;div className="form-group">
-                        &lt;label value="inputPassword4">Old Password&lt;/label>
-                        &lt;input
-                          type="password"
-                          className="form-control"
-                          id="inputPassword5"
-                        />
-                      &lt;/div>
-                      &lt;div className="form-group">
-                        &lt;label value="inputPassword5">New Password&lt;/label>
-                        &lt;input
-                          type="password"
-                          className="form-control"
-                          id="inputPassword5"
-                        />
-                      &lt;/div>
-                      &lt;div className="form-group">
-                        &lt;label value="inputPassword6">Confirm Password&lt;/label>
-                        &lt;input
-                          type="password"
-                          className="form-control"
-                          id="inputPassword6"
-                        />
-                      &lt;/div>
-                    &lt;/div>
-                    &lt;div className="col-md-6">
-                      &lt;p className="mb-2">Password requirements&lt;/p>
-                      &lt;p className="small text-muted mb-2">
-                        To create a new password, you have to meet all of the
-                        following requirements:
-                      &lt;/p>
-                      &lt;ul className="small text-muted pl-4 mb-0">
-                        &lt;li>Minimum 8 character&lt;/li>
-                        &lt;li>At least one special character&lt;/li>
-                        &lt;li>At least one number&lt;/li>
-                        &lt;li>Can’t be the same as a previous password&lt;/li>
-                      &lt;/ul>
-                    &lt;/div>
-                  &lt;/div>
-                  &lt;Button type="submit" variant="primary">
-                    Save Password
-                  &lt;/Button>
-                  &lt;Button
-                    className="ml-4"
-                    onClick={() => setShowPasswordForm(!showPasswordForm)}
-                    variant="outline-secondary"
-                  >
-                    Close Settings
-                  &lt;/Button>
-                &lt;/form>
+                &lt;PasswordForm onSubmit={passwordSubmit} notify={notify} onClose={closePassword}/>
               )}
             &lt;/div>
             &lt;br />
@@ -289,13 +190,13 @@ export default Profile;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setAssetInfoFlow">setAssetInfoFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Mar 27 2021 11:15:29 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

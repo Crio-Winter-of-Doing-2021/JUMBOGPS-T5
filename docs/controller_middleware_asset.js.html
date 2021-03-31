@@ -27,18 +27,22 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import moment from "moment";
+import logger from "../../utils/logger";
 import {
   loadAsset,
   loadAssetSuccess,
-  setAssetInfo,
   setDateRange,
   setGeoJSON,
 } from "../reducer/asset";
-import { loadGeoFence, loadGeoRoute, loadNotifications } from "../reducer/geo";
+import {
+  loadGeoFenceSuccess,
+  loadGeoRouteSuccess,
+  loadNotifications,
+} from "../reducer/geo";
 import * as uiActions from "../reducer/ui";
 
 function arrayToGeoJSON(track) {
-  const ts = track[0].timestamp;
+  const ts = (track.length===0) ? 'invalid' : track[0].timestamp;
   const features = track.map((item) => ({
     type: "Feature",
     geometry: { type: "Point", coordinates: [item.lon, item.lat] },
@@ -53,14 +57,14 @@ function arrayToGeoJSON(track) {
 }
 
 /**
-* Track Asset  Middleware
-* @description
-* Make API Call to get all locations for a particular Asset. Performs converting to GeoJSON operation.
-* Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON), 
-* loadNotifications(), loadGeoFence(), loadGeoRoute() on success.
-* Dispatches setError(err) on failure.
-* @param {function} services.getAssetTrack get asset api 
-*/
+ * Track Asset  Middleware
+ * @description
+ * Make API Call to get all locations for a particular Asset. Performs converting to GeoJSON operation.
+ * Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON),
+ * loadNotifications(), loadGeoFence(), loadGeoRoute() on success.
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getAssetTrack get asset api
+ */
 const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -70,44 +74,36 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
     try {
       const response = await getAssetTrack(
         getState().user.token,
-        getState().asset.assetInfo.id
+        action.payload
       );
-      
+      logger(response, action.payload);
       dispatch(loadAssetSuccess(response.data));
       const geoJSON = arrayToGeoJSON(response.data.data.track);
       dispatch(setGeoJSON(geoJSON));
       dispatch(loadNotifications());
-      dispatch(loadGeoFence());
-      dispatch(loadGeoRoute());
+      dispatch(loadGeoFenceSuccess(response.data.data.geofence));
+      dispatch(loadGeoRouteSuccess(response.data.data.georoute));
     } catch (error) {
-      dispatch(uiActions.setError(error));
+      if (error.response) {
+        dispatch(uiActions.setError(error.response.data.error.message));
+      } else {
+        dispatch(uiActions.setError(error.message));
+      }
     }
     dispatch(uiActions.setLoading(false));
   }
 };
 
-/**
-* Set Asset Info Middleware
-* @description
-* If an asset is selected for track, user is navigated to track component
-* Dispatches setTabId("2")
-*/
-const setAssetInfoFlow = ({}) => ({ dispatch }) => (next) => async (action) => {
-  next(action);
-  if (action.type === setAssetInfo.type) {
-    dispatch(uiActions.setTabId("2"));
-  }
-};
 
 /**
-* Track Asset Within Date Range Middleware
-* @description
-* Make API Call to get all locations for a particular Asset within given Date Range.
-* Performs converting to GeoJSON operation.
-* Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON)
-* Dispatches setError(err) on failure.
-* @param {function} services.getAssetTrackByTime get asset api by time
-*/
+ * Track Asset Within Date Range Middleware
+ * @description
+ * Make API Call to get all locations for a particular Asset within given Date Range.
+ * Performs converting to GeoJSON operation.
+ * Dispatches loadAssetSuccess(response.data) ,setGeoJSON(geoJSON)
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getAssetTrackByTime get asset api by time
+ */
 const setDateRangeFlow = ({ getAssetTrackByTime }) => ({
   dispatch,
   getState,
@@ -116,13 +112,13 @@ const setDateRangeFlow = ({ getAssetTrackByTime }) => ({
   if (action.type === setDateRange.type) {
     dispatch(uiActions.setLoading(true));
     try {
-      console.log(action.payload);
+      logger(action.payload);
       const response = await getAssetTrackByTime(
         getState().user.token,
         getState().asset.assetInfo.id,
         action.payload
       );
-      
+
       dispatch(loadAssetSuccess(response.data));
       const geoJSON = arrayToGeoJSON(response.data.data.track);
       dispatch(setGeoJSON(geoJSON));
@@ -133,7 +129,7 @@ const setDateRangeFlow = ({ getAssetTrackByTime }) => ({
   }
 };
 
-const assetFlow = [trackAssetFlow, setAssetInfoFlow, setDateRangeFlow];
+const assetFlow = [trackAssetFlow, setDateRangeFlow];
 
 export default assetFlow;
 </code></pre>
@@ -146,13 +142,13 @@ export default assetFlow;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setAssetInfoFlow">setAssetInfoFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Mar 27 2021 11:15:29 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

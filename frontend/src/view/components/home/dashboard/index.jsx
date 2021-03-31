@@ -32,7 +32,6 @@ const Dashboard = ({}) => {
     dispatch(pageLoaded());
   }, [dispatch]);
 
-  // console.log("assets ", assets, "loading", loading);
   const onSelect = (assetType) => {
     dispatch(setAssetType(assetType));
     dispatch(loadAssets());

@@ -53,7 +53,7 @@ const DataTable = ({  }) => {
                   variant="outline-primary"
                   onClick={() => {
                     // onSelect(asset._id, asset.name);
-                    history.push("/track/"+asset._id);
+                    history.push("/track/"+asset._id+"#track");
                   }}
                 >
                   Track

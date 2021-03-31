@@ -58,12 +58,10 @@ const Profile = () => {
 
 
   const profileSubmit = (data)=>{
-    // console.log(data);
     dispatch(updateProfile(data));
   }
 
   const passwordSubmit = (data)=>{
-    // console.log(data);
     dispatch(updatePassword(data));
   }
   if (loading) return <Loader />;

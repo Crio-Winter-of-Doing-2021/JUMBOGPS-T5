@@ -1,5 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import ReactMapGL, { Layer, Marker, Popup, Source } from "react-map-gl";
+import { Badge, Button, Card, Figure } from "react-bootstrap";
+import ReactMapGL, {
+  Layer,
+  Marker,
+  Popup,
+  Source,
+  FlyToInterpolator,
+  NavigationControl,
+  FullscreenControl,
+  ScaleControl,
+  GeolocateControl,
+} from "react-map-gl";
 import { EditingMode, Editor } from "react-map-gl-draw";
 import { useSelector } from "react-redux";
 import { getGeoJSON } from "../../../../../controller/reducer/asset";
@@ -13,7 +24,33 @@ import { getEditHandleStyle, getFeatureStyle } from "./common/draw-styles";
 import DrawFenceTools from "./common/DrawFenceTools";
 import DrawRouteTools from "./common/DrawRouteTools";
 import { heatmapLayer } from "./common/map-style";
+import moment from "moment";
 import "./styles.css";
+import logger from "../../../../../utils/logger";
+
+const geolocateStyle = {
+  top: 0,
+  left: 0,
+  padding: "10px",
+};
+
+const fullscreenControlStyle = {
+  top: 36,
+  left: 0,
+  padding: "10px",
+};
+
+const navStyle = {
+  top: 72,
+  left: 0,
+  padding: "10px",
+};
+
+const scaleControlStyle = {
+  top: 150,
+  left: 0,
+  padding: "10px",
+};
 
 /**
  * Map Component
@@ -49,9 +86,9 @@ function Map({
   submitGeoRoute,
 }) {
   const [viewport, setViewport] = useState({
-    latitude: locArray && locArray.length > 1 ? locArray[0].lat : 24,
-    longitude: locArray && locArray.length > 1 ? locArray[0].lon : 24,
-    zoom: locArray && locArray.length > 1 ? 3 : 1,
+    latitude: locArray.length > 1 ? locArray[0].lat : 24,
+    longitude: locArray.length > 1 ? locArray[0].lon : 75,
+    zoom: locArray.length > 1 ? 3 : 1,
   });
 
   const [modeFence, setModeFence] = useState(null);
@@ -67,15 +104,26 @@ function Map({
   const geoFence = useSelector(getGeoFence);
   const geoRoute = useSelector(getGeoRoute);
 
+  const onSelectLocation = useCallback((longitude, latitude) => {
+    logger(longitude, latitude);
+    setViewport({
+      longitude,
+      latitude,
+      zoom: 8,
+      transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
+      transitionDuration: "auto",
+    });
+  }, []);
+
   useEffect(() => {
     if (tabId === "3" && fenceEditorRef.current && geoFence) {
       fenceEditorRef.current.addFeatures(geoFence);
-      console.log(geoFence);
-      console.log(fenceEditorRef.current.getFeatures());
+      logger(geoFence);
+      logger(fenceEditorRef.current.getFeatures());
     }
     if (tabId === "4" && routeEditorRef.current && geoRoute) {
       routeEditorRef.current.addFeatures(geoRoute);
-      console.log(routeEditorRef.current.getFeatures());
+      logger(routeEditorRef.current.getFeatures());
     }
   }, [tabId]);
 
@@ -95,7 +143,7 @@ function Map({
           setGeoFence(data[0]);
           setModeFence(new EditingMode());
         } else {
-          console.log(data[0]);
+          logger(data[0]);
           setGeoRoute(data[0]);
           setModeRoute(new EditingMode());
         }
@@ -197,6 +245,33 @@ function Map({
           submit={submitGeoRoute}
         />
       )}
+      <div className="scrollmenu">
+        {locArray &&
+          locArray.map((loc, id) => (
+            <Figure
+              key={id}
+              className="item"
+              onClick={() => onSelectLocation(loc.lon, loc.lat)}
+            >
+              <Figure.Caption>
+                <p className="p mt-2 mb-2 ml-4 mr-4 font-weight-bold">
+                  {moment
+                    .duration(moment().diff("2021-03-22T12:41:47.604Z"))
+                    .humanize()}{" "}
+                  ago
+                </p>
+              </Figure.Caption>
+            </Figure>
+          ))}
+      </div>
+      <GeolocateControl
+        style={geolocateStyle}
+        positionOptions={{ enableHighAccuracy: true }}
+        trackUserLocation={true}
+      />
+      <FullscreenControl style={fullscreenControlStyle} />
+      <NavigationControl style={navStyle} showCompass={false} />
+      <ScaleControl style={scaleControlStyle} />
     </ReactMapGL>
   );
 }

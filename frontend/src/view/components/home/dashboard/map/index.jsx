@@ -12,6 +12,7 @@ import ReactMapGL, {
 import { useSelector } from "react-redux";
 import { getAssets } from "../../../../../controller/reducer/assets";
 import Markers from "../../../../../data/constants/Markers";
+import logger from "../../../../../utils/logger";
 import Info from "../../widget/info";
 import "./styles.css";
 
@@ -34,7 +35,7 @@ const navStyle = {
 };
 
 const scaleControlStyle = {
-  top : 180,
+  top: 150,
   left: 0,
   padding: "10px",
 };
@@ -68,8 +69,8 @@ function Map() {
     setAsset(asset);
   };
 
-  const onSelectCity = useCallback((longitude, latitude) => {
-    console.log(longitude, latitude);
+  const onSelectLocation = useCallback((longitude, latitude) => {
+    logger(longitude, latitude);
     setViewport({
       longitude,
       latitude,
@@ -128,15 +129,13 @@ function Map() {
       <div className="scrollmenu">
         {assets &&
           assets.map((asset, id) => (
-            <Card key={id} className="item">
+            <Card
+              key={id}
+              className="item"
+              onClick={() => onSelectLocation(asset.lon, asset.lat)}
+            >
               <Card.Body>
                 <Card.Text>{asset.name}</Card.Text>
-                <Button
-                  variant="outline-primary"
-                  onClick={() => onSelectCity(asset.lon, asset.lat)}
-                >
-                  LOCATE
-                </Button>
               </Card.Body>
             </Card>
           ))}
@@ -147,7 +146,7 @@ function Map() {
         trackUserLocation={true}
       />
       <FullscreenControl style={fullscreenControlStyle} />
-      <NavigationControl style={navStyle} />
+      <NavigationControl style={navStyle} showCompass={false} />
       <ScaleControl style={scaleControlStyle} />
     </ReactMapGL>
   );

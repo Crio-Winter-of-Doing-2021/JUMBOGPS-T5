@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
+import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAsset,
@@ -24,6 +25,7 @@ import {
   setTabId,
   setTrackTabId
 } from "../../../../controller/reducer/ui";
+import logger from "../../../../utils/logger";
 import Loader from "../widget/loader";
 import Notifications from "../widget/notifications";
 import DateRangeSelector from "./date-range";
@@ -33,6 +35,13 @@ import AutoSearch from "./search";
 import "./style.css";
 import DataTable from "./table";
 import Tabs from "./tabs";
+import csvIcon from "../../../../assets/icons/table.svg";
+
+const headers = [
+  { label: "Latitude", key: "lat" },
+  { label: "Longitude", key: "lon" },
+  { label: "Time", key: "timestamp" },
+];
 
 /**
  * Track Component
@@ -92,7 +101,7 @@ const Track = ({ match }) => {
     );
   }
 
-  console.log("asset ", asset);
+  logger("asset ", asset);
   return (
     <div className="track bg-light" style={{ left: sidenav ? "200px" : "0px" }}>
       <h1 className="h2 font-weight-normal m-2">
@@ -108,7 +117,7 @@ const Track = ({ match }) => {
         </Col>
       </Row>
       <hr />
-      <div className="d-flex justify-content-center ">
+      <div className="d-flex justify-content-center " id="track" >
         <Tabs onSelect={onSelectTab} />
       </div>
 
@@ -135,7 +144,16 @@ const Track = ({ match }) => {
       </div>
       <br />
       <div className="table-view" id="table">
-        <h1 className="h3 font-weight-normal">Track List</h1>
+        <h1 className="h3 font-weight-normal">Track List<CSVLink
+          data={asset.track}
+          headers={headers}
+          filename={`${asset.asset_data.name}.csv`}
+          className="btn btn-dark btn-csv"
+          target="_blank"
+        >
+          <img src={csvIcon} className="mr-2 mb-1" alt="csv icon"/>CSV
+        </CSVLink></h1>
+        
         <hr />
         <DataTable dispatch={dispatch} track={asset.track} />
       </div>

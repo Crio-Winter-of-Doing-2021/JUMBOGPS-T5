@@ -1,4 +1,5 @@
 import moment from "moment";
+import logger from "../../utils/logger";
 import {
   loadAsset,
   loadAssetSuccess,
@@ -47,7 +48,7 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
         getState().user.token,
         action.payload
       );
-      console.log(response, action.payload);
+      logger(response, action.payload);
       dispatch(loadAssetSuccess(response.data));
       const geoJSON = arrayToGeoJSON(response.data.data.track);
       dispatch(setGeoJSON(geoJSON));
@@ -83,7 +84,7 @@ const setDateRangeFlow = ({ getAssetTrackByTime }) => ({
   if (action.type === setDateRange.type) {
     dispatch(uiActions.setLoading(true));
     try {
-      console.log(action.payload);
+      logger(action.payload);
       const response = await getAssetTrackByTime(
         getState().user.token,
         getState().asset.assetInfo.id,

@@ -27,7 +27,18 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import React, { useCallback, useEffect, useRef, useState } from "react";
-import ReactMapGL, { Layer, Marker, Popup, Source } from "react-map-gl";
+import { Badge, Button, Card, Figure } from "react-bootstrap";
+import ReactMapGL, {
+  Layer,
+  Marker,
+  Popup,
+  Source,
+  FlyToInterpolator,
+  NavigationControl,
+  FullscreenControl,
+  ScaleControl,
+  GeolocateControl,
+} from "react-map-gl";
 import { EditingMode, Editor } from "react-map-gl-draw";
 import { useSelector } from "react-redux";
 import { getGeoJSON } from "../../../../../controller/reducer/asset";
@@ -41,7 +52,33 @@ import { getEditHandleStyle, getFeatureStyle } from "./common/draw-styles";
 import DrawFenceTools from "./common/DrawFenceTools";
 import DrawRouteTools from "./common/DrawRouteTools";
 import { heatmapLayer } from "./common/map-style";
+import moment from "moment";
 import "./styles.css";
+import logger from "../../../../../utils/logger";
+
+const geolocateStyle = {
+  top: 0,
+  left: 0,
+  padding: "10px",
+};
+
+const fullscreenControlStyle = {
+  top: 36,
+  left: 0,
+  padding: "10px",
+};
+
+const navStyle = {
+  top: 72,
+  left: 0,
+  padding: "10px",
+};
+
+const scaleControlStyle = {
+  top: 150,
+  left: 0,
+  padding: "10px",
+};
 
 /**
  * Map Component
@@ -77,9 +114,9 @@ function Map({
   submitGeoRoute,
 }) {
   const [viewport, setViewport] = useState({
-    latitude: locArray &amp;&amp; locArray.length > 1 ? locArray[0].lat : 24,
-    longitude: locArray &amp;&amp; locArray.length > 1 ? locArray[0].lon : 24,
-    zoom: locArray &amp;&amp; locArray.length > 1 ? 3 : 1,
+    latitude: locArray.length > 1 ? locArray[0].lat : 24,
+    longitude: locArray.length > 1 ? locArray[0].lon : 75,
+    zoom: locArray.length > 1 ? 3 : 1,
   });
 
   const [modeFence, setModeFence] = useState(null);
@@ -95,15 +132,26 @@ function Map({
   const geoFence = useSelector(getGeoFence);
   const geoRoute = useSelector(getGeoRoute);
 
+  const onSelectLocation = useCallback((longitude, latitude) => {
+    logger(longitude, latitude);
+    setViewport({
+      longitude,
+      latitude,
+      zoom: 8,
+      transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
+      transitionDuration: "auto",
+    });
+  }, []);
+
   useEffect(() => {
     if (tabId === "3" &amp;&amp; fenceEditorRef.current &amp;&amp; geoFence) {
       fenceEditorRef.current.addFeatures(geoFence);
-      console.log(geoFence);
-      console.log(fenceEditorRef.current.getFeatures());
+      logger(geoFence);
+      logger(fenceEditorRef.current.getFeatures());
     }
     if (tabId === "4" &amp;&amp; routeEditorRef.current &amp;&amp; geoRoute) {
       routeEditorRef.current.addFeatures(geoRoute);
-      console.log(routeEditorRef.current.getFeatures());
+      logger(routeEditorRef.current.getFeatures());
     }
   }, [tabId]);
 
@@ -123,7 +171,7 @@ function Map({
           setGeoFence(data[0]);
           setModeFence(new EditingMode());
         } else {
-          console.log(data[0]);
+          logger(data[0]);
           setGeoRoute(data[0]);
           setModeRoute(new EditingMode());
         }
@@ -225,6 +273,33 @@ function Map({
           submit={submitGeoRoute}
         />
       )}
+      &lt;div className="scrollmenu">
+        {locArray &amp;&amp;
+          locArray.map((loc, id) => (
+            &lt;Figure
+              key={id}
+              className="item"
+              onClick={() => onSelectLocation(loc.lon, loc.lat)}
+            >
+              &lt;Figure.Caption>
+                &lt;p className="p mt-2 mb-2 ml-4 mr-4 font-weight-bold">
+                  {moment
+                    .duration(moment().diff("2021-03-22T12:41:47.604Z"))
+                    .humanize()}{" "}
+                  ago
+                &lt;/p>
+              &lt;/Figure.Caption>
+            &lt;/Figure>
+          ))}
+      &lt;/div>
+      &lt;GeolocateControl
+        style={geolocateStyle}
+        positionOptions={{ enableHighAccuracy: true }}
+        trackUserLocation={true}
+      />
+      &lt;FullscreenControl style={fullscreenControlStyle} />
+      &lt;NavigationControl style={navStyle} showCompass={false} />
+      &lt;ScaleControl style={scaleControlStyle} />
     &lt;/ReactMapGL>
   );
 }
@@ -240,13 +315,13 @@ export default Map;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setAssetInfoFlow">setAssetInfoFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Mar 27 2021 11:15:29 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

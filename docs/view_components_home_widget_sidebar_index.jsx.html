@@ -35,7 +35,9 @@ import profileIcon from "../../../../../assets/icons/profile.png";
 import tableIcon from "../../../../../assets/icons/table.png";
 import trackIcon from "../../../../../assets/icons/track.png";
 import { getShowSidenav } from "../../../../../controller/reducer/ui";
+import { Link } from "react-router-dom";
 import "./styles.css";
+import { getAssetInfo } from "../../../../../controller/reducer/asset";
 
 /**
  * Side Navigation Component
@@ -50,6 +52,7 @@ import "./styles.css";
  */
 function SideBar({ activeKey, onSelect, onShow }) {
   const show = useSelector(getShowSidenav);
+  const assetId = useSelector(getAssetInfo).id;
   return (
     &lt;div
       id="mySidenav"
@@ -63,25 +66,25 @@ function SideBar({ activeKey, onSelect, onShow }) {
         className="flex-column"
       >
         &lt;Nav.Item>
-          &lt;Nav.Link eventKey="1">
+          &lt;Nav.Link as={Link} to="/" eventKey="1">
             &lt;img className="icon" src={dashboardIcon} />
-            &lt;p className=" h5 font-weight-light">Dashboard &lt;/p>
+            &lt;p className=" h5 font-weight-light">Dashboard &lt;/p>     
           &lt;/Nav.Link>
         &lt;/Nav.Item>
         &lt;Nav.Item>
-          &lt;Nav.Link eventKey="2">
+          &lt;Nav.Link as={Link} to={`/track/${assetId ? assetId : "none"}`} eventKey="2">
             &lt;img className="icon" src={trackIcon} />
             &lt;p className=" h5 font-weight-light">Track Asset&lt;/p>
           &lt;/Nav.Link>
         &lt;/Nav.Item>
         &lt;Nav.Item>
-          &lt;Nav.Link eventKey="3">
+          &lt;Nav.Link as={Link} to="/asset-list" eventKey="3">
             &lt;img className="icon" src={tableIcon} />
             &lt;p className=" h5 font-weight-light">All Assets&lt;/p>
           &lt;/Nav.Link>
         &lt;/Nav.Item>
         &lt;Nav.Item>
-          &lt;Nav.Link eventKey="4">
+          &lt;Nav.Link as={Link} to="/profile" href="/profile" eventKey="4">
             &lt;img className="icon" src={profileIcon} />
             &lt;p className=" h5 font-weight-light">Profile&lt;/p>
           &lt;/Nav.Link>
@@ -108,13 +111,13 @@ export default SideBar;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setAssetInfoFlow">setAssetInfoFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Mar 27 2021 11:15:29 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -8,7 +8,8 @@ export const counterSlice = createSlice({
     token: "", 
     remember: false,
     profile: {
-      male: true,
+      name: "",
+      isMale: true,
       phone: 0,
       address: "",
       role: "Site Administrator",
@@ -22,13 +23,15 @@ export const counterSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.token = action.payload.token;
+      state.profile.name = action.payload.name;
     },
     loadProfile: () => {},
     loadProfileSuccess: (state, action) => {
       state.name = action.payload.name;
-      state.email = action.payload.email;
+      state.profile = action.payload;
+      state.profile.isMale = action.payload.isMale==="true";
     },
-    removeUser: (state, action) => {
+    removeUser: (state) => {
       state.name = "";
       state.email = "";
       state.token = "";
@@ -38,6 +41,8 @@ export const counterSlice = createSlice({
     },
     loadLocalUser: () => {},
     performLogout: () => {},
+    updateProfile : () => {},
+    updatePassword : () => {}
   },
 });
 
@@ -51,11 +56,15 @@ export const {
   setRemember,
   loadLocalUser,
   performLogout,
+  updateProfile,
+  updatePassword
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
 
 export const getUser = (state) => state.user;
+
+export const getProfile = (state) => state.user.profile;
 
 export const getToken = (state) => state.user.token;
 

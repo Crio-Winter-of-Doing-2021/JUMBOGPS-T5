@@ -1,9 +1,44 @@
-import React, { useState } from "react";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import { setAssetInfo } from "../../../../../controller/reducer/asset";
+import React, { useCallback, useState } from "react";
+import { Button, Card } from "react-bootstrap";
+import ReactMapGL, {
+  FlyToInterpolator,
+  Marker,
+  Popup,
+  NavigationControl,
+  FullscreenControl,
+  ScaleControl,
+  GeolocateControl,
+} from "react-map-gl";
+import { useSelector } from "react-redux";
+import { getAssets } from "../../../../../controller/reducer/assets";
 import Markers from "../../../../../data/constants/Markers";
+import logger from "../../../../../utils/logger";
 import Info from "../../widget/info";
 import "./styles.css";
+
+const geolocateStyle = {
+  top: 0,
+  left: 0,
+  padding: "10px",
+};
+
+const fullscreenControlStyle = {
+  top: 36,
+  left: 0,
+  padding: "10px",
+};
+
+const navStyle = {
+  top: 72,
+  left: 0,
+  padding: "10px",
+};
+
+const scaleControlStyle = {
+  top: 150,
+  left: 0,
+  padding: "10px",
+};
 
 /**
  * Map Component for Dashboard
@@ -17,11 +52,14 @@ import "./styles.css";
  *  <Map assets={assets} dispatch={dispatch}/>
  * )
  */
-function Map({ assets, dispatch }) {
+function Map() {
+  const assets = useSelector(getAssets);
   const [viewport, setViewport] = useState({
     latitude: assets && assets.length > 1 ? assets[0].lat : 24,
     longitude: assets && assets.length > 1 ? assets[0].lon : 76,
     zoom: assets && assets.length > 1 ? 3 : 1,
+    bearing: 0,
+    pitch: 0,
   });
 
   const [asset, setAsset] = useState(null);
@@ -30,6 +68,17 @@ function Map({ assets, dispatch }) {
     // onSelect(asset);
     setAsset(asset);
   };
+
+  const onSelectLocation = useCallback((longitude, latitude) => {
+    logger(longitude, latitude);
+    setViewport({
+      longitude,
+      latitude,
+      zoom: 8,
+      transitionInterpolator: new FlyToInterpolator({ speed: 1.2 }),
+      transitionDuration: "auto",
+    });
+  }, []);
 
   if (!assets) return <></>;
 
@@ -42,6 +91,7 @@ function Map({ assets, dispatch }) {
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       mapStyle="mapbox://styles/tazril/cklo46zze4zoz17pg8tp1oyms"
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
+      dragRotate={false}
     >
       {assets.map((asset, id) => (
         <Marker latitude={asset.lat} longitude={asset.lon} key={id}>
@@ -76,6 +126,28 @@ function Map({ assets, dispatch }) {
           />
         </Popup>
       )}
+      <div className="scrollmenu">
+        {assets &&
+          assets.map((asset, id) => (
+            <Card
+              key={id}
+              className="item"
+              onClick={() => onSelectLocation(asset.lon, asset.lat)}
+            >
+              <Card.Body>
+                <Card.Text>{asset.name}</Card.Text>
+              </Card.Body>
+            </Card>
+          ))}
+      </div>
+      <GeolocateControl
+        style={geolocateStyle}
+        positionOptions={{ enableHighAccuracy: true }}
+        trackUserLocation={true}
+      />
+      <FullscreenControl style={fullscreenControlStyle} />
+      <NavigationControl style={navStyle} showCompass={false} />
+      <ScaleControl style={scaleControlStyle} />
     </ReactMapGL>
   );
 }

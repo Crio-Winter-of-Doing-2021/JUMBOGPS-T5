@@ -7,7 +7,7 @@ import {
 
 const DrawFenceTools = ({ setMode, onDelete, submit }) => {
   return (
-    <div className="mapboxgl-ctrl-top-left">
+    <div className="mapboxgl-ctrl-top-right">
       <div className="mapboxgl-ctrl-group mapboxgl-ctrl">
         <button
           className=" mapbox-gl-draw_polygon"

@@ -48,7 +48,7 @@ function Info({ asset, onClose, minimal }) {
               variant="primary"
               onClick={() => {
                 // onSelectAsset(asset._id);
-                history.push("/track/"+asset._id);
+                history.push("/track/"+asset._id+"#track");
               }}
             >
               Track

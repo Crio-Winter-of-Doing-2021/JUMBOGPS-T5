@@ -8,6 +8,8 @@ import {
   performSignin,
   performSignUp,
   removeUser,
+  updateProfile,
+  updatePassword
 } from "../reducer/user";
 
 /**
@@ -95,6 +97,7 @@ const getProfileFlow = ({ getProfile }) => ({ dispatch, getState }) => (
 ) => async (action) => {
   next(action);
   if (action.type === loadProfile.type) {
+    dispatch(uiActions.setLoading(true));
     try {
       const response = await getProfile(getState().user.token);
       dispatch(loadProfileSuccess(response.data.data));
@@ -105,8 +108,66 @@ const getProfileFlow = ({ getProfile }) => ({ dispatch, getState }) => (
         dispatch(uiActions.setError(error.message));
       }
     }
+    dispatch(uiActions.setLoading(false));
   }
 };
+
+/**
+* Update Profile Middleware
+* @description
+* Performs PUT Profile API call. If call is successful, profile data  is saved locally.
+* Otherwise error handling is done.
+* Dispatches setLoading, loadProfileSuccess and setError
+* @param {function} services.getProfile perform get profile api call
+*/ 
+const updateProfileFlow = ({ putProfile, saveLocalUser, getLocalUser }) => ({ dispatch, getState }) => (
+  next
+) => async (action) => {
+  next(action);
+  if (action.type === updateProfile.type) {
+    try {
+      const response = await putProfile(getState().user.token,action.payload);
+      dispatch(loadProfileSuccess(action.payload));
+      dispatch(uiActions.setSuccessToast("Profile Updated Successfully"));
+      if (getLocalUser()) {
+        saveLocalUser(getState().user);
+      }
+    } catch (error) {
+      if (error.response) {
+        dispatch(uiActions.setError(error.response.data.error));
+      } else {
+        dispatch(uiActions.setError(error.message));
+      }
+    }
+  }
+};
+
+/**
+* Update Password Middleware
+* @description
+* Performs PUT Profile API call. If call is successful, profile data  is saved locally.
+* Otherwise error handling is done.
+* Dispatches setLoading, loadProfileSuccess and setError
+* @param {function} services.getProfile perform get profile api call
+*/ 
+const updatePasswordFlow = ({ putPassword}) => ({ dispatch, getState }) => (
+  next
+) => async (action) => {
+  next(action);
+  if (action.type === updatePassword.type) {
+    try {
+      const response = await putPassword(getState().user.token,action.payload);
+      dispatch(uiActions.setSuccessToast("Password Updated Successfully"));
+    } catch (error) {
+      if (error.response) {
+        dispatch(uiActions.setError(error.response.data.error.message));
+      } else {
+        dispatch(uiActions.setError(error.message));
+      }
+    }
+  }
+};
+
 
 /**
 * Load Local User Middleware
@@ -154,6 +215,8 @@ const userFlow = [
   getProfileFlow,
   loadLocalUserFlow,
   performLogoutFlow,
+  updateProfileFlow,
+  updatePasswordFlow,
 ];
 
 export default userFlow;

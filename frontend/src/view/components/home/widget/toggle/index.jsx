@@ -7,7 +7,7 @@ const Toggle = ({ value, onChange, title }) => {
       <ButtonGroup toggle className="m-2">
         <ToggleButton
           type="checkbox"
-          variant="outline-primary"
+          variant="outline-dark"
           checked={value}
           onChange={onChange}
         >

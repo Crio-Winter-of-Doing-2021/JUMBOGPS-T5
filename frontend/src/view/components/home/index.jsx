@@ -1,5 +1,11 @@
-import React, {useEffect} from "react";
-import { useDispatch, useSelector,  } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -13,7 +19,6 @@ import {
   setTabId,
   toggleSidenav,
 } from "../../../controller/reducer/ui";
-import { BrowserRouter as Router, Switch, Route, useHistory } from "react-router-dom";
 import { performLogout } from "../../../controller/reducer/user";
 import useWindowDimensions from "../../hooks/windowDimension";
 import AssetList from "./assetlist";
@@ -54,55 +59,58 @@ const Home = () => {
 
   const { width } = useWindowDimensions();
 
-  if (width > 750 && !sidenav) {
-    dispatch(toggleSidenav());
-  }
+  useEffect(() => {
+    if (width > 750 && !sidenav) {
+      dispatch(toggleSidenav());
+    }
+  }, [width]);
 
-  if (err) {
-    notify(err);
-    dispatch(setError(""));
-  }
+  useEffect(() => {
+    if (err) {
+      notify(err);
+      dispatch(setError(""));
+    }
+  }, [err]);
 
-  if (msg) {
-    notify(msg);
-    dispatch(setSuccessToast(""));
-  }
-
-  // useEffect(() => {
-  //   if(history && tabId==="2")    history.push("/track");
-  // }, [tabId])
+  useEffect(() => {
+    if (msg) {
+      notify(msg);
+      dispatch(setSuccessToast(""));
+    }
+  }, [msg]);
 
   const handleClose = () => dispatch(setshowLogoutModal(false));
   const handleShow = () => dispatch(setshowLogoutModal(true));
   const handleShowSidenav = () => dispatch(toggleSidenav());
   const handleSelect = (eventKey) => dispatch(setTabId(eventKey));
-  
+
   const logout = () => dispatch(performLogout());
-
-  let component = <Dashboard dispatch={dispatch} />;
-
-  if (tabId === "2") {
-    component = <Track dispatch={dispatch} />;
-  }
-  else if (tabId === "3") component = <AssetList dispatch={dispatch} />;
-  else if (tabId === "4") component = <Profile dispatch={dispatch} />;
 
   return (
     <Router>
-    <div className="home ">
-      <Header onSelect={handleShowSidenav} />
-      <SideBar activeKey={tabId} onSelect={handleSelect} onShow={handleShow} />
-      <div className="child ">
-      <Switch>
+      <div className="home ">
+        <Header onSelect={handleShowSidenav} />
+        <SideBar
+          activeKey={tabId}
+          onSelect={handleSelect}
+          onShow={handleShow}
+        />
+        <div className="child ">
+          <Switch>
             <Route path="/" exact component={Dashboard} />
             <Route path="/track/:id" exact component={Track} />
             <Route path="/asset-list" exact component={AssetList} />
-            <Route path="/profile" exact component={Profile} />
+            <Route
+              path="/profile"
+              exact
+              component={Profile}
+              onSelect={() => dispatch(setTabId("4"))}
+            />
           </Switch>
         </div>
-      <LogoutModal onClose={handleClose} logout={logout} />
-      <ToastContainer position="top-right" autoClose={3000} />
-    </div>
+        <LogoutModal onClose={handleClose} logout={logout} />
+        <ToastContainer position="top-right" autoClose={3000} />
+      </div>
     </Router>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { performSignUp } from "../../../../controller/reducer/user";
+import logger from "../../../../utils/logger";
 import "./styles.css";
 
 const SignIn = ({ toggle, notify, dispatch }) => {
@@ -11,7 +12,7 @@ const SignIn = ({ toggle, notify, dispatch }) => {
 
   const register = (e) => {
     e.preventDefault();
-    console.log(name, email, password, confirmPassword);
+    logger(name, email, password, confirmPassword);
     if(password!==confirmPassword) {
       notify("Both passwoord should match");
     } else {

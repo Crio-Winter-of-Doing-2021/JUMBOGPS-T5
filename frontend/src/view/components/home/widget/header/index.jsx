@@ -35,7 +35,7 @@ function Header({ onSelect }) {
       {user && user.name && (
         <div className="d-flex ">
           <img
-            src={user.profile.male ? maleIcon : femaleIcon}
+            src={user.profile.isMale ? maleIcon : femaleIcon}
             className="avatar-small"
           />
           <p className="h6 ml-2 mt-1 font-weight-normal text-light">

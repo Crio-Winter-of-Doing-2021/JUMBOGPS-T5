@@ -7,3 +7,35 @@
     border-radius: 20px;
 }
 
+div.scrollmenu {
+    margin: 0px 20px;
+    width: 90%;
+    overflow: auto;
+    white-space: nowrap;
+    overflow-x: scroll;
+    position: absolute;
+    bottom: 0;
+    z-index: 10;
+  }
+  div.scrollmenu::-webkit-scrollbar {
+    width: 0;
+  }
+  
+  div.scrollmenu .item {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    float: none;
+    font-size: 16px;
+    margin: 10px;
+    background-color: white;
+    text-overflow: ellipsis;
+    box-shadow: 1px 1px 1px 1px #009e9e36 ;
+  }
+  
+  div.scrollmenu .item:hover {
+    background-color: rgb(233, 233, 233);
+  }
+  
+  

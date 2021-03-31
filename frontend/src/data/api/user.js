@@ -21,4 +21,24 @@ export const profile = (authToken) =>
     },
   });
 
+export const profileUpdate = (authToken, profileData) =>
+  axios.put(
+    Urls.PROFILE_UPDATE_URL,
+    profileData,
+    {
+      headers: {
+        Authorization: `Token ${authToken}`,
+      },
+    }
+  );
 
+  export const passwordUpdate = (authToken, passwordData) =>
+  axios.put(
+    Urls.PASSWORD_UPDATE_URL,
+    passwordData,
+    {
+      headers: {
+        Authorization: `Token ${authToken}`,
+      },
+    }
+  );

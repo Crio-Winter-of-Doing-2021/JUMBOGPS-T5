@@ -2,7 +2,10 @@ export const BASE_URL = "http://localhost:8000";
 
 export const SIGN_IN_URL = `${BASE_URL}/auth/signin`;
 export const SIGN_UP_URL = `${BASE_URL}/auth/signup`;
-export const PROFILE_URL = `${BASE_URL}/auth/user`;
+export const PASSWORD_UPDATE_URL = `${BASE_URL}/auth/updatePassword`;
+
+export const PROFILE_URL = `${BASE_URL}/user/getuser`;
+export const PROFILE_UPDATE_URL= `${BASE_URL}/user/updateprofile`;
 
 export const ASSET_LIST_URL = `${BASE_URL}/api/asset/list`;
 export const trackUrl = (id) => `${BASE_URL}/api/asset/track/${id}`;

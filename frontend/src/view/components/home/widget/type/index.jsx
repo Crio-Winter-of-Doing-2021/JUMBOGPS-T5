@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getAssetType } from "../../../../../controller/reducer/assets";
+import logger from "../../../../../utils/logger";
 import Toggle from "../toggle";
 
 /**
@@ -27,7 +28,7 @@ const TypeSelector = ({ onSelect }) => {
     if (truck && salesman) assetType = "";
     else if (truck) assetType = "truck";
     else if (salesman) assetType = "salesman";
-    console.log(truck, salesman, assetType);
+    logger(truck, salesman, assetType);
     onSelect(assetType);
   };
 

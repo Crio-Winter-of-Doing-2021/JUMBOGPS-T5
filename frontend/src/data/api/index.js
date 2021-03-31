@@ -9,7 +9,10 @@ const services = {
 
     postSignin: userApi.signin,
     postSignup: userApi.signup,
+    putPassword: userApi.passwordUpdate,
+    
     getProfile: userApi.profile,
+    putProfile: userApi.profileUpdate,
 
     getGeoFence: geoApi.getGeoFence,
     getGeoRoute: geoApi.getGeoRoute,

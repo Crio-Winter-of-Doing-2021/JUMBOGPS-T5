@@ -16,6 +16,7 @@
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.1",
     "react-bootstrap-daterangepicker": "^7.0.0",
+    "react-csv": "^2.0.3",
     "react-dom": "^17.0.1",
     "react-map-gl": "^6.1.10",
     "react-map-gl-draw": "^0.22.3",

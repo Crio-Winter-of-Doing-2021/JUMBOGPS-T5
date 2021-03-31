@@ -1,3 +1,4 @@
+import logger from "../../utils/logger";
 import {
   loadAssets,
   loadAssetsSuccess,
@@ -24,6 +25,7 @@ const loadAssetsFlow = ({ getAssetList }) => ({ dispatch, getState }) => (
         getState().assets.assetType
       );
       dispatch(loadAssetsSuccess(response.data));
+      logger(response.data);
     } catch (error) {
       dispatch(uiActions.setError(error));
     }

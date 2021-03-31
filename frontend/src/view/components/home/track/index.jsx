@@ -89,7 +89,7 @@ const Track = ({ match }) => {
     return (
       <div
         className="track bg-light"
-        style={{ left: sidenav ? "200px" : "0px" }}
+        style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
       >
         <h1 className="h2 font-weight-normal m-2">Asset : None</h1>
         <AutoSearch dispatch={dispatch} />
@@ -103,7 +103,8 @@ const Track = ({ match }) => {
 
   logger("asset ", asset);
   return (
-    <div className="track bg-light" style={{ left: sidenav ? "200px" : "0px" }}>
+    <div className="track bg-light" style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
+    >
       <h1 className="h2 font-weight-normal m-2">
         Asset : {assetInfo.name}
         <span className="h6 font-weight-light">{"[" + assetInfo.id + "]"}</span>
@@ -117,7 +118,7 @@ const Track = ({ match }) => {
         </Col>
       </Row>
       <hr />
-      <div className="d-flex justify-content-center " id="track" >
+      <div className="d-flex justify-content-center ">
         <Tabs onSelect={onSelectTab} />
       </div>
 
@@ -144,11 +145,12 @@ const Track = ({ match }) => {
       </div>
       <br />
       <div className="table-view" id="table">
-        <h1 className="h3 font-weight-normal">Track List<CSVLink
+        <h1 className="h3 font-weight-normal">Track List
+        <CSVLink
           data={asset.track}
           headers={headers}
           filename={`${asset.asset_data.name}.csv`}
-          className="btn btn-dark btn-csv"
+          className="btn btn-dark btn-csv-end"
           target="_blank"
         >
           <img src={csvIcon} className="mr-2 mb-1" alt="csv icon"/>CSV

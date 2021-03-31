@@ -4,7 +4,7 @@
   overflow: auto;
   top: 50px;
   right: 0px;
-  left:200px;
+  left:var(--sidenav-width);
   padding: 20px;
   bottom: 0;
   transition: left 0.5s;
@@ -14,10 +14,13 @@
   height: 100px;
   width: 100px;
 }
-.btn-csv{
+.asset-list .btn-csv{
   position: absolute;
+  margin: 9px auto;
 }
 
-/* @media screen and (max-width: 750px) {
-  .asset-list {left: 0px;}
-} */
+@media screen and (max-width: 750px) {
+  .asset-list .btn-csv img{
+    display: none;
+  }
+}

@@ -1,0 +1,9 @@
+
+
+@media screen and (max-width: 750px) {
+    .type-div p {
+        display: none;
+    }
+  
+
+}

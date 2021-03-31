@@ -1,11 +1,14 @@
 import moment from "moment";
 import React from "react";
 import { Table } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 
-const DataTable = ({ dispatch, track }) => {
+const DataTable = ({  track }) => {
+  const deviceSize = useSelector(getDeviceSize);
   if (!track) return <div></div>;
   return (
-    <Table striped bordered hover variant="light">
+    <Table striped bordered hover variant="light" size={deviceSize}>
       <thead>
         <tr>
           <th>#</th>

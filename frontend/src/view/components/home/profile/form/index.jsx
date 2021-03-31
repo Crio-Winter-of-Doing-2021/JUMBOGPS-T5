@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import { getUser, getProfile } from '../../../../../controller/reducer/user';
 import { Button } from "react-bootstrap";
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 
 const ProfileForm = ({onSubmit,onClose}) => {
     const user = useSelector(getUser);
     const profile = useSelector(getProfile);
+    const deviceSize = useSelector(getDeviceSize);
 
     const [name, setName] = useState(profile.name);
     const [about, setAbout] = useState(profile.about);
@@ -63,7 +65,7 @@ const ProfileForm = ({onSubmit,onClose}) => {
           />
         </div>
         <div className="form-group">
-          <label>Address {profile.address}</label>
+          <label>Address</label>
           <input
             type="text"
             className="form-control"
@@ -117,13 +119,14 @@ const ProfileForm = ({onSubmit,onClose}) => {
             />
           </div>
         </div>
-        <Button type="submit" variant="primary">
+        <Button className="mt-4" type="submit" variant="primary" size={deviceSize}>
           Save Change
         </Button>
         <Button
-          className="ml-4"
+          className="ml-4 mt-4"
           onClick={onClose}
           variant="outline-secondary"
+          size={deviceSize}
         >
           Close Settings
         </Button>

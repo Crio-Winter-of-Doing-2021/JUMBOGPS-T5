@@ -11,6 +11,7 @@ import ReactMapGL, {
 } from "react-map-gl";
 import { useSelector } from "react-redux";
 import { getAssets } from "../../../../../controller/reducer/assets";
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import Markers from "../../../../../data/constants/Markers";
 import logger from "../../../../../utils/logger";
 import Info from "../../widget/info";
@@ -63,9 +64,9 @@ function Map() {
   });
 
   const [asset, setAsset] = useState(null);
+  const deviceSize = useSelector(getDeviceSize);
 
   const handleClick = (asset) => {
-    // onSelect(asset);
     setAsset(asset);
   };
 
@@ -120,9 +121,7 @@ function Map() {
           <Info
             asset={asset}
             onClose={() => setAsset(null)}
-            // onSelectAsset={(id) =>
-            //   dispatch(setAssetInfo({ id: id, name: asset.name }))
-            // }
+
           />
         </Popup>
       )}
@@ -134,7 +133,7 @@ function Map() {
               className="item"
               onClick={() => onSelectLocation(asset.lon, asset.lat)}
             >
-              <Card.Body>
+              <Card.Body  className={deviceSize!=="sm"?" ":"p-2"}>
                 <Card.Text>{asset.name}</Card.Text>
               </Card.Body>
             </Card>
@@ -147,7 +146,7 @@ function Map() {
       />
       <FullscreenControl style={fullscreenControlStyle} />
       <NavigationControl style={navStyle} showCompass={false} />
-      <ScaleControl style={scaleControlStyle} />
+      {deviceSize!=="sm" && <ScaleControl style={scaleControlStyle} />}
     </ReactMapGL>
   );
 }

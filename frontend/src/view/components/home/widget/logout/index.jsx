@@ -18,8 +18,8 @@ const LogoutModal = ({ onClose, logout }) => {
   const showLogoutModal = useSelector(getShowLogout);
 
   return (
-    <Modal show={showLogoutModal} animation={false} onHide={onClose}>
-      <Modal.Header closeButton>
+    <Modal show={showLogoutModal} animation={false}  onHide={onClose}>
+      <Modal.Header >
         <Modal.Title>Sign Out</Modal.Title>
       </Modal.Header>
       <Modal.Body>Are you sure you want to Sign Out</Modal.Body>

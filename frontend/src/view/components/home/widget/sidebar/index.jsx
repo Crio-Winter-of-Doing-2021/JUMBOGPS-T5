@@ -27,9 +27,9 @@ function SideBar({ activeKey, onSelect, onShow }) {
   const assetId = useSelector(getAssetInfo).id;
   return (
     <div
-      id="mySidenav"
+      id="sidenav"
       className="sidenav bg-secondary"
-      style={{ width: show ? "200px" : "0px" }}
+      style={{ width: show ? "var(--sidenav-width)" : "0px" }}
     >
       <Nav
         variant="tabs"
@@ -40,7 +40,7 @@ function SideBar({ activeKey, onSelect, onShow }) {
         <Nav.Item>
           <Nav.Link as={Link} to="/" eventKey="1">
             <img className="icon" src={dashboardIcon} />
-            <p className=" h5 font-weight-light">Dashboard </p>     
+            <p className="h5 font-weight-light">Dashboard </p>     
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

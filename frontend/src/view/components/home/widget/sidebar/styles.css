@@ -1,7 +1,9 @@
-
+:root {
+  --sidenav-width: 200px;
+}
 /* The side navigation menu */
 .sidenav {
-    width: 200px; /* 0 width - change this with JavaScript */
+    width: var(--sidenav-width); /* 0 width - change this with JavaScript */
     position: absolute; /* Stay in place */
     top: 50px; /* Stay at the top */
     left: 0;
@@ -9,7 +11,6 @@
     background-color:  #1a237e;
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 50px; /* Place content 60px from the top */
-    /* transition: 0.5s;  0.5 second transition effect to slide in the sidenav */
     transition: width 0.5s;
   }
 
@@ -51,7 +52,20 @@
     padding: 20px;
   }
 
+ 
   
   @media screen and (max-width: 750px) {
-    .sidenav {width: 0px;}
+    :root {
+      --sidenav-width: 80px;
+    }
+    #sidenav p{
+      display: none;
+    }
+    .icon{
+      width: 40px;
+      height: 40px;
+    }
+    .sidenav a {
+      padding: 8px 8px 8px 10px;
+    }
   }

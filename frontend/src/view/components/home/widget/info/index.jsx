@@ -3,6 +3,8 @@ import { Button, Card } from "react-bootstrap";
 import { AssetProperties } from "../../../../../data/constants/Asset";
 import "./styles.css";
 import { withRouter, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 
 
 /**
@@ -23,17 +25,18 @@ import { withRouter, useHistory } from "react-router-dom";
  */
 function Info({ asset, onClose, minimal }) {
   const history = useHistory();
+  const deviceSize = useSelector(getDeviceSize);
   if (!asset) return <div> </div>;
   return (
-    <div className="d-flex align-items-center">
-      {!minimal && (
+    <div className="d-flex info align-items-center">
+      {!minimal && deviceSize!=="sm" && (
         <Card.Img
           src={asset.image_url}
           style={{ height: "300px", width: "300px " }}
         />
       )}
       <div className="info" style={{ width: "18rem" }}>
-        <Card.Body>
+        <Card.Body className={deviceSize!=="sm"?" ":"p-2"}>
           <Card.Title>{asset.name}</Card.Title>
           <Card.Text>{asset.desc}</Card.Text>
           {AssetProperties.filter(({ value, label }) => asset.body[value]).map(
@@ -45,10 +48,10 @@ function Info({ asset, onClose, minimal }) {
           )}
           {!minimal && (
             <Button
+            size={deviceSize}
               variant="primary"
               onClick={() => {
-                // onSelectAsset(asset._id);
-                history.push("/track/"+asset._id+"#track");
+                history.push("/track/"+asset._id);
               }}
             >
               Track
@@ -56,6 +59,7 @@ function Info({ asset, onClose, minimal }) {
           )}
           {!minimal && (
             <Button
+            size={deviceSize}
               variant="outline-secondary"
               className="ml-2"
               onClick={onClose}

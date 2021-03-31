@@ -3,9 +3,10 @@
   overflow: auto;
   top: 50px;
   right: 0px;
-  left:200px;
+  left:var(--sidenav-width);
   bottom: 0px;
   transition: left 0.5s;
+  padding: 20px;
 }
 body{
   color: #8e9194;

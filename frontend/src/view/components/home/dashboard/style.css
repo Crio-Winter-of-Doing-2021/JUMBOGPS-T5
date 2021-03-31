@@ -3,7 +3,6 @@
   overflow: auto;
   top: 50px;
   right: 0px;
-  left:200px;
   bottom: 0px;
   transition: left 0.5s;
 }
@@ -22,6 +21,8 @@
 }
 
 
-/* @media screen and (max-width: 750px) {
-  .dashboard {left: 0px;}
-} */
+@media screen and (max-width: 750px) {
+  .map-child{
+    height: 100%;
+  }
+}

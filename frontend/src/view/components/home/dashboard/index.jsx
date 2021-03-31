@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  getAssets,
   loadAssets,
-  setAssetType
+  setAssetType,
+  getAssets,
 } from "../../../../controller/reducer/assets";
 import {
   getLoading,
-  getShowSidenav, pageLoaded
+  getShowSidenav,
+  pageLoaded,
 } from "../../../../controller/reducer/ui";
 import Loader from "../widget/loader";
 import TypeSelector from "../widget/type";
 import Map from "./map";
-import "./style.css";
 import "./style.css";
 
 /**
@@ -24,16 +24,16 @@ import "./style.css";
  *   <Dashboard dispatch={dispatch}/>
  * )
  */
-const Dashboard = ({ }) => {
-  const assets = useSelector(getAssets);
+const Dashboard = ({}) => {
   const dispatch = useDispatch();
+  const assets = useSelector(getAssets);
 
   useEffect(() => {
     dispatch(pageLoaded());
   }, [dispatch]);
 
   // console.log("assets ", assets, "loading", loading);
-  const onSelect =  (assetType) => {
+  const onSelect = (assetType) => {
     dispatch(setAssetType(assetType));
     dispatch(loadAssets());
   };
@@ -51,8 +51,9 @@ const Dashboard = ({ }) => {
       </div>
 
       <div className="map-child">
-        <Map assets={assets} dispatch={dispatch} />
+        <Map />
       </div>
+
     </div>
   );
 };

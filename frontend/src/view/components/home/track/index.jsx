@@ -1,26 +1,28 @@
 import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAsset,
   getAssetInfo,
-  getGeoJSON,
-  loadAsset,
-  setAssetInfo,
+
+  loadAsset
 } from "../../../../controller/reducer/asset";
-import { getAssetsLength, loadAssets } from "../../../../controller/reducer/assets";
+import {
+  getAssetsLength,
+  loadAssets
+} from "../../../../controller/reducer/assets";
 import {
   setGeoFence,
   setGeoRoute,
   updateGeoFence,
-  updateGeoRoute,
+  updateGeoRoute
 } from "../../../../controller/reducer/geo";
 import {
   getLoading,
   getShowSidenav,
   getTabId,
   setTabId,
-  setTrackTabId,
+  setTrackTabId
 } from "../../../../controller/reducer/ui";
 import Loader from "../widget/loader";
 import Notifications from "../widget/notifications";
@@ -61,18 +63,20 @@ const Track = ({ match }) => {
   const onSelectTab = (key) => dispatch(setTrackTabId(key));
 
   useEffect(() => {
-    if (match.params.id !== "none" || match.params.id!==assetInfo.id) {
+    if (
+      match.params.id !== "none" ||
+      (match.params.id !== "none" && match.params.id !== assetInfo.id)
+    ) {
       dispatch(loadAsset(match.params.id));
     }
-    if(tabId!=="2") dispatch(setTabId("2"));
-    if(noOfAssets===0) dispatch(loadAssets());
+    if (tabId !== "2") dispatch(setTabId("2"));
+    if (noOfAssets === 0) dispatch(loadAssets());
   }, [match.params.id]);
-
 
   const sidenav = useSelector(getShowSidenav);
   if (useSelector(getLoading)) return <Loader />;
 
-  if (match.params.id === "none" ||  !asset.asset_data) {
+  if (match.params.id === "none" || !asset.asset_data) {
     return (
       <div
         className="track bg-light"

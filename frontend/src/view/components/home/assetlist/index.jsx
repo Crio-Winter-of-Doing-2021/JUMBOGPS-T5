@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAssetInfo } from "../../../../controller/reducer/asset";
 import { loadAssets, setAssetType } from "../../../../controller/reducer/assets";
-import { getLoading, getShowSidenav, pageLoaded } from "../../../../controller/reducer/ui";
+import { getLoading, getShowSidenav, getTabId, pageLoaded, setTabId } from "../../../../controller/reducer/ui";
 import Loader from "../widget/loader";
 import TypeSelector from "../widget/type";
 import "./style.css";
@@ -29,9 +29,11 @@ const AssetList = ({  }) => {
     dispatch(loadAssets());
   };
 
-  // const onSelectTableItem = (id, name) => {
-  //   dispatch(setAssetInfo({ id, name }));
-  // };
+  const tabId = useSelector(getTabId);
+  useEffect(() => {
+    if(tabId!=="3") dispatch(setTabId("3"));
+  }, [tabId])
+
   const sidenav = useSelector(getShowSidenav);
   if (useSelector(getLoading)) return <Loader />;
 

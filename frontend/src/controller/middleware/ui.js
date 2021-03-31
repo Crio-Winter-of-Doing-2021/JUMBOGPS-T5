@@ -1,5 +1,5 @@
 import { loadAssets } from "../reducer/assets";
-import { pageLoaded } from "../reducer/ui";
+import { log, pageLoaded } from "../reducer/ui";
 
 /**
 * Page Load Middleware

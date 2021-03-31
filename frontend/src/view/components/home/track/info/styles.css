@@ -9,3 +9,9 @@
 .img{
     object-fit: cover;
 }
+
+@media screen and (max-width: 750px) {
+    .overlay{
+        padding:15px;
+    }
+}

@@ -55,7 +55,6 @@ const AutoSearch = ({ dispatch }) => {
       onChange={(item) => {
         setItem(item);
         history.push("/track/"+item.id);
-        // dispatch(setAssetInfo({ id: item.id, name: item.name }));
       }}
     />
   );

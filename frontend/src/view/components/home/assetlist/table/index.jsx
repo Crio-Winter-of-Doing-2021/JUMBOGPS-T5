@@ -4,10 +4,12 @@ import { Button, OverlayTrigger, Popover, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { getAssets } from "../../../../../controller/reducer/assets";
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import Info from "../../widget/info";
 
 const DataTable = ({  }) => {
   const assets = useSelector(getAssets);
+  const deviceSize = useSelector(getDeviceSize);
   const history = useHistory();
 
   const renderDetailsOverlay = (asset) => (
@@ -19,14 +21,14 @@ const DataTable = ({  }) => {
   );
 
   return (
-    <Table striped bordered hover variant="light">
+    <Table striped bordered hover variant="light" size={deviceSize}>
       <thead>
         <tr>
           <th>#</th>
           <th>Name</th>
           <th>Type</th>
-          <th>Latitude</th>
-          <th>Longitude</th>
+          {deviceSize!=="sm"  && <th>Latitude</th>}
+          {deviceSize!=="sm"  && <th>Longitude</th>}
           <th>Last Updated</th>
           <th>History</th>
         </tr>
@@ -43,17 +45,18 @@ const DataTable = ({  }) => {
               <td>{id}</td>
               <td>{asset.name}</td>
               <td>{asset.type}</td>
-              <td>{asset.lat}</td>
-              <td>{asset.lon}</td>
+               {deviceSize!=="sm" && <td>{asset.lat}</td>}
+               {deviceSize!=="sm" && <td>{asset.lon}</td>}
               <td>
                 {moment.duration(moment().diff(asset.timestamp)).humanize()} ago
               </td>
               <td>
                 <Button
+                  size={deviceSize}
                   variant="outline-primary"
                   onClick={() => {
                     // onSelect(asset._id, asset.name);
-                    history.push("/track/"+asset._id+"#track");
+                    history.push("/track/"+asset._id);
                   }}
                 >
                   Track

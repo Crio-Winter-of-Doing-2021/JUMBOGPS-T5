@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getAssetType } from "../../../../../controller/reducer/assets";
 import logger from "../../../../../utils/logger";
-import Toggle from "../toggle";
+import { ButtonGroup, ToggleButton } from "react-bootstrap";
+import "./styles.css";
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 
 /**
  * Type Selector Component
@@ -17,6 +19,7 @@ import Toggle from "../toggle";
  */
 const TypeSelector = ({ onSelect }) => {
   const assetType = useSelector(getAssetType);
+  const deviceSize = useSelector(getDeviceSize);
 
   const [truck, setTruck] = useState(assetType === "" || assetType === "truck");
   const [salesman, setSalesman] = useState(
@@ -33,24 +36,37 @@ const TypeSelector = ({ onSelect }) => {
   };
 
   return (
-    <div className="d-flex justify-content-end align-items-center">
+    <div className="type-div d-flex justify-content-end align-items-center">
       <p className="p font-weight-normal align-self-end">Selected:</p>
-      <Toggle
-        value={truck}
-        title={"truck"}
-        onChange={(e) => {
-          setTruck(e.currentTarget.checked);
-          submitTask(!truck, salesman);
-        }}
-      />
-      <Toggle
-        value={salesman}
-        title={"Salesman"}
-        onChange={(e) => {
-          setSalesman(e.currentTarget.checked);
-          submitTask(truck, !salesman);
-        }}
-      />
+
+      <ButtonGroup toggle className="m-2">
+        <ToggleButton
+          type="checkbox"
+          variant="outline-dark"
+          size={deviceSize}
+          checked={truck}
+          onChange={(e) => {
+            setTruck(e.currentTarget.checked);
+            submitTask(!truck, salesman);
+          }}
+        >
+          Truck
+        </ToggleButton>
+      </ButtonGroup>
+      <ButtonGroup toggle className="m-2">
+        <ToggleButton
+          type="checkbox"
+          variant="outline-dark"
+          size={deviceSize}
+          checked={salesman}
+          onChange={(e) => {
+            setSalesman(e.currentTarget.checked);
+            submitTask(truck, !salesman);
+          }}
+        >
+          Salesman
+        </ToggleButton>
+      </ButtonGroup>
     </div>
   );
 };

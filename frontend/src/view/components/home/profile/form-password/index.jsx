@@ -1,8 +1,11 @@
 import React, {useState} from 'react'
 import { Button } from "react-bootstrap";
+import { useSelector } from 'react-redux';
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 
 const PasswordForm = ({notify,onSubmit,onClose}) => {
 
+  const deviceSize = useSelector(getDeviceSize);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
@@ -68,13 +71,14 @@ const PasswordForm = ({notify,onSubmit,onClose}) => {
           </ul>
         </div>
       </div>
-      <Button type="submit" variant="primary">
+      <Button className="mt-4" type="submit" variant="primary" size={deviceSize}>
         Save Password
       </Button>
       <Button
-        className="ml-4"
+        className="ml-4 mt-4"
         onClick={onClose}
         variant="outline-secondary"
+        size={deviceSize}
       >
         Close Settings
       </Button>

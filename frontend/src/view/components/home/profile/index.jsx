@@ -68,8 +68,8 @@ const Profile = () => {
 
   return (
     <div
-      className="container profile bg-light"
-      style={{ left: sidenav ? "200px" : "0px" }}
+      className=" profile bg-light"
+      style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
     >
       <div className="row justify-content-center">
         <div className="col-12 col-lg-10 col-xl-8 mx-auto">
@@ -99,10 +99,6 @@ const Profile = () => {
                   </div>
                   <div className="col">
                     <p className="small mb-0 text-muted">{profile.address}</p>
-                    {/* <p className="small mb-0 text-muted">
-                      P.O. Box 464, 5975 Eget Avenue
-                    </p>
-                    <p className="small mb-0 text-muted">(537) 315-1481</p> */}
                   </div>
                 </div>
               </div>

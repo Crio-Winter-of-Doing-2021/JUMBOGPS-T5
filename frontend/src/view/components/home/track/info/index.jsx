@@ -1,9 +1,12 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import { AssetProperties } from "../../../../../data/constants/Asset";
 import "./styles.css";
 
 function Info({ asset }) {
+  const deviceSize = useSelector(getDeviceSize);
   if (!asset) return <div> </div>;
   return (
     <Card>
@@ -15,13 +18,14 @@ function Info({ asset }) {
         />
         <Card.ImgOverlay>
           <div className="overlay">
-            <Card.Title className="display-3">{asset.name}</Card.Title>
-            <Card.Text className="h1 font-weight-light">{asset.desc}</Card.Text>
+            <Card.Text className={`${deviceSize!=="sm"?"display-3":"h1  font-weight-normal"}`}>{asset.name}</Card.Text>
+            <br />
+            <Card.Text className={`${deviceSize!=="sm"?"h1":"h4"} font-weight-light`}>{asset.desc}</Card.Text>
             <br />
             {AssetProperties.filter(
               ({ value, label }) => asset.body[value]
             ).map(({ value, label }) => (
-              <p key={value} className="h2 font-weight-light">
+              <p key={value} className={`${deviceSize!=="sm"?"h2":"h5"} font-weight-light`}>
                 <strong>{label}</strong>: {asset.body[value]}
               </p>
             ))}

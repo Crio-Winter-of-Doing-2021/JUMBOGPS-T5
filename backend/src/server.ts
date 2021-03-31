@@ -1,9 +1,11 @@
 const app = require("./app");
+require('dotenv').config()
 import mongoose from "mongoose";
 
 //DATABASE
-export const databaseUrl =
-  "mongodb+srv://chypsd:jumbotailgps5@mongoperul.hirgt.mongodb.net/Jumbotail";
+export const databaseUrl = process.env.DATABASE_NAME || ""
+
+
 mongoose
   .connect(databaseUrl, {
     useNewUrlParser: true,
@@ -17,8 +19,11 @@ mongoose
     console.log(e);
   });
 
+
+
 //Host Server
-app.listen(8000, () => {
+app.listen(process.env.PORT, () => {
+  console.log()
   console.log("Server is running");
 });
 

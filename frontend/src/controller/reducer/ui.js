@@ -10,6 +10,7 @@ export const counterSlice = createSlice({
     error: "",
     message: "",
     showSideNav: true,
+    deviceSize : "lg",
   },
   reducers: {
     pageLoaded: () => {},
@@ -28,6 +29,10 @@ export const counterSlice = createSlice({
     toggleSidenav: (state) => {
       state.showSideNav = !state.showSideNav;
     },
+    hideSidenav: () => {},
+    setDeviceSize:(state, action)  => {
+      state.deviceSize = action.payload;
+    },
   },
 });
 
@@ -40,6 +45,8 @@ export const {
   setError,
   setTrackTabId,
   toggleSidenav,
+  setDeviceSize,
+  hideSidenav
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -57,3 +64,5 @@ export const getToastMessage = (state) => state.ui.message;
 export const getTrackTabId = (state) => state.ui.trackTabId;
 
 export const getShowSidenav = (state) => state.ui.showSideNav;
+
+export const getDeviceSize = (state) => state.ui.deviceSize;

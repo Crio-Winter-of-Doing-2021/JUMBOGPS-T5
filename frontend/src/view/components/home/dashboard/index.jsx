@@ -43,7 +43,7 @@ const Dashboard = ({}) => {
   return (
     <div
       className="dashboard bg-light"
-      style={{ left: sidenav ? "200px" : "0px" }}
+      style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
     >
       <div className="type-child">
         <TypeSelector onSelect={onSelect} />

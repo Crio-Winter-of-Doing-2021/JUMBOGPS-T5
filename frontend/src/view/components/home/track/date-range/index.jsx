@@ -52,6 +52,7 @@ const DateRangeSelector = ({ dispatch }) => {
     start.format("MMMM D, YYYY h:mm a") +
     " to " +
     end.format("MMMM D, YYYY h:mm a");
+    
   return (
     <div className="bg-secondary outer-box">
       <p>Select Start and End Date</p>

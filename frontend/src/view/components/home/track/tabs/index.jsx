@@ -6,8 +6,8 @@ import { getTrackTabId } from "../../../../../controller/reducer/ui";
 function Tabs({ onSelect }) {
   const tabId = useSelector(getTrackTabId);
   return (
-    <Nav variant="pills" activeKey={tabId} onSelect={onSelect}>
-      <Nav.Item>
+    <Nav variant="pills" className="flex-column flex-md-row" activeKey={tabId} onSelect={onSelect} >
+      <Nav.Item > 
         <Nav.Link eventKey="1">Normal</Nav.Link>
       </Nav.Item>
       <Nav.Item>

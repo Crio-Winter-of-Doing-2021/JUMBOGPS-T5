@@ -18,7 +18,7 @@ import {
   getGeoFence,
   getGeoRoute,
 } from "../../../../../controller/reducer/geo";
-import { getTrackTabId } from "../../../../../controller/reducer/ui";
+import { getDeviceSize, getTrackTabId } from "../../../../../controller/reducer/ui";
 import Markers from "../../../../../data/constants/Markers";
 import { getEditHandleStyle, getFeatureStyle } from "./common/draw-styles";
 import DrawFenceTools from "./common/DrawFenceTools";
@@ -103,6 +103,7 @@ function Map({
   const geoJSON = useSelector(getGeoJSON);
   const geoFence = useSelector(getGeoFence);
   const geoRoute = useSelector(getGeoRoute);
+  const deviceSize = useSelector(getDeviceSize);
 
   const onSelectLocation = useCallback((longitude, latitude) => {
     logger(longitude, latitude);
@@ -271,7 +272,7 @@ function Map({
       />
       <FullscreenControl style={fullscreenControlStyle} />
       <NavigationControl style={navStyle} showCompass={false} />
-      <ScaleControl style={scaleControlStyle} />
+      {deviceSize!=="sm" && <ScaleControl style={scaleControlStyle} />}
     </ReactMapGL>
   );
 }

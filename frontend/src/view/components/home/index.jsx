@@ -18,6 +18,8 @@ import {
   setSuccessToast,
   setTabId,
   toggleSidenav,
+  setDeviceSize,
+  hideSidenav,
 } from "../../../controller/reducer/ui";
 import { performLogout } from "../../../controller/reducer/user";
 import useWindowDimensions from "../../hooks/windowDimension";
@@ -60,9 +62,10 @@ const Home = () => {
   const { width } = useWindowDimensions();
 
   useEffect(() => {
-    if (width > 750 && !sidenav) {
-      dispatch(toggleSidenav());
-    }
+    if (width > 750) {
+      if (!sidenav) dispatch(toggleSidenav());
+      dispatch(setDeviceSize("md"));
+    } else dispatch(setDeviceSize("sm"));
   }, [width]);
 
   useEffect(() => {
@@ -82,6 +85,7 @@ const Home = () => {
   const handleClose = () => dispatch(setshowLogoutModal(false));
   const handleShow = () => dispatch(setshowLogoutModal(true));
   const handleShowSidenav = () => dispatch(toggleSidenav());
+  const handleTouch = () => dispatch(hideSidenav());
   const handleSelect = (eventKey) => dispatch(setTabId(eventKey));
 
   const logout = () => dispatch(performLogout());
@@ -95,7 +99,11 @@ const Home = () => {
           onSelect={handleSelect}
           onShow={handleShow}
         />
-        <div className="child ">
+        <div
+          className="child "
+          onTouchStart={handleTouch}
+          style={{ marginLeft: sidenav ? "var(--sidenav-width)" : "0px" }}
+        >
           <Switch>
             <Route path="/" exact component={Dashboard} />
             <Route path="/track/:id" exact component={Track} />

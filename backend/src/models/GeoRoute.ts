@@ -11,9 +11,10 @@ const geoRouteSchema = mongoose.Schema({
     type: {
       type: String
     },
-    coordinates: [[Number]], 
+    coordinates: [[Number]]
   },
 });
 
+geoRouteSchema.index({geometry: "2dsphere"})
 const GeoRoute = mongoose.model("GeoRoute", geoRouteSchema);
 module.exports = GeoRoute

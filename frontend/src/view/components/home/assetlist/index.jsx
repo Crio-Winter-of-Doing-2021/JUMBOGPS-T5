@@ -50,6 +50,7 @@ const AssetList = ({}) => {
   const dispatch = useDispatch();
   const assets = useSelector(getAssets);
   const deviceSize = useSelector(getDeviceSize);
+  
   useEffect(() => {
     dispatch(pageLoaded());
   }, [dispatch]);

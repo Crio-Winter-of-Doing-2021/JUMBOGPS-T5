@@ -1,4 +1,5 @@
 const app = require("./app");
+// import {http} from "./app";
 require('dotenv').config()
 import mongoose from "mongoose";
 
@@ -14,6 +15,7 @@ mongoose
   })
   .then(() => {
     console.log("DB CONNECTED");
+    
   })
   .catch((e) => {
     console.log(e);

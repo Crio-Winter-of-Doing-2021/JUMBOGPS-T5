@@ -1,4 +1,5 @@
 import { loadAssets } from "../reducer/assets";
+import { loadNotifications } from "../reducer/geo";
 import { hideSidenav, log, pageLoaded, toggleSidenav } from "../reducer/ui";
 
 /**
@@ -11,6 +12,7 @@ const pageLoadedFlow = () => ({ dispatch }) => (next) => (action) => {
   next(action);
   if (action.type === pageLoaded.type) {
     dispatch(loadAssets());
+    dispatch(loadNotifications());
   }
 };
 /**

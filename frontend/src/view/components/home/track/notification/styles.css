@@ -1,0 +1,23 @@
+.notification-box-track{
+  background-color: white;
+  padding: 30px;
+  min-width: 300px;
+  max-width: 500px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 2px 2px #ebebeb ;
+  margin-bottom: 30px;
+}
+.notification-box-container{
+  height: 500px;
+  padding: 12px;
+  overflow-y: scroll;
+}
+
+.img-icon{
+  width: 25px;
+  height: 30px;
+}
+
+@media screen and (max-width: 750px) {
+
+  }

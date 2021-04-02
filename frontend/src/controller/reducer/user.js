@@ -64,6 +64,8 @@ export default counterSlice.reducer;
 
 export const getUser = (state) => state.user;
 
+export const getEmail = (state) => state.user.email;
+
 export const getProfile = (state) => state.user.profile;
 
 export const getToken = (state) => state.user.token;

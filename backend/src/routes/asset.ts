@@ -3,7 +3,7 @@ import { authByToken } from "../middleware/auth";
 
 const {createAsset, updateLocation, getAssets, getAsset, getAssetByTime} = require('../controllers/asset')
 const {updateGeoFence, updateGeoRoute, getGeofence, getGeoroute} = require('../controllers/geo')
-const {getNotification} = require('../controllers/notification')
+const {getNotificationById,getAllNotification,getNotify} = require('../controllers/notification')
 
 const route = Router()
 
@@ -25,6 +25,9 @@ route.get('/asset/getgeofence/:id', authByToken, getGeofence)
 
 route.get('/asset/getgeoroute/:id', authByToken, getGeoroute)
 
-route.get('/asset/notification/:id', authByToken, getNotification)
+route.get('/asset/notification/:id', authByToken, getNotificationById)
+
+route.get('/asset/notification/', authByToken, getAllNotification)
+
 
 export const assetRoute = route

@@ -20,6 +20,7 @@ const services = {
     putGeoRoute: geoApi.putGeoRoute,
     
     getNotifications: geoApi.notifications,
+    getAssetNotifications: geoApi.assetNotifications,
 }
 
 export default services;

@@ -2,10 +2,18 @@
     height: 50px;
 }
 
-.burger {
-    height: 25px;
-    width: 20px;
+.burger-container{
     visibility: hidden;
+}
+
+.burger {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.burger:hover {
+    filter: invert(100%);
 }
 
 .avatar-small  {
@@ -14,7 +22,7 @@
 }
 
 @media screen and (max-width: 750px) {
-    .burger {
+    .burger-container {
         visibility: visible;
     }
 }

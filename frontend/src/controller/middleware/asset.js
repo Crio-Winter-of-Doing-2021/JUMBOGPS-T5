@@ -7,6 +7,7 @@ import {
   setGeoJSON,
 } from "../reducer/asset";
 import {
+  loadAssetNotifications,
   loadGeoFenceSuccess,
   loadGeoRouteSuccess,
   loadNotifications,
@@ -52,7 +53,7 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
       dispatch(loadAssetSuccess(response.data));
       const geoJSON = arrayToGeoJSON(response.data.data.track);
       dispatch(setGeoJSON(geoJSON));
-      dispatch(loadNotifications());
+      dispatch(loadAssetNotifications());
       dispatch(loadGeoFenceSuccess(response.data.data.geofence));
       dispatch(loadGeoRouteSuccess(response.data.data.georoute));
     } catch (error) {

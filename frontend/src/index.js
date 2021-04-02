@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import  configStore  from './controller/configStore';
 import services from './data/index';
 import { Provider } from "react-redux";
-import NotificationApp from './view/NotificationApp';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

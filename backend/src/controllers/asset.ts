@@ -5,6 +5,7 @@ const AssetTrack = require("../models/AssetTrack");
 const Notification = require("../models/Notification");
 const GeoRoute = require("../models/GeoRoute");
 const [parses] = require("../utils/geojson.js");
+var mongoose = require("mongoose");
 import { io } from "../app";
 
 exports.createAsset = async (req: Request, res: Response) => {
@@ -234,7 +235,10 @@ exports.updateLocation = async (req: Request, res: Response) => {
     notificationData.withinGeoFence,
     newWithinGeoBound
   );
-
+    const query = await Notification.findOne(
+      { _id: req.params.id },
+      { name: 1 }
+  )
   if (status !== "none") {
     //notification exists for geo fence
     const notification = {
@@ -254,7 +258,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
       }
     );
     //emit io notification
-    io.emit("notification", {...notification,assetId:req.params.id,name:asset_data.name});
+    io.emit("notification", {...notification,assetId:req.params.id,name:query.name});
   }
   await Notification.updateOne(
     { _id: req.params.id },
@@ -287,6 +291,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
   if (status !== "none") {
     //notification exists for geo route
     const notification = {
+      _id:mongoose.Types.ObjectId(),
       lat: req.body.lat,
       lon: req.body.lon,
       timestamp: req.body.timestamp,
@@ -304,7 +309,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
     );
     console.log(updateNotification);
     //emit io notification
-    io.emit("notification", {...notification,assetId:req.params.id,name:asset_data.name});
+    io.emit("notification", {...notification,assetId:req.params.id,name:query.name});
   }
   await Notification.updateOne(
     { _id: req.params.id },

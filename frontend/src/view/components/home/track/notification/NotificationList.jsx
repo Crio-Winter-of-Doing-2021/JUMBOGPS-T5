@@ -18,7 +18,7 @@ const msg = (type, status) => {
 
 const NotificationList = ({ notifications, email }) => {
   return notifications.map(
-    ({ name, type, status, timestamp, lat, lon, seenBy }, index) => (
+    ({ name, type, status, timestamp, lat, lon, seenBy, unseen }, index) => (
       <Toast
         key={index}
         style={{ display: "inline-block" }}
@@ -45,7 +45,7 @@ const NotificationList = ({ notifications, email }) => {
           Asset Located [{lon},{lat}] {msg(type, status)}
           </span>
           <h6 style={{ display: "inline" }}>
-            {!seenBy.includes(email) && (
+            {unseen && (
               <Badge variant="info" className="ml-2">
                 NEW!
               </Badge>

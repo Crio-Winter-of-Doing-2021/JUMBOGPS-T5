@@ -135,11 +135,11 @@ const Track = ({ match }) => {
       </div>
       <div className="card-view" id="notifications">
         <Row>
-          <Col lg={6} >
-          <Info asset={asset.asset_data} />
-          </Col>
           <Col lg={6}>
           <NotificationArea dispatch={dispatch} assetId={assetInfo.id}/>
+          </Col>
+          <Col lg={6} >
+          <Info asset={asset.asset_data} />
           </Col>
         </Row>
         

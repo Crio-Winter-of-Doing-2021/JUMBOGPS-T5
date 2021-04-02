@@ -1,54 +1,53 @@
 import React, { useContext, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Badge } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { getNotifications, loadNotifications, loadNotificationsSuccess } from "../../../../../controller/reducer/geo";
+import {
+  addNotification,
+  getNotifications,
+  loadNotifications,
+  loadNotificationsSuccess,
+} from "../../../../../controller/reducer/geo";
+import { getUnseenNotifications } from "../../../../../controller/reducer/ui";
 import { getEmail } from "../../../../../controller/reducer/user";
 import { SocketContext } from "../../../../../utils/socket";
 import NotificationList from "./NotificationList";
 import "./styles.css";
 
-function NotificationArea({dispatch}) {
+function NotificationArea({ dispatch }) {
   const notifications = useSelector(getNotifications);
+  const unseenNotifications = useSelector(getUnseenNotifications);
   const socket = useContext(SocketContext);
   const email = useSelector(getEmail);
-  // logger(notifications);
-  useEffect(() => {
-    console.log(socket);
-    socket.on("notification", (notification) => {
-      console.log(notification);
-      dispatch(loadNotificationsSuccess([notification, ...notifications]));
-    });
-    return () => socket.off("notification");
-  }, [socket, notifications]);
 
   const onSeenSubmit = (e) => {
     e.preventDefault();
-    let present = false;
-    notifications.forEach((notification) => {
-      if (!notification.seenBy.includes(email)) {
-        socket.emit("notification", {
-          assetId: notification.assetId,
-          id: notification._id,
-          email,
-        });
-        present  = true;
-      }
+    unseenNotifications.forEach(({ id, assetId }) => {
+      socket.emit("notification", {
+        assetId,
+        id,
+        email,
+      });
     });
-    if(present)    dispatch(loadNotifications());
+    if (unseenNotifications.length !== 0) dispatch(loadNotifications());
   };
 
   return (
     <div className="notification-box">
-      <h1 className="h3 font-weight-normal">Notifications</h1>
+      <h1 className="h3 font-weight-normal">
+        Notifications{" "}
+        {unseenNotifications.length!==0 && (
+          <Badge variant="light">{unseenNotifications.length}</Badge>
+        )}{" "}
+      </h1>
       <hr />
-      <Button
+     { (unseenNotifications.length !== 0) && <Button
         onClick={onSeenSubmit}
         variant="outline-primary"
         className="mr-4"
         block
       >
         Mark Seen
-      </Button>
+      </Button>}
       <div className="notification-box-container">
         <NotificationList notifications={notifications} email={email} />
       </div>

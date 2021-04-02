@@ -26,14 +26,20 @@ export const counterSlice = createSlice({
     updateGeoRoute: () => {},
     loadNotifications: () => {},
     loadNotificationsSuccess: (state, action) => {
-      state.notifications = action.payload.data;
+      state.notifications = action.payload;
     },
     loadAssetNotifications: () => {},
     loadAssetNotificationsSuccess: (state, action) => {
-      state.assetNotifications = action.payload.data;
+      state.assetNotifications = action.payload;
     },
     setGeoRoute: (state, action) => {
       state.geoRoute = action.payload;
+    },
+    addNotification:(state, action) => {
+      state.notifications = [{...action.payload,unseen:true},...state.notifications];
+    },
+    addAssetNotification:(state, action) => {
+      state.assetNotifications = [{...action.payload,unseen:true},...state.assetNotifications];
     },
   },
 });
@@ -51,7 +57,9 @@ export const {
   setGeoFence,
   setGeoRoute,
   loadAssetNotifications,
-  loadAssetNotificationsSuccess
+  loadAssetNotificationsSuccess,
+  addNotification,
+  addAssetNotification
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

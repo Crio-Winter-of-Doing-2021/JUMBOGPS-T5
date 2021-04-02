@@ -1,9 +1,10 @@
 import React from "react";
-import { Navbar } from "react-bootstrap";
+import { Badge, Navbar, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import burgerIcon from "../../../../../assets/icons/menu.svg";
 import femaleIcon from "../../../../../assets/illustrations/female.svg";
 import maleIcon from "../../../../../assets/illustrations/male.svg";
+import { getUnseenNotifications } from "../../../../../controller/reducer/ui";
 import { getUser } from "../../../../../controller/reducer/user";
 import "./styles.css";
 
@@ -28,6 +29,7 @@ const firstName = (name) => name.split(" ")[0];
  */
 function Header({ onSelect }) {
   const user = useSelector(getUser);
+  const unseenNotifications = useSelector(getUnseenNotifications);
 
   return (
     <Navbar className="header justify-content-between" bg="dark" variant="dark">
@@ -43,7 +45,26 @@ function Header({ onSelect }) {
           </p>
         </div>
       )}
-      <img src={burgerIcon} onClick={onSelect} className="burger" />
+      <div>
+        {unseenNotifications.length !== 0 && (
+          <Button
+            variant="outline-light"
+            size="sm"
+            className="mb-1 mr-2"
+            href="/#notification"
+          >
+            🔔<Badge variant="light">{unseenNotifications.length}</Badge>
+          </Button>
+        )}{" "}
+        <Button
+          variant="outline-light"
+          size="sm"
+          className="mb-1 burger-container"
+          href="/#notification"
+        >
+          <img src={burgerIcon} onClick={onSelect} className="burger" />
+        </Button>
+      </div>
     </Navbar>
   );
 }

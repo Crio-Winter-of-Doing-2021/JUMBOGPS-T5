@@ -1,23 +1,31 @@
 import React, { useContext, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Badge } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { getAssetNotifications, loadAssetNotifications, loadAssetNotificationsSuccess } from "../../../../../controller/reducer/geo";
+import {
+  getAssetNotifications,
+  loadAssetNotifications,
+  loadAssetNotificationsSuccess,
+  addAssetNotification,
+  loadNotifications,
+} from "../../../../../controller/reducer/geo";
+import { getUnseenAssetNotifications } from "../../../../../controller/reducer/ui";
 import { getEmail } from "../../../../../controller/reducer/user";
 import { SocketContext } from "../../../../../utils/socket";
 import NotificationList from "./NotificationList";
 import "./styles.css";
 
-function NotificationArea({dispatch,assetId}) {
+function NotificationArea({ dispatch, assetId }) {
   const notifications = useSelector(getAssetNotifications);
+  const unseenAssetNotifications = useSelector(getUnseenAssetNotifications);
   const socket = useContext(SocketContext);
   const email = useSelector(getEmail);
   // logger(notifications);
   useEffect(() => {
     console.log(socket);
     socket.on("notification", (notification) => {
-      if(notification.assetId===assetId){
-        console.log(notification);
-        dispatch(loadAssetNotificationsSuccess([notification, ...notifications]));
+      if (notification.assetId === assetId) {
+        // console.log(notification);
+        dispatch(addAssetNotification(notification));
       }
     });
     return () => socket.off("notification");
@@ -25,32 +33,36 @@ function NotificationArea({dispatch,assetId}) {
 
   const onSeenSubmit = (e) => {
     e.preventDefault();
-    let present = false;
-    notifications.forEach((notification) => {
-      if (!notification.seenBy.includes(email)) {
-        socket.emit("notification", {
-          assetId: notification.assetId,
-          id: notification._id,
-          email,
-        });
-        present  = true;
-      }
+    unseenAssetNotifications.forEach(({ assetId, id }) => {
+      socket.emit("notification", {
+        assetId,
+        id,
+        email,
+      });
     });
-    if(present)    dispatch(loadAssetNotifications());
+    if (unseenAssetNotifications.length !== 0){
+      dispatch(loadAssetNotifications());
+      dispatch(loadNotifications());
+    }
   };
 
   return (
-    <div className="notification-box">
-      <h1 className="h3 font-weight-normal">Notifications</h1>
+    <div className="notification-box-track">
+      <h1 className="h3 font-weight-normal">
+        Notifications{" "}
+        {unseenAssetNotifications.length!==0 && (
+          <Badge variant="light">{unseenAssetNotifications.length}</Badge>
+        )}{" "}
+      </h1>
       <hr />
-      <Button
+      {(unseenAssetNotifications.length !== 0) && <Button
         onClick={onSeenSubmit}
         variant="outline-primary"
         className="mr-4"
         block
       >
         Mark Seen
-      </Button>
+      </Button>}
       <div className="notification-box-container">
         <NotificationList notifications={notifications} email={email} />
       </div>

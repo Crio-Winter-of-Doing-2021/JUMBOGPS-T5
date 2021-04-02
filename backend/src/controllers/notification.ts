@@ -7,7 +7,7 @@ exports.getNotificationById = async (req: Request, res: Response) => {
     {
       $match: { _id: mongoose.Types.ObjectId(req.params.id) },
     },
-    {
+    { //add fields in each element of track
       $addFields: {
         "track.name": "$name",
         "track.assetId": "$_id",
@@ -17,7 +17,10 @@ exports.getNotificationById = async (req: Request, res: Response) => {
       $project: {
         track: "$track",
       },
-    },
+    },//sort track based on timestamp
+    { $unwind: "$track" },
+    { $sort: { "track.timestamp": -1 } },
+    { $group: { _id: "$_id", track: { $push: "$track" } } },
   ]);
 
   if (!data) {
@@ -33,19 +36,19 @@ exports.getNotificationById = async (req: Request, res: Response) => {
 
 exports.getAllNotification = async (req: Request, res: Response) => {
   const data = await Notification.aggregate([
-    {
+    { //add fields in each element of track
       $addFields: {
         "track.name": "$name",
         "track.assetId": "$_id",
       },
     },
-    {
+    { //[track1,track2]
       $group: {
         _id: null,
         track: { $push: "$track" },
       },
     },
-    {
+    { // concat all nested array into single array
       $project: {
         _id: 0,
         track: {
@@ -59,6 +62,10 @@ exports.getAllNotification = async (req: Request, res: Response) => {
         },
       },
     },
+    //sort track based on timestamp
+    { $unwind: "$track" },
+    { $sort: { "track.timestamp": -1 } },
+    { $group: { _id: "$_id", track: { $push: "$track" } } },
   ]);
 
   return res.status(200).json({
@@ -67,30 +74,9 @@ exports.getAllNotification = async (req: Request, res: Response) => {
   });
 };
 
-
-export const markSeen = async (assetId:string,id:string,email:string) => {
+export const markSeen = async (assetId: string, id: string, email: string) => {
   const track_data = await Notification.updateOne(
     { _id: assetId, "track._id": id },
-    { $addToSet: { "track.$.seenBy": email } },
+    { $addToSet: { "track.$.seenBy": email } }
   );
-}
-
-exports.getNotify = async (req: Request, res: Response) => {
-  // console.log(io);
-  // const data = {
-  //   _id:"sadda",
-  //   name: "Hello",
-  //   type: "geofence",
-  //   status: "success",
-  //   time:"2001-03-12T12:41:48.872Z",
-  //   lat: 24.3,
-  //   lon: 80.13,
-  //   seenBy:[]
-  // };
-  // io.emit("notification", data);
-  // return res.status(200).json({
-  //   data: "notify",
-  //   error: {}
-  // })
-  exports.getAllNotification(req, res);
 };

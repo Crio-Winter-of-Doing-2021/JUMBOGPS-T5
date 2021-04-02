@@ -29,6 +29,5 @@ route.get('/asset/notification/:id', authByToken, getNotificationById)
 
 route.get('/asset/notification/', authByToken, getAllNotification)
 
-route.get('/notify',getNotify)
 
 export const assetRoute = route

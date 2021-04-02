@@ -30,8 +30,15 @@ export const getGeoFence = (authToken,assetId) =>
     },
   });
   
-  export const notifications = (authToken,assetId) =>
+  export const assetNotifications = (authToken,assetId) =>
   axios.get(Urls.notificationUrl(assetId), {
+    headers: {
+      Authorization: `Token ${authToken}`,
+    },
+  });
+
+  export const notifications = (authToken) =>
+  axios.get(Urls.NOTIFICATION_URL, {
     headers: {
       Authorization: `Token ${authToken}`,
     },

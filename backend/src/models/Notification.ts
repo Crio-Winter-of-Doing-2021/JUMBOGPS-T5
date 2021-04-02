@@ -13,6 +13,12 @@ const trackSchema =  mongoose.Schema({
     },
     type: {
         type: String
+    },
+    status: {
+        type: String
+    },
+    seenBy: {
+        type: [String]
     }
 })
 
@@ -21,6 +27,14 @@ const notificationSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   name: {
     type: String
+  },
+  withinGeoFence: {
+    type: Boolean,
+    default:true
+  },
+  onGeoRoute: {
+    type: Boolean,
+    default:true
   },
   track: {
       type: [trackSchema]

@@ -36,6 +36,7 @@ import "./style.css";
 import DataTable from "./table";
 import Tabs from "./tabs";
 import csvIcon from "../../../../assets/icons/table.svg";
+import NotificationArea from "./notification";
 
 const headers = [
   { label: "Latitude", key: "lat" },
@@ -133,15 +134,15 @@ const Track = ({ match }) => {
         />
       </div>
       <div className="card-view" id="notifications">
-        <h1 className="h3 font-weight-normal">Notifications</h1>
-        <hr />
-        <Notifications />
-      </div>
-      <br />
-      <div className="card-view " id="information">
-        <h1 className="h3 font-weight-normal">Information</h1>
-        <hr />
-        <Info asset={asset.asset_data} />
+        <Row>
+          <Col lg={6} >
+          <Info asset={asset.asset_data} />
+          </Col>
+          <Col lg={6}>
+          <NotificationArea dispatch={dispatch} assetId={assetInfo.id}/>
+          </Col>
+        </Row>
+        
       </div>
       <br />
       <div className="table-view" id="table">

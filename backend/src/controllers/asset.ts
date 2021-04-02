@@ -3,9 +3,9 @@ const Asset = require("../models/Asset");
 const GeoFence = require("../models/GeoFence");
 const AssetTrack = require("../models/AssetTrack");
 const Notification = require("../models/Notification");
-const GeoRoute = require('../models/GeoRoute')
-const [parses] = require('../utils/geojson.js')
-
+const GeoRoute = require("../models/GeoRoute");
+const [parses] = require("../utils/geojson.js");
+import { io } from "../app";
 
 exports.createAsset = async (req: Request, res: Response) => {
   const data_asset = {
@@ -36,12 +36,46 @@ exports.createAsset = async (req: Request, res: Response) => {
       });
     }
 
+    // const geofence = new GeoFence({
+    //   _id: result._id,
+    //   type: "Feature",
+    // });
+
     const geofence = new GeoFence({
       _id: result._id,
       type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates:  [
+          [
+            [
+              66.26953125,
+              16.214674588248542
+            ],
+            [
+              93.42773437499999,
+              16.214674588248542
+            ],
+            [
+              93.42773437499999,
+              28.38173504322308
+            ],
+            [
+              66.26953125,
+              28.38173504322308
+            ],
+            [
+              66.26953125,
+              16.214674588248542
+            ]
+          ]
+        ],
+      },
     });
 
     await geofence.save((error: any, results: any) => {
+      console.log(error, results);
       if (err) {
         return res.status(422).json({
           data: {},
@@ -53,6 +87,21 @@ exports.createAsset = async (req: Request, res: Response) => {
     const georoute = new GeoRoute({
       _id: result._id,
       type: "Feature",
+      coordinates: [],
+      properties: {},
+      geometry: {
+        type: "LineString",
+        coordinates: [
+          [
+            77.255859375,
+            16.130262012034756
+          ],
+          [
+            77.255859375,
+            28.304380682962783
+          ]
+        ]
+      },
     });
 
     await georoute.save((error: any, results: any) => {
@@ -63,8 +112,6 @@ exports.createAsset = async (req: Request, res: Response) => {
         });
       }
     });
-
-    
 
     const notification = new Notification({
       _id: result._id,
@@ -100,6 +147,30 @@ exports.createAsset = async (req: Request, res: Response) => {
   });
 };
 
+const generateNotification = (
+  oldWithinGeoBound: Boolean,
+  newWithinGeoBound: Boolean
+) => {
+  let status;
+  if (!newWithinGeoBound) {
+    // Asset outside geofence
+    if (oldWithinGeoBound) {
+      // Asset went outside geofence for first time
+      status = "warning";
+    } else {
+      // Asset is still outside geofence
+      status = "danger";
+    }
+  } else if (!oldWithinGeoBound) {
+    // Asset come inside geofence
+    status = "success";
+  } else {
+    // No notification
+    status = "none";
+  }
+  return status;
+};
+
 exports.updateLocation = async (req: Request, res: Response) => {
   if (!req.body.lat || !req.body.lon || !req.body.timestamp) {
     return res.status(422).json({
@@ -107,7 +178,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
       error: { message: "Lat, lon and timestamp are required" },
     });
   }
-
+  //update in Asset Colletion
   const asset_data = await Asset.updateOne(
     { _id: req.params.id },
     {
@@ -118,7 +189,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
       },
     }
   );
-
+  //update in Asset Track Colletion
   const track_data = await AssetTrack.updateOne(
     { _id: req.params.id },
     {
@@ -132,6 +203,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
     }
   );
 
+  //Within Geo Fence Check
   let geofence_data = await GeoFence.find({
     $and: [
       { _id: req.params.id },
@@ -148,22 +220,43 @@ exports.updateLocation = async (req: Request, res: Response) => {
       },
     ],
   });
+  const notificationData = await Notification.findOne({ _id: req.params.id });
+  let newWithinGeoBound = geofence_data.length !== 0;
+  let status = generateNotification(
+    notificationData.withinGeoFence,
+    newWithinGeoBound
+  );
 
-  if(geofence_data.length==0) {
-    let updateNotification = await Notification.updateOne({_id: req.params.id}, 
-      { 
+  if (status !== "none") {
+    //notification exists for geo fence
+    const notification = {
+      lat: req.body.lat,
+      lon: req.body.lon,
+      timestamp: req.body.timestamp,
+      type: "geofence",
+      status: status,
+      seenBy: [],
+    };
+    let updateNotification = await Notification.updateOne(
+      { _id: req.params.id },
+      {
         $push: {
-          track: {
-            lat: req.body.lat,
-            lon: req.body.lon,
-            timestamp: req.body.timestamp,
-            type: "geofence"
-          },
+          track: notification,
         },
-      })
+      }
+    );
+    //emit io notification
+    io.emit("notification", {...notification,assetId:req.params.id,name:asset_data.name});
   }
-
-  let georoute_data = await GeoFence.find({
+  await Notification.updateOne(
+    { _id: req.params.id },
+    {
+      $set: {
+        withinGeoFence: newWithinGeoBound,
+      },
+    }
+  );
+  let georoute_data = await GeoRoute.find({
     $and: [
       { _id: req.params.id },
       {
@@ -180,20 +273,39 @@ exports.updateLocation = async (req: Request, res: Response) => {
     ],
   });
 
-  if(georoute_data.length==0) {
-    let updateNotification = await Notification.updateOne({_id: req.params.id}, 
-      { 
-        $push: {
-          track: {
-            lat: req.body.lat,
-            lon: req.body.lon,
-            timestamp: req.body.timestamp,
-            type: "georoute"
-          },
-        },
-      })
-  }
+  newWithinGeoBound = georoute_data.length !== 0;
+  status = generateNotification(notificationData.onGeoRoute, newWithinGeoBound);
 
+  if (status !== "none") {
+    //notification exists for geo route
+    const notification = {
+      lat: req.body.lat,
+      lon: req.body.lon,
+      timestamp: req.body.timestamp,
+      type: "georoute",
+      status: status,
+      seenBy: [],
+    };
+    let updateNotification = await Notification.updateOne(
+      { _id: req.params.id },
+      {
+        $push: {
+          track: notification,
+        },
+      }
+    );
+    console.log(updateNotification);
+    //emit io notification
+    io.emit("notification", {...notification,assetId:req.params.id,name:asset_data.name});
+  }
+  await Notification.updateOne(
+    { _id: req.params.id },
+    {
+      $set: {
+        onGeoRoute: newWithinGeoBound,
+      },
+    }
+  );
 
   return res.status(200).json({
     data: {
@@ -228,33 +340,39 @@ exports.getAssets = async (req: Request, res: Response) => {
 };
 
 exports.getAsset = async (req: Request, res: Response) => {
- 
-   await Asset.findOne({ _id: req.params._id },
+  await Asset.findOne(
+    { _id: req.params._id },
     async (err: any, asset_data: any) => {
       if (err || !asset_data) {
         return res.status(401).json({
-          error:  { message: "Asset does not exist" },
-          data: {}
+          error: { message: "Asset does not exist" },
+          data: {},
         });
       }
 
-      const track_data = await AssetTrack.findOne({ _id: req.params._id }).exec();
+      const track_data = await AssetTrack.findOne({
+        _id: req.params._id,
+      }).exec();
 
-      const geofence_data = await GeoFence.findOne({ _id: req.params._id }).exec();
+      const geofence_data = await GeoFence.findOne({
+        _id: req.params._id,
+      }).exec();
 
-      const georoute_data = await GeoRoute.findOne({ _id: req.params._id }).exec();
+      const georoute_data = await GeoRoute.findOne({
+        _id: req.params._id,
+      }).exec();
 
       return res.status(200).json({
         data: {
           asset_data,
           track: track_data.track,
           geofence: geofence_data,
-          georoute: parses(georoute_data)
+          georoute: parses(georoute_data),
         },
         error: {},
       });
-    })
-
+    }
+  );
 };
 
 exports.getAssetByTime = async (req: Request, res: Response) => {
@@ -291,8 +409,3 @@ exports.getAssetByTime = async (req: Request, res: Response) => {
     error: {},
   });
 };
-
-
-
-
-

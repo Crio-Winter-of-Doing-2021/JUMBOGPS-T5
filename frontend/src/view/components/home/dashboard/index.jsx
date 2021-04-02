@@ -13,6 +13,7 @@ import {
 import Loader from "../widget/loader";
 import TypeSelector from "../widget/type";
 import Map from "./map";
+import NotificationArea from "./notification";
 import "./style.css";
 
 /**
@@ -52,7 +53,10 @@ const Dashboard = ({}) => {
       <div className="map-child">
         <Map />
       </div>
-
+      <div className="notifications-child">
+        
+        <NotificationArea dispatch={dispatch}/>
+      </div>
     </div>
   );
 };

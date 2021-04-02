@@ -1,0 +1,21 @@
+.notification-box{
+  background-color: white;
+  padding: 30px;
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 2px 2px 2px 2px #ebebeb ;
+}
+.notification-box-container{
+  height: 400px;
+  padding: 12px;
+  overflow-y: scroll;
+}
+
+.img-icon{
+  width: 25px;
+  height: 30px;
+}
+
+@media screen and (max-width: 750px) {
+
+  }

@@ -10,9 +10,11 @@ const geoSchema = mongoose.Schema({
     type: {
       type: String
     },
-    coordinates: [[[Number]]], 
+    coordinates: [[[Number]]]
   },
 });
+
+geoSchema.index({geometry: "2dsphere"})
 
 const GeoFence = mongoose.model("GeoFence", geoSchema);
 module.exports = GeoFence

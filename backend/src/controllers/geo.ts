@@ -19,6 +19,8 @@ exports.getGeofence = async (req: Request, res: Response) => {
 };
 
 exports.getGeoroute = async (req: Request, res: Response) => {
+  
+
   let data = await GeoRoute.findOne({ _id: req.params.id }).exec();
 
   if (!data) {
@@ -34,6 +36,18 @@ exports.getGeoroute = async (req: Request, res: Response) => {
 };
 
 exports.updateGeoFence = async (req: Request, res: Response) => {
+
+
+  if(req.body.geometry===undefined) {
+    return res.status(422).json({
+      data: {
+      },
+      error: {
+        message: "body is required"
+      },
+    });
+  }
+
   let array = req.body.geometry.coordinates[0];
 
   array = geojson.complexify(array, 0.5);
@@ -48,6 +62,15 @@ exports.updateGeoFence = async (req: Request, res: Response) => {
     }
   );
 
+  if(data.n==0) {
+    return res.status(422).json({
+      error: {
+        message: "Asset does not exist"
+      },
+      data: {}
+    });
+  }
+
   return res.status(200).json({
     data: {
       success: true,
@@ -57,6 +80,18 @@ exports.updateGeoFence = async (req: Request, res: Response) => {
 };
 
 exports.updateGeoRoute = async (req: Request, res: Response) => {
+
+  if(req.body.geometry===undefined) {
+    return res.status(422).json({
+      data: {
+      },
+      error: {
+        message: "body is required"
+      },
+    });
+  }
+
+
   const data = await GeoRoute.updateOne(
     { _id: req.params.id },
     {
@@ -67,6 +102,16 @@ exports.updateGeoRoute = async (req: Request, res: Response) => {
       },
     }
   );
+
+
+  if(data.n==0) {
+    return res.status(422).json({
+      error: {
+        message: "Asset does not exist"
+      },
+      data: {}
+    });
+  }
 
   return res.status(200).json({
     data: {

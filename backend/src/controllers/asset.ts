@@ -119,6 +119,14 @@ exports.updateLocation = async (req: Request, res: Response) => {
     }
   );
 
+
+  if(asset_data.n==0) {
+    return res.status(422).json({
+      data: {},
+      error: { message: "Asset not exist" },
+    });
+  }
+
   const track_data = await AssetTrack.updateOne(
     { _id: req.params.id },
     {
@@ -262,6 +270,14 @@ exports.getAssetByTime = async (req: Request, res: Response) => {
   if (!asset_data) {
     return res.status(422).json({
       error: { message: "Asset does not exist" },
+      data: {}
+    });
+  }
+
+  if(!req.query.start || !req.query.end) {
+    return res.status(422).json({
+      error: { message: "start and end time required" },
+      data: {}
     });
   }
 

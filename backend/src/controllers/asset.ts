@@ -4,7 +4,7 @@ const GeoFence = require("../models/GeoFence");
 const AssetTrack = require("../models/AssetTrack");
 const Notification = require("../models/Notification");
 const GeoRoute = require("../models/GeoRoute");
-const [parses] = require("../utils/geojson.js");
+const [convert, parses, parseNotifications,parseNotification] = require("../utils/parsing.js");
 var mongoose = require("mongoose");
 import { io } from "../app";
 

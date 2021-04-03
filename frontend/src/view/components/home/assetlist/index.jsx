@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
-import { setAssetInfo } from "../../../../controller/reducer/asset";
+import csvIcon from "../../../../assets/icons/table.svg";
 import {
   getAssets,
   loadAssets,
-  setAssetType,
+  setAssetType
 } from "../../../../controller/reducer/assets";
 import {
   getDeviceSize,
@@ -13,14 +13,12 @@ import {
   getShowSidenav,
   getTabId,
   pageLoaded,
-  setTabId,
+  setTabId
 } from "../../../../controller/reducer/ui";
 import Loader from "../widget/loader";
 import TypeSelector from "../widget/type";
 import "./style.css";
 import DataTable from "./table";
-import { CSVLink } from "react-csv";
-import csvIcon from "../../../../assets/icons/table.svg";
 
 
 const headers = [

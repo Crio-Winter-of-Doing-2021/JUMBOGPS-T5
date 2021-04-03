@@ -3,25 +3,29 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
-  useHistory,
+  Switch
 } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { addNotification } from "../../../controller/reducer/geo";
+import { getAssetInfo } from "../../../controller/reducer/asset";
+import { addAssetNotification, addNotification } from "../../../controller/reducer/geo";
 import {
   getError,
   getShowSidenav,
   getTabId,
   getToastMessage,
-  setError,
+
+
+
+
+
+
+  hideSidenav,
+  pageLoaded, setDeviceSize, setError,
   setshowLogoutModal,
   setSuccessToast,
   setTabId,
-  toggleSidenav,
-  setDeviceSize,
-  hideSidenav,
-  pageLoaded,
+  toggleSidenav
 } from "../../../controller/reducer/ui";
 import { performLogout } from "../../../controller/reducer/user";
 import logger from "../../../utils/logger";
@@ -40,7 +44,7 @@ import SideBar from "./widget/sidebar";
  * Notify toast message to user
  * @param {string} message
  */
-const notify = (message) => toast.dark(message, { autoClose: 3000 });
+const notify = (message) => toast.dark(message, { autoClose: 2500 });
 
 /**
  * Home Component
@@ -56,12 +60,12 @@ const notify = (message) => toast.dark(message, { autoClose: 3000 });
  */
 const Home = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const tabId = useSelector(getTabId);
   const err = useSelector(getError);
   const msg = useSelector(getToastMessage);
   const sidenav = useSelector(getShowSidenav);
+  const assetInfo = useSelector(getAssetInfo);
 
   const { width } = useWindowDimensions();
 
@@ -88,15 +92,17 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(pageLoaded());
-    // logger("logged")
   }, []);
 
   const socket = useContext(SocketContext);
   useEffect(() => {
-    console.log(socket);
+    logger(socket);
     socket.on("notification", (notification) => {
-      console.log(notification);
+      logger(notification);
       dispatch(addNotification(notification));
+      if (notification.assetId === assetInfo.id) {
+        dispatch(addAssetNotification(notification));
+      }
     });
     return () => socket.off("notification");
   }, [socket]);

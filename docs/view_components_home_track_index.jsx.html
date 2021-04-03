@@ -30,6 +30,7 @@
 import { Col, Row } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
+import csvIcon from "../../../../assets/icons/table.svg";
 import {
   getAsset,
   getAssetInfo,
@@ -55,15 +56,14 @@ import {
 } from "../../../../controller/reducer/ui";
 import logger from "../../../../utils/logger";
 import Loader from "../widget/loader";
-import Notifications from "../widget/notifications";
 import DateRangeSelector from "./date-range";
 import Info from "./info";
 import Map from "./map";
+import NotificationArea from "./notification";
 import AutoSearch from "./search";
 import "./style.css";
 import DataTable from "./table";
 import Tabs from "./tabs";
-import csvIcon from "../../../../assets/icons/table.svg";
 
 const headers = [
   { label: "Latitude", key: "lat" },
@@ -117,7 +117,7 @@ const Track = ({ match }) => {
     return (
       &lt;div
         className="track bg-light"
-        style={{ left: sidenav ? "200px" : "0px" }}
+        style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
       >
         &lt;h1 className="h2 font-weight-normal m-2">Asset : None&lt;/h1>
         &lt;AutoSearch dispatch={dispatch} />
@@ -131,7 +131,8 @@ const Track = ({ match }) => {
 
   logger("asset ", asset);
   return (
-    &lt;div className="track bg-light" style={{ left: sidenav ? "200px" : "0px" }}>
+    &lt;div className="track bg-light" style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
+    >
       &lt;h1 className="h2 font-weight-normal m-2">
         Asset : {assetInfo.name}
         &lt;span className="h6 font-weight-light">{"[" + assetInfo.id + "]"}&lt;/span>
@@ -144,8 +145,8 @@ const Track = ({ match }) => {
           &lt;DateRangeSelector dispatch={dispatch} />
         &lt;/Col>
       &lt;/Row>
-      &lt;hr />
-      &lt;div className="d-flex justify-content-center " id="track" >
+      &lt;hr id="map"/>
+      &lt;div className="d-flex justify-content-center ">
         &lt;Tabs onSelect={onSelectTab} />
       &lt;/div>
 
@@ -160,23 +161,24 @@ const Track = ({ match }) => {
         />
       &lt;/div>
       &lt;div className="card-view" id="notifications">
-        &lt;h1 className="h3 font-weight-normal">Notifications&lt;/h1>
-        &lt;hr />
-        &lt;Notifications />
-      &lt;/div>
-      &lt;br />
-      &lt;div className="card-view " id="information">
-        &lt;h1 className="h3 font-weight-normal">Information&lt;/h1>
-        &lt;hr />
-        &lt;Info asset={asset.asset_data} />
+        &lt;Row>
+          &lt;Col lg={6}>
+          &lt;NotificationArea dispatch={dispatch} assetId={assetInfo.id}/>
+          &lt;/Col>
+          &lt;Col lg={6} >
+          &lt;Info asset={asset.asset_data} />
+          &lt;/Col>
+        &lt;/Row>
+        
       &lt;/div>
       &lt;br />
       &lt;div className="table-view" id="table">
-        &lt;h1 className="h3 font-weight-normal">Track List&lt;CSVLink
+        &lt;h1 className="h3 font-weight-normal">Track List
+        &lt;CSVLink
           data={asset.track}
           headers={headers}
           filename={`${asset.asset_data.name}.csv`}
-          className="btn btn-dark btn-csv"
+          className="btn btn-dark btn-csv-end"
           target="_blank"
         >
           &lt;img src={csvIcon} className="mr-2 mb-1" alt="csv icon"/>CSV
@@ -200,13 +202,13 @@ export default Track;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAssetNotificationFlow">addAssetNotificationFlow</a></li><li><a href="global.html#addNotificationFlow">addNotificationFlow</a></li><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoAssetNotificationsFlow">geoAssetNotificationsFlow</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#hideSideNavFlow">hideSideNavFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Apr 03 2021 23:47:15 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

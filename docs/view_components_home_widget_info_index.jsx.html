@@ -28,9 +28,12 @@
         <article>
             <pre class="prettyprint source linenums"><code>import React from "react";
 import { Button, Card } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import { AssetProperties } from "../../../../../data/constants/Asset";
 import "./styles.css";
-import { withRouter, useHistory } from "react-router-dom";
 
 
 /**
@@ -51,17 +54,18 @@ import { withRouter, useHistory } from "react-router-dom";
  */
 function Info({ asset, onClose, minimal }) {
   const history = useHistory();
+  const deviceSize = useSelector(getDeviceSize);
   if (!asset) return &lt;div> &lt;/div>;
   return (
-    &lt;div className="d-flex align-items-center">
-      {!minimal &amp;&amp; (
+    &lt;div className="d-flex info align-items-center">
+      {!minimal &amp;&amp; deviceSize!=="sm" &amp;&amp; (
         &lt;Card.Img
           src={asset.image_url}
           style={{ height: "300px", width: "300px " }}
         />
       )}
       &lt;div className="info" style={{ width: "18rem" }}>
-        &lt;Card.Body>
+        &lt;Card.Body className={deviceSize!=="sm"?" ":"p-2"}>
           &lt;Card.Title>{asset.name}&lt;/Card.Title>
           &lt;Card.Text>{asset.desc}&lt;/Card.Text>
           {AssetProperties.filter(({ value, label }) => asset.body[value]).map(
@@ -73,17 +77,18 @@ function Info({ asset, onClose, minimal }) {
           )}
           {!minimal &amp;&amp; (
             &lt;Button
+              as={HashLink}
+              size={deviceSize}
+              smooth
               variant="primary"
-              onClick={() => {
-                // onSelectAsset(asset._id);
-                history.push("/track/"+asset._id+"#track");
-              }}
+              to={`/track/${asset._id}#map`}
             >
               Track
             &lt;/Button>
           )}
           {!minimal &amp;&amp; (
             &lt;Button
+            size={deviceSize}
               variant="outline-secondary"
               className="ml-2"
               onClick={onClose}
@@ -108,13 +113,13 @@ export default Info;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAssetNotificationFlow">addAssetNotificationFlow</a></li><li><a href="global.html#addNotificationFlow">addNotificationFlow</a></li><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoAssetNotificationsFlow">geoAssetNotificationsFlow</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#hideSideNavFlow">hideSideNavFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Apr 03 2021 23:47:15 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

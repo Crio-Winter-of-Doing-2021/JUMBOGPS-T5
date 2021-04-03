@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useSelector } from 'react-redux';
-import { getUser, getProfile } from '../../../../../controller/reducer/user';
 import { Button } from "react-bootstrap";
+import { useSelector } from 'react-redux';
 import { getDeviceSize } from "../../../../../controller/reducer/ui";
+import { getProfile, getUser } from '../../../../../controller/reducer/user';
 
 const ProfileForm = ({onSubmit,onClose}) => {
     const user = useSelector(getUser);

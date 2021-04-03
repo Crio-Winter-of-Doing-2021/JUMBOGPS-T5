@@ -26,18 +26,19 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Badge, Button, Card, Figure } from "react-bootstrap";
+            <pre class="prettyprint source linenums"><code>import moment from "moment";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Figure } from "react-bootstrap";
 import ReactMapGL, {
+  FlyToInterpolator,
+  FullscreenControl,
+  GeolocateControl,
   Layer,
   Marker,
-  Popup,
-  Source,
-  FlyToInterpolator,
   NavigationControl,
-  FullscreenControl,
+  Popup,
   ScaleControl,
-  GeolocateControl,
+  Source,
 } from "react-map-gl";
 import { EditingMode, Editor } from "react-map-gl-draw";
 import { useSelector } from "react-redux";
@@ -46,15 +47,17 @@ import {
   getGeoFence,
   getGeoRoute,
 } from "../../../../../controller/reducer/geo";
-import { getTrackTabId } from "../../../../../controller/reducer/ui";
+import {
+  getDeviceSize,
+  getTrackTabId,
+} from "../../../../../controller/reducer/ui";
 import Markers from "../../../../../data/constants/Markers";
+import logger from "../../../../../utils/logger";
 import { getEditHandleStyle, getFeatureStyle } from "./common/draw-styles";
 import DrawFenceTools from "./common/DrawFenceTools";
 import DrawRouteTools from "./common/DrawRouteTools";
 import { heatmapLayer } from "./common/map-style";
-import moment from "moment";
 import "./styles.css";
-import logger from "../../../../../utils/logger";
 
 const geolocateStyle = {
   top: 0,
@@ -131,6 +134,7 @@ function Map({
   const geoJSON = useSelector(getGeoJSON);
   const geoFence = useSelector(getGeoFence);
   const geoRoute = useSelector(getGeoRoute);
+  const deviceSize = useSelector(getDeviceSize);
 
   const onSelectLocation = useCallback((longitude, latitude) => {
     logger(longitude, latitude);
@@ -283,10 +287,7 @@ function Map({
             >
               &lt;Figure.Caption>
                 &lt;p className="p mt-2 mb-2 ml-4 mr-4 font-weight-bold">
-                  {moment
-                    .duration(moment().diff("2021-03-22T12:41:47.604Z"))
-                    .humanize()}{" "}
-                  ago
+                  {moment.duration(moment().diff(loc.timestamp)).humanize()} ago
                 &lt;/p>
               &lt;/Figure.Caption>
             &lt;/Figure>
@@ -299,7 +300,7 @@ function Map({
       />
       &lt;FullscreenControl style={fullscreenControlStyle} />
       &lt;NavigationControl style={navStyle} showCompass={false} />
-      &lt;ScaleControl style={scaleControlStyle} />
+      {deviceSize !== "sm" &amp;&amp; &lt;ScaleControl style={scaleControlStyle} />}
     &lt;/ReactMapGL>
   );
 }
@@ -315,13 +316,13 @@ export default Map;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAssetNotificationFlow">addAssetNotificationFlow</a></li><li><a href="global.html#addNotificationFlow">addNotificationFlow</a></li><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoAssetNotificationsFlow">geoAssetNotificationsFlow</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#hideSideNavFlow">hideSideNavFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Apr 03 2021 23:47:15 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,12 +1,12 @@
-import React, { useContext, useEffect } from "react";
-import { Button, Badge } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Badge, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {
   getAssetNotifications,
   loadAssetNotifications,
-  loadAssetNotificationsSuccess,
-  addAssetNotification,
-  loadNotifications,
+
+
+  loadNotifications
 } from "../../../../../controller/reducer/geo";
 import { getUnseenAssetNotifications } from "../../../../../controller/reducer/ui";
 import { getEmail } from "../../../../../controller/reducer/user";
@@ -19,17 +19,6 @@ function NotificationArea({ dispatch, assetId }) {
   const unseenAssetNotifications = useSelector(getUnseenAssetNotifications);
   const socket = useContext(SocketContext);
   const email = useSelector(getEmail);
-  // logger(notifications);
-  useEffect(() => {
-    console.log(socket);
-    socket.on("notification", (notification) => {
-      if (notification.assetId === assetId) {
-        // console.log(notification);
-        dispatch(addAssetNotification(notification));
-      }
-    });
-    return () => socket.off("notification");
-  }, [socket, notifications]);
 
   const onSeenSubmit = (e) => {
     e.preventDefault();

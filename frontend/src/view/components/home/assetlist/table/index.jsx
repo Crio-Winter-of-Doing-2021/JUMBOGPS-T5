@@ -3,6 +3,7 @@ import React from "react";
 import { Button, OverlayTrigger, Popover, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { HashLink } from 'react-router-hash-link';
 import { getAssets } from "../../../../../controller/reducer/assets";
 import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import Info from "../../widget/info";
@@ -54,10 +55,9 @@ const DataTable = ({  }) => {
                 <Button
                   size={deviceSize}
                   variant="outline-primary"
-                  onClick={() => {
-                    // onSelect(asset._id, asset.name);
-                    history.push("/track/"+asset._id);
-                  }}
+                  smooth
+                  as={HashLink}
+                  to={`/track/${asset._id}#map`}
                 >
                   Track
                 </Button>

@@ -1,11 +1,9 @@
-import React, { useContext, useEffect } from "react";
-import { Button, Badge } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Badge, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {
-  addNotification,
   getNotifications,
-  loadNotifications,
-  loadNotificationsSuccess,
+  loadNotifications
 } from "../../../../../controller/reducer/geo";
 import { getUnseenNotifications } from "../../../../../controller/reducer/ui";
 import { getEmail } from "../../../../../controller/reducer/user";

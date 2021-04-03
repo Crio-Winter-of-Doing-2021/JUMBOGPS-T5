@@ -26,29 +26,29 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  getUser,
-  loadProfile,
-  updateProfile,
-  getProfile,
-  updatePassword,
-} from "../../../../controller/reducer/user";
-import maleIcon from "../../../../assets/illustrations/male.svg";
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import femaleIcon from "../../../../assets/illustrations/female.svg";
-import "./style.css";
-import Loader from "../widget/loader";
+import maleIcon from "../../../../assets/illustrations/male.svg";
 import {
   getLoading,
   getShowSidenav,
   getTabId,
   setError,
-  setTabId,
+  setTabId
 } from "../../../../controller/reducer/ui";
+import {
+  getProfile, getUser,
+  loadProfile,
+
+
+  updatePassword, updateProfile
+} from "../../../../controller/reducer/user";
+import Loader from "../widget/loader";
 import ProfileForm from "./form";
 import PasswordForm from "./form-password";
+import "./style.css";
 
 //TODO
 /**
@@ -96,8 +96,8 @@ const Profile = () => {
 
   return (
     &lt;div
-      className="container profile bg-light"
-      style={{ left: sidenav ? "200px" : "0px" }}
+      className=" profile bg-light"
+      style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
     >
       &lt;div className="row justify-content-center">
         &lt;div className="col-12 col-lg-10 col-xl-8 mx-auto">
@@ -127,10 +127,6 @@ const Profile = () => {
                   &lt;/div>
                   &lt;div className="col">
                     &lt;p className="small mb-0 text-muted">{profile.address}&lt;/p>
-                    {/* &lt;p className="small mb-0 text-muted">
-                      P.O. Box 464, 5975 Eget Avenue
-                    &lt;/p>
-                    &lt;p className="small mb-0 text-muted">(537) 315-1481&lt;/p> */}
                   &lt;/div>
                 &lt;/div>
               &lt;/div>
@@ -190,13 +186,13 @@ export default Profile;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAssetNotificationFlow">addAssetNotificationFlow</a></li><li><a href="global.html#addNotificationFlow">addNotificationFlow</a></li><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoAssetNotificationsFlow">geoAssetNotificationsFlow</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#hideSideNavFlow">hideSideNavFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Apr 03 2021 23:47:15 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

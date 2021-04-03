@@ -29,7 +29,6 @@ export const counterSlice = createSlice({
     loadProfileSuccess: (state, action) => {
       state.name = action.payload.name;
       state.profile = action.payload;
-      state.profile.isMale = action.payload.isMale==="true";
     },
     removeUser: (state) => {
       state.name = "";

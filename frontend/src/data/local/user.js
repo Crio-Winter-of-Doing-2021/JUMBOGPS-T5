@@ -1,4 +1,4 @@
-const USER_KEY = USER_KEY;
+const USER_KEY = "user";
 
 export const saveUser = (user) =>
   localStorage.setItem(

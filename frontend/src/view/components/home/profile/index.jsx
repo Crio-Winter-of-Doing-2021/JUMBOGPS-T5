@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  getUser,
-  loadProfile,
-  updateProfile,
-  getProfile,
-  updatePassword,
-} from "../../../../controller/reducer/user";
-import maleIcon from "../../../../assets/illustrations/male.svg";
+import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import femaleIcon from "../../../../assets/illustrations/female.svg";
-import "./style.css";
-import Loader from "../widget/loader";
+import maleIcon from "../../../../assets/illustrations/male.svg";
 import {
   getLoading,
   getShowSidenav,
   getTabId,
   setError,
-  setTabId,
+  setTabId
 } from "../../../../controller/reducer/ui";
+import {
+  getProfile, getUser,
+  loadProfile,
+
+
+  updatePassword, updateProfile
+} from "../../../../controller/reducer/user";
+import Loader from "../widget/loader";
 import ProfileForm from "./form";
 import PasswordForm from "./form-password";
+import "./style.css";
 
 //TODO
 /**

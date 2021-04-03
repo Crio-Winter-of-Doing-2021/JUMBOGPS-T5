@@ -9,28 +9,23 @@ function Info({ asset }) {
   const deviceSize = useSelector(getDeviceSize);
   if (!asset) return <div> </div>;
   return (
-    <Card>
-      <Card.Body>
+    <Card className="card-box">
         <Card.Img
-          className="img"
+        className="img-pic"
           src={asset.image_url}
-          style={{ height: "600px", width: "100%" }}
         />
-        <Card.ImgOverlay>
-          <div className="overlay">
-            <Card.Text className={`${deviceSize!=="sm"?"display-3":"h1  font-weight-normal"}`}>{asset.name}</Card.Text>
+      <Card.Body>
+            <Card.Text className={`${"h1 font-weight-normal"}`}>{asset.name}</Card.Text>
             <br />
-            <Card.Text className={`${deviceSize!=="sm"?"h1":"h4"} font-weight-light`}>{asset.desc}</Card.Text>
+            <Card.Text className={`${deviceSize!=="sm"?"h3":"h4"} font-weight-light`}>{asset.desc}</Card.Text>
             <br />
             {AssetProperties.filter(
               ({ value, label }) => asset.body[value]
             ).map(({ value, label }) => (
-              <p key={value} className={`${deviceSize!=="sm"?"h2":"h5"} font-weight-light`}>
+              <p key={value} className={`${deviceSize!=="sm"?"h4":"h5"} font-weight-light`}>
                 <strong>{label}</strong>: {asset.body[value]}
               </p>
             ))}
-          </div>
-        </Card.ImgOverlay>
       </Card.Body>
     </Card>
   );

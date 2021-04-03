@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { addNotification } from "../../../controller/reducer/geo";
 import {
   getError,
   getShowSidenav,
@@ -20,8 +21,11 @@ import {
   toggleSidenav,
   setDeviceSize,
   hideSidenav,
+  pageLoaded,
 } from "../../../controller/reducer/ui";
 import { performLogout } from "../../../controller/reducer/user";
+import logger from "../../../utils/logger";
+import { SocketContext } from "../../../utils/socket";
 import useWindowDimensions from "../../hooks/windowDimension";
 import AssetList from "./assetlist";
 import Dashboard from "./dashboard";
@@ -81,6 +85,21 @@ const Home = () => {
       dispatch(setSuccessToast(""));
     }
   }, [msg]);
+
+  useEffect(() => {
+    dispatch(pageLoaded());
+    // logger("logged")
+  }, []);
+
+  const socket = useContext(SocketContext);
+  useEffect(() => {
+    console.log(socket);
+    socket.on("notification", (notification) => {
+      console.log(notification);
+      dispatch(addNotification(notification));
+    });
+    return () => socket.off("notification");
+  }, [socket]);
 
   const handleClose = () => dispatch(setshowLogoutModal(false));
   const handleShow = () => dispatch(setshowLogoutModal(true));

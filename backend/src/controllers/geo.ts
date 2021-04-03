@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 const GeoFence = require("../models/GeoFence");
 const GeoRoute = require("../models/GeoRoute");
-const [convert, parses] = require("../utils/geojson.js");
+const [convert, parses] = require("../utils/parsing.js");
 var geojson = require('geojson-tools')
 
 exports.getGeofence = async (req: Request, res: Response) => {

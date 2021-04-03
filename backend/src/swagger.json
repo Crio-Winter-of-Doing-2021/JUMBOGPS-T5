@@ -455,6 +455,29 @@
           }
         }
       }
+    },
+    "/api/asset/notification/": {
+      "get": {
+        "tags": ["Assets"],
+        "description": "Get Notification",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          }
+        ],
+        "summary": "Get Notifications ",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Get Notifications",
+            "schema": {
+              "$ref": "#/definitions/Notification"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {

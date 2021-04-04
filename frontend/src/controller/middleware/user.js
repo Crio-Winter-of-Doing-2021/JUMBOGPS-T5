@@ -126,7 +126,7 @@ const updateProfileFlow = ({ putProfile, saveLocalUser, getLocalUser }) => ({ di
   next(action);
   if (action.type === updateProfile.type) {
     try {
-      const response = await putProfile(getState().user.token,action.payload);
+      await putProfile(getState().user.token,action.payload);
       dispatch(loadProfileSuccess(action.payload));
       dispatch(uiActions.setSuccessToast("Profile Updated Successfully"));
       if (getLocalUser()) {
@@ -156,7 +156,7 @@ const updatePasswordFlow = ({ putPassword}) => ({ dispatch, getState }) => (
   next(action);
   if (action.type === updatePassword.type) {
     try {
-      const response = await putPassword(getState().user.token,action.payload);
+      await putPassword(getState().user.token,action.payload);
       dispatch(uiActions.setSuccessToast("Password Updated Successfully"));
     } catch (error) {
       if (error.response) {

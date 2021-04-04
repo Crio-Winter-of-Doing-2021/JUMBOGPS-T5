@@ -22,11 +22,12 @@ import {
 import {
   getLoading,
   getShowSidenav,
-  getTabId,
-  setTabId,
+
+
   setTrackTabId
 } from "../../../../controller/reducer/ui";
 import logger from "../../../../utils/logger";
+import { useSelectedTab } from "../../../hooks/useSelectedTab";
 import Loader from "../widget/loader";
 import DateRangeSelector from "./date-range";
 import Info from "./info";
@@ -63,7 +64,6 @@ const Track = ({ match }) => {
   const asset = useSelector(getAsset);
   const noOfAssets = useSelector(getAssetsLength);
   const assetInfo = useSelector(getAssetInfo);
-  const tabId = useSelector(getTabId);
 
   const setGeoFenceData = (data) => dispatch(setGeoFence(data));
   const setGeoRouteData = (data) => dispatch(setGeoRoute(data));
@@ -72,15 +72,18 @@ const Track = ({ match }) => {
   const onSelectTab = (key) => dispatch(setTrackTabId(key));
 
   useEffect(() => {
+    let mounted = true;
     if (
       match.params.id !== "none" ||
       (match.params.id !== "none" && match.params.id !== assetInfo.id)
     ) {
-      dispatch(loadAsset(match.params.id));
+      dispatch(loadAsset({id:match.params.id,mounted}));
     }
-    if (tabId !== "2") dispatch(setTabId("2"));
     if (noOfAssets === 0) dispatch(loadAssets());
-  }, [match.params.id]);
+    return () => {mounted = false};
+  }, [match.params.id,dispatch,assetInfo.id,noOfAssets]);
+
+  useSelectedTab("2");
 
   const sidenav = useSelector(getShowSidenav);
   if (useSelector(getLoading)) return <Loader />;

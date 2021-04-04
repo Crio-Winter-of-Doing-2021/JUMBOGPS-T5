@@ -11,10 +11,10 @@ import {
   getDeviceSize,
   getLoading,
   getShowSidenav,
-  getTabId,
-  pageLoaded,
-  setTabId
+
+  pageLoaded
 } from "../../../../controller/reducer/ui";
+import { useSelectedTab } from "../../../hooks/useSelectedTab";
 import Loader from "../widget/loader";
 import TypeSelector from "../widget/type";
 import "./style.css";
@@ -44,7 +44,7 @@ const headers = [
  *   <AssetList dispatch={dispatch}/>
  * )
  */
-const AssetList = ({}) => {
+const AssetList = () => {
   const dispatch = useDispatch();
   const assets = useSelector(getAssets);
   const deviceSize = useSelector(getDeviceSize);
@@ -58,10 +58,7 @@ const AssetList = ({}) => {
     dispatch(loadAssets());
   };
 
-  const tabId = useSelector(getTabId);
-  useEffect(() => {
-    if (tabId !== "3") dispatch(setTabId("3"));
-  }, [tabId]);
+  useSelectedTab("3");
 
   const sidenav = useSelector(getShowSidenav);
   if (useSelector(getLoading)) return <Loader />;

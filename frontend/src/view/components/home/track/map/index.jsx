@@ -129,7 +129,7 @@ function Map({
       routeEditorRef.current.addFeatures(geoRoute);
       logger(routeEditorRef.current.getFeatures());
     }
-  }, [tabId]);
+  }, [tabId,geoFence,geoRoute]);
 
   const onDelete = useCallback(
     (ref) => () => {
@@ -137,7 +137,7 @@ function Map({
       else setGeoRoute(null);
       ref.current.deleteFeatures(0);
     },
-    []
+    [setGeoFence,setGeoRoute]
   );
 
   const onUpdate = useCallback(
@@ -153,7 +153,7 @@ function Map({
         }
       }
     },
-    []
+    [setGeoFence,setGeoRoute]
   );
 
   const setModeValue = (ref) => (mode) => {
@@ -259,7 +259,7 @@ function Map({
             >
               <Figure.Caption>
                 <p className="p mt-2 mb-2 ml-4 mr-4 font-weight-bold">
-                  {moment.duration(moment().diff(loc.timestamp)).humanize()} ago
+                  {moment(loc.timestamp).format("DD/MM/YY, h:mm a")}
                 </p>
               </Figure.Caption>
             </Figure>

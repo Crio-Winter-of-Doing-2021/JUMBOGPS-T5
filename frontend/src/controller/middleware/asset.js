@@ -10,7 +10,6 @@ import {
   loadAssetNotifications,
   loadGeoFenceSuccess,
   loadGeoRouteSuccess,
-  loadNotifications,
 } from "../reducer/geo";
 import * as uiActions from "../reducer/ui";
 
@@ -47,9 +46,10 @@ const trackAssetFlow = ({ getAssetTrack }) => ({ dispatch, getState }) => (
     try {
       const response = await getAssetTrack(
         getState().user.token,
-        action.payload
+        action.payload.id
       );
       logger(response, action.payload);
+      if(!action.payload.mounted) return;
       dispatch(loadAssetSuccess(response.data));
       const geoJSON = arrayToGeoJSON(response.data.data.track);
       dispatch(setGeoJSON(geoJSON));

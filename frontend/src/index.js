@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import  configStore  from './controller/configStore';
 import services from './data/index';
 import { Provider } from "react-redux";
-import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -23,7 +22,4 @@ ReactDOM.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
+

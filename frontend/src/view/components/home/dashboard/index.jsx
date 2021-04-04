@@ -6,11 +6,9 @@ import {
 } from "../../../../controller/reducer/assets";
 import {
   getLoading,
-  getShowSidenav,
-  getTabId,
-  pageLoaded,
-  setTabId
+  getShowSidenav
 } from "../../../../controller/reducer/ui";
+import { useSelectedTab } from "../../../hooks/useSelectedTab";
 import Loader from "../widget/loader";
 import TypeSelector from "../widget/type";
 import Map from "./map";
@@ -26,23 +24,22 @@ import "./style.css";
  *   <Dashboard dispatch={dispatch}/>
  * )
  */
-const Dashboard = (match) => {
+const Dashboard = () => {
   const dispatch = useDispatch();
-  const tabId = useSelector(getTabId);
-  // logger(match.history.location.hash);
+
+  useSelectedTab("1");
 
   useEffect(() => {
-    if (tabId !== "1") dispatch(setTabId("1"));
-  }, [tabId]);
+    let mounted = true;
+    if (mounted) dispatch(loadAssets({mounted}));
+    return () => {mounted = false};
+  }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(pageLoaded());
-  }, []);
 
   const onSelect = (assetType) => {
     dispatch(setAssetType(assetType));
-    dispatch(loadAssets());
   };
+
   const sidenav = useSelector(getShowSidenav);
 
   if (useSelector(getLoading)) return <Loader />;
@@ -57,7 +54,7 @@ const Dashboard = (match) => {
       </div>
 
       <div className="map-child">
-        <Map />
+        <Map dispatch={dispatch}/>
       </div>
       <div className="notifications-child" id="notification">
         

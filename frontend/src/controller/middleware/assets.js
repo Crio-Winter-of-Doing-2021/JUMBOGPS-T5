@@ -2,6 +2,7 @@ import logger from "../../utils/logger";
 import {
   loadAssets,
   loadAssetsSuccess,
+  setAssetType,
 } from "../reducer/assets";
 import * as uiActions from "../reducer/ui";
 
@@ -24,7 +25,8 @@ const loadAssetsFlow = ({ getAssetList }) => ({ dispatch, getState }) => (
         getState().user.token,
         getState().assets.assetType
       );
-      dispatch(loadAssetsSuccess(response.data));
+      if(!action.payload || action.payload.mounted)      
+        dispatch(loadAssetsSuccess(response.data));
       logger(response.data);
     } catch (error) {
       dispatch(uiActions.setError(error));
@@ -33,6 +35,15 @@ const loadAssetsFlow = ({ getAssetList }) => ({ dispatch, getState }) => (
   }
 };
 
-const assetsFlow = [loadAssetsFlow];
+const setAssetTypeFlow = () => ({ dispatch, getState }) => (
+  next
+) =>  (action) => {
+  next(action);
+  if (action.type === setAssetType.type) {
+    dispatch(loadAssets());
+  }
+};
+
+const assetsFlow = [loadAssetsFlow,setAssetTypeFlow];
 
 export default assetsFlow;

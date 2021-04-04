@@ -37,6 +37,7 @@ app.get("/", (req, res) => {
 io.on('connection',function  (socket:any) {
 
   socket.on("notification", ({assetId,id,email}: { assetId: string; id: string; email: string }  )=> {
+      console.log(assetId,id,email);
       //add email in notification's sendBy in Db
       markSeen(assetId,id,email);
   });

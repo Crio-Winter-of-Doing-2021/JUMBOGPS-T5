@@ -2,16 +2,14 @@ import moment from "moment";
 import React from "react";
 import { Button, OverlayTrigger, Popover, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
 import { HashLink } from 'react-router-hash-link';
 import { getAssets } from "../../../../../controller/reducer/assets";
 import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import Info from "../../widget/info";
 
-const DataTable = ({  }) => {
+const DataTable = () => {
   const assets = useSelector(getAssets);
   const deviceSize = useSelector(getDeviceSize);
-  const history = useHistory();
 
   const renderDetailsOverlay = (asset) => (
     <Popover className="popover">

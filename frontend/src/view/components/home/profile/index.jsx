@@ -6,9 +6,8 @@ import maleIcon from "../../../../assets/illustrations/male.svg";
 import {
   getLoading,
   getShowSidenav,
-  getTabId,
-  setError,
-  setTabId
+
+  setError
 } from "../../../../controller/reducer/ui";
 import {
   getProfile, getUser,
@@ -17,6 +16,7 @@ import {
 
   updatePassword, updateProfile
 } from "../../../../controller/reducer/user";
+import { useSelectedTab } from "../../../hooks/useSelectedTab";
 import Loader from "../widget/loader";
 import ProfileForm from "./form";
 import PasswordForm from "./form-password";
@@ -46,10 +46,8 @@ const Profile = () => {
 
   const notify = (msg) => dispatch(setError(msg));
 
-  const tabId = useSelector(getTabId);
-  useEffect(() => {
-    if (tabId !== "4") dispatch(setTabId("4"));
-  }, [tabId]);
+  useSelectedTab("4");
+
 
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
+import csvIcon from "../../../../assets/icons/table.svg";
 import {
   getAsset,
   getAssetInfo,
@@ -27,16 +28,14 @@ import {
 } from "../../../../controller/reducer/ui";
 import logger from "../../../../utils/logger";
 import Loader from "../widget/loader";
-import Notifications from "../widget/notifications";
 import DateRangeSelector from "./date-range";
 import Info from "./info";
 import Map from "./map";
+import NotificationArea from "./notification";
 import AutoSearch from "./search";
 import "./style.css";
 import DataTable from "./table";
 import Tabs from "./tabs";
-import csvIcon from "../../../../assets/icons/table.svg";
-import NotificationArea from "./notification";
 
 const headers = [
   { label: "Latitude", key: "lat" },
@@ -118,7 +117,7 @@ const Track = ({ match }) => {
           <DateRangeSelector dispatch={dispatch} />
         </Col>
       </Row>
-      <hr />
+      <hr id="map"/>
       <div className="d-flex justify-content-center ">
         <Tabs onSelect={onSelectTab} />
       </div>

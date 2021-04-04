@@ -1,6 +1,8 @@
+const USER_KEY = "user";
+
 export const saveUser = (user) =>
   localStorage.setItem(
-    "user",
+    USER_KEY,
     JSON.stringify({
       name: user.name,
       email: user.email,
@@ -8,6 +10,6 @@ export const saveUser = (user) =>
     })
   );
 
-export const retrieveUser = () => localStorage.getItem("user");
+export const retrieveUser = () => localStorage.getItem(USER_KEY);
 
-export const removeUser = () => localStorage.removeItem("user");
+export const removeUser = () => localStorage.removeItem(USER_KEY);

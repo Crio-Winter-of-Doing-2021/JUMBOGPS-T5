@@ -37,7 +37,7 @@ const performSignInFlow = ({ postSignin, saveLocalUser }) => ({
       }
     } catch (error) {
       if (error.response) {
-        dispatch(uiActions.setError(error.response.data.error));
+        dispatch(uiActions.setError(error.response.data.error.message));
       } else {
         dispatch(uiActions.setError(error.message));
       }
@@ -75,7 +75,7 @@ const performSignUpFlow = ({ postSignup, saveLocalUser }) => ({
       );
     } catch (error) {
       if (error.response) {
-        dispatch(uiActions.setError(error.response.data.error));
+        dispatch(uiActions.setError(error.response.data.error.message));
       } else {
         dispatch(uiActions.setError(error.message));
       }
@@ -103,7 +103,7 @@ const getProfileFlow = ({ getProfile }) => ({ dispatch, getState }) => (
       dispatch(loadProfileSuccess(response.data.data));
     } catch (error) {
       if (error.response) {
-        dispatch(uiActions.setError(error.response.data.error));
+        dispatch(uiActions.setError(error.response.data.error.message));
       } else {
         dispatch(uiActions.setError(error.message));
       }
@@ -134,7 +134,7 @@ const updateProfileFlow = ({ putProfile, saveLocalUser, getLocalUser }) => ({ di
       }
     } catch (error) {
       if (error.response) {
-        dispatch(uiActions.setError(error.response.data.error));
+        dispatch(uiActions.setError(error.response.data.error.message));
       } else {
         dispatch(uiActions.setError(error.message));
       }
@@ -160,7 +160,7 @@ const updatePasswordFlow = ({ putPassword}) => ({ dispatch, getState }) => (
       dispatch(uiActions.setSuccessToast("Password Updated Successfully"));
     } catch (error) {
       if (error.response) {
-        dispatch(uiActions.setError(error.response.data.error.message));
+        dispatch(uiActions.setError(error.response.data.error.message.message));
       } else {
         dispatch(uiActions.setError(error.message));
       }
@@ -182,11 +182,13 @@ const loadLocalUserFlow = ({ getLocalUser }) => ({ dispatch, getState }) => (
   next(action);
   if (action.type === loadLocalUser.type) {
     if (!getState().user.token) {
+      dispatch(uiActions.setLoading(true));
       const user = JSON.parse(getLocalUser());
       if (user) {
         dispatch(loadUser(user));
         dispatch(uiActions.setSuccessToast("Welcome " + user.name));
       }
+      dispatch(uiActions.setLoading(false));
     }
   }
 };

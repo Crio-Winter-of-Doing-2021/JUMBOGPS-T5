@@ -26,28 +26,38 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useEffect } from "react";
+            <pre class="prettyprint source linenums"><code>import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
-  useHistory,
+  Switch
 } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getAssetInfo } from "../../../controller/reducer/asset";
+import { addAssetNotification, addNotification } from "../../../controller/reducer/geo";
 import {
   getError,
   getShowSidenav,
   getTabId,
   getToastMessage,
-  setError,
+
+
+
+
+
+
+  hideSidenav,
+  pageLoaded, setDeviceSize, setError,
   setshowLogoutModal,
   setSuccessToast,
   setTabId,
-  toggleSidenav,
+  toggleSidenav
 } from "../../../controller/reducer/ui";
 import { performLogout } from "../../../controller/reducer/user";
+import logger from "../../../utils/logger";
+import { SocketContext } from "../../../utils/socket";
 import useWindowDimensions from "../../hooks/windowDimension";
 import AssetList from "./assetlist";
 import Dashboard from "./dashboard";
@@ -62,7 +72,7 @@ import SideBar from "./widget/sidebar";
  * Notify toast message to user
  * @param {string} message
  */
-const notify = (message) => toast.dark(message, { autoClose: 3000 });
+const notify = (message) => toast.dark(message, { autoClose: 2500 });
 
 /**
  * Home Component
@@ -78,19 +88,20 @@ const notify = (message) => toast.dark(message, { autoClose: 3000 });
  */
 const Home = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const tabId = useSelector(getTabId);
   const err = useSelector(getError);
   const msg = useSelector(getToastMessage);
   const sidenav = useSelector(getShowSidenav);
+  const assetInfo = useSelector(getAssetInfo);
 
   const { width } = useWindowDimensions();
 
   useEffect(() => {
-    if (width > 750 &amp;&amp; !sidenav) {
-      dispatch(toggleSidenav());
-    }
+    if (width > 750) {
+      if (!sidenav) dispatch(toggleSidenav());
+      dispatch(setDeviceSize("md"));
+    } else dispatch(setDeviceSize("sm"));
   }, [width]);
 
   useEffect(() => {
@@ -107,9 +118,27 @@ const Home = () => {
     }
   }, [msg]);
 
+  useEffect(() => {
+    dispatch(pageLoaded());
+  }, []);
+
+  const socket = useContext(SocketContext);
+  useEffect(() => {
+    logger(socket);
+    socket.on("notification", (notification) => {
+      logger(notification);
+      dispatch(addNotification(notification));
+      if (notification.assetId === assetInfo.id) {
+        dispatch(addAssetNotification(notification));
+      }
+    });
+    return () => socket.off("notification");
+  }, [socket]);
+
   const handleClose = () => dispatch(setshowLogoutModal(false));
   const handleShow = () => dispatch(setshowLogoutModal(true));
   const handleShowSidenav = () => dispatch(toggleSidenav());
+  const handleTouch = () => dispatch(hideSidenav());
   const handleSelect = (eventKey) => dispatch(setTabId(eventKey));
 
   const logout = () => dispatch(performLogout());
@@ -123,7 +152,11 @@ const Home = () => {
           onSelect={handleSelect}
           onShow={handleShow}
         />
-        &lt;div className="child ">
+        &lt;div
+          className="child "
+          onTouchStart={handleTouch}
+          style={{ marginLeft: sidenav ? "var(--sidenav-width)" : "0px" }}
+        >
           &lt;Switch>
             &lt;Route path="/" exact component={Dashboard} />
             &lt;Route path="/track/:id" exact component={Track} />
@@ -154,13 +187,13 @@ export default Home;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAssetNotificationFlow">addAssetNotificationFlow</a></li><li><a href="global.html#addNotificationFlow">addNotificationFlow</a></li><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoAssetNotificationsFlow">geoAssetNotificationsFlow</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#hideSideNavFlow">hideSideNavFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Apr 03 2021 23:47:15 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

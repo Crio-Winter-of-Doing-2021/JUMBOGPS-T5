@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { HashLink } from 'react-router-hash-link';
+import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import { AssetProperties } from "../../../../../data/constants/Asset";
 import "./styles.css";
-import { withRouter, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getDeviceSize } from "../../../../../controller/reducer/ui";
 
 
 /**
@@ -48,11 +49,11 @@ function Info({ asset, onClose, minimal }) {
           )}
           {!minimal && (
             <Button
-            size={deviceSize}
+              as={HashLink}
+              size={deviceSize}
+              smooth
               variant="primary"
-              onClick={() => {
-                history.push("/track/"+asset._id);
-              }}
+              to={`/track/${asset._id}#map`}
             >
               Track
             </Button>

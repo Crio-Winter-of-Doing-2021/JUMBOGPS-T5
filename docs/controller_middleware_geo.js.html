@@ -26,7 +26,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import {
+            <pre class="prettyprint source linenums"><code>import logger from "../../utils/logger";
+import {
+  addAssetNotification,
+  addNotification,
+  loadAssetNotifications,
+  loadAssetNotificationsSuccess,
   loadGeoFence,
   loadGeoFenceSuccess,
   loadGeoRoute,
@@ -39,13 +44,13 @@
 import * as uiActions from "../reducer/ui";
 
 /**
-* Geo Fence Middleware
-* @description
-* Make API Call to get geofence object for selected asset
-* Dispatches loadGeoFenceSuccess(response.data) on success
-* Dispatches setError(err) on failure.
-* @param {function} services.getGeoFence get asset geofence api 
-*/
+ * Geo Fence Middleware
+ * @description
+ * Make API Call to get geofence object for selected asset
+ * Dispatches loadGeoFenceSuccess(response.data) on success
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getGeoFence get asset geofence api
+ */
 const geoFenceFlow = ({ getGeoFence }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -57,7 +62,7 @@ const geoFenceFlow = ({ getGeoFence }) => ({ dispatch, getState }) => (
         getState().user.token,
         getState().asset.assetInfo.id
       );
-      
+
       dispatch(loadGeoFenceSuccess(response.data));
     } catch (error) {
       dispatch(uiActions.setError(error));
@@ -67,13 +72,13 @@ const geoFenceFlow = ({ getGeoFence }) => ({ dispatch, getState }) => (
 };
 
 /**
-* Geo Route Middleware
-* @description
-* Make API Call to get georoute object for selected asset
-* Dispatches loadGeoRouteSuccess(response.data) on success
-* Dispatches setError(err) on failure.
-* @param {function} services.getGeoRoute get asset georoute api 
-*/
+ * Geo Route Middleware
+ * @description
+ * Make API Call to get georoute object for selected asset
+ * Dispatches loadGeoRouteSuccess(response.data) on success
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getGeoRoute get asset georoute api
+ */
 const geoRouteFlow = ({ getGeoRoute }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -85,7 +90,7 @@ const geoRouteFlow = ({ getGeoRoute }) => ({ dispatch, getState }) => (
         getState().user.token,
         getState().asset.assetInfo.id
       );
-      
+
       dispatch(loadGeoRouteSuccess(response.data));
     } catch (error) {
       dispatch(uiActions.setError(error));
@@ -95,13 +100,13 @@ const geoRouteFlow = ({ getGeoRoute }) => ({ dispatch, getState }) => (
 };
 
 /**
-* Updated Geo Fence Middleware
-* @description
-* Make API Call to put geofence object for selected asset
-* Dispatches setSuccessToast(message) on success
-* Dispatches setError(err) on failure. 
-* @param {function} services.putGeoFence put asset geofence api 
-*/
+ * Updated Geo Fence Middleware
+ * @description
+ * Make API Call to put geofence object for selected asset
+ * Dispatches setSuccessToast(message) on success
+ * Dispatches setError(err) on failure.
+ * @param {function} services.putGeoFence put asset geofence api
+ */
 const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -113,7 +118,7 @@ const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
         getState().asset.assetInfo.id,
         getState().geo.geoFence
       );
-      
+
       const message =
         "Geo Fence Updated for Asset " + getState().asset.assetInfo.name;
       dispatch(uiActions.setSuccessToast(message));
@@ -124,13 +129,13 @@ const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
 };
 
 /**
-* Updated Geo Route Middleware
-* @description
-* Make API Call to put georoute object for selected asset
-* Dispatches setSuccessToast(message)  on success
-* Dispatches setError(err) on failure.
-* @param {function} services.putGeoRoute put asset georoute api 
-*/
+ * Updated Geo Route Middleware
+ * @description
+ * Make API Call to put georoute object for selected asset
+ * Dispatches setSuccessToast(message)  on success
+ * Dispatches setError(err) on failure.
+ * @param {function} services.putGeoRoute put asset georoute api
+ */
 const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
@@ -142,7 +147,7 @@ const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
         getState().asset.assetInfo.id,
         getState().geo.geoRoute
       );
-      
+
       const message =
         "Geo Route Updated for Asset " + getState().asset.assetInfo.name;
       dispatch(uiActions.setSuccessToast(message));
@@ -152,32 +157,134 @@ const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
   }
 };
 
+const calcUnseen = (notifications, email) => {
+  let unseenNotifications = [];
+  notifications.forEach((notification) => {
+    notification.unseen = !notification.seenBy.includes(email);
+    if (notification.unseen) {
+      unseenNotifications.push({
+        id: notification._id,
+        assetId: notification.assetId,
+      });
+    }
+  });
+  return unseenNotifications;
+};
+
 /**
-* Notifications Middleware
-* @description
-* Make API Call to get notification list for selected asset
-* Dispatches loadNotificationsSuccess(response.data) on success
-* Dispatches setError(err) on failure.
-* @param {function} services.getGeoFence get asset geofence api 
-*/
+ * Notifications Middleware
+ * @description
+ * Make API Call to get notification list for all assets
+ * Dispatches loadNotificationsSuccess(response.data) on success
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getNotifications get notifications api
+ */
 const geoNotificationsFlow = ({ getNotifications }) => ({
   dispatch,
   getState,
 }) => (next) => async (action) => {
   next(action);
   if (action.type === loadNotifications.type) {
+    try {
+      const response = await getNotifications(getState().user.token);
+      const notifications = response.data.data;
+      logger(notifications);
+      dispatch(
+        uiActions.setUnseenNotifications(
+          calcUnseen(notifications, getState().user.email)
+        )
+      );
+      dispatch(loadNotificationsSuccess(notifications));
+    } catch (error) {
+      logger(error);
+    }
+  }
+};
+
+/**
+ * Asset Notifications Middleware
+ * @description
+ * Make API Call to get notification list for selected asset
+ * Dispatches loadAssetNotificationsSuccess(response.data) on success
+ * Dispatches setError(err) on failure.
+ * @param {function} services.getAssetNotifications get asset notifications api
+ */
+const geoAssetNotificationsFlow = ({ getAssetNotifications }) => ({
+  dispatch,
+  getState,
+}) => (next) => async (action) => {
+  next(action);
+  if (action.type === loadAssetNotifications.type) {
     dispatch(uiActions.setLoading(true));
     try {
-      const response = await getNotifications(
+      const response = await getAssetNotifications(
         getState().user.token,
         getState().asset.assetInfo.id
       );
-      
-      dispatch(loadNotificationsSuccess(response.data));
+      const notifications = response.data.data;
+      dispatch(
+        uiActions.setUnseenAssetNotifications(
+          calcUnseen(notifications, getState().user.email)
+        )
+      );
+      dispatch(loadAssetNotificationsSuccess(notifications));
     } catch (error) {
       dispatch(uiActions.setError(error));
     }
     dispatch(uiActions.setLoading(false));
+  }
+};
+
+/**
+ * Add = Notification Middleware
+ * @description
+ * Triggered on receiving new notification belonging and 
+ * add to unseen  notifications
+ * Dispatches addUnseenNotifications(response.data) 
+ */
+const addNotificationFlow = () => ({ dispatch, getState }) => (next) => (
+  action
+) => {
+  next(action);
+  if (action.type === addNotification.type) {
+    try {
+      const notification = action.payload;
+      dispatch(
+        uiActions.addUnseenNotifications({
+          id: notification._id,
+          assetId: notification.assetId,
+        })
+      );
+    } catch (error) {
+      logger(error);
+    }
+  }
+};
+
+/**
+ * Add Asset Notification Middleware
+ * @description
+ * Triggered on receiving new notification belonging to selected assset and 
+ * add to unseen asset notifications
+ * Dispatches addUnseenAssetNotifications(response.data) 
+ */
+const addAssetNotificationFlow = () => ({ dispatch, getState }) => (next) => (
+  action
+) => {
+  next(action);
+  if (action.type === addAssetNotification.type) {
+    try {
+      const notification = action.payload;
+      logger(getState().ui.unseenAssetNotifications);
+      dispatch(
+        uiActions.addUnseenAssetNotifications({
+          id: notification._id,
+          assetId: notification.assetId,
+        })
+      );
+    } catch (error) {
+      logger(error);
+    }
   }
 };
 
@@ -186,7 +293,10 @@ const assetFlow = [
   geoRouteFlow,
   putGeoFenceFlow,
   putGeoRouteFlow,
+  geoAssetNotificationsFlow,
   geoNotificationsFlow,
+  addNotificationFlow,
+  addAssetNotificationFlow,
 ];
 
 export default assetFlow;
@@ -200,13 +310,13 @@ export default assetFlow;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AssetList.html">AssetList</a></li><li><a href="AuthPage.html">AuthPage</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="Header.html">Header</a></li><li><a href="Home.html">Home</a></li><li><a href="Info.html">Info</a></li><li><a href="Loader.html">Loader</a></li><li><a href="LogoutModal.html">LogoutModal</a></li><li><a href="Map.html">Map</a></li><li><a href="Profile.html">Profile</a></li><li><a href="SideBar.html">SideBar</a></li><li><a href="Track.html">Track</a></li><li><a href="TypeSelector.html">TypeSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAssetNotificationFlow">addAssetNotificationFlow</a></li><li><a href="global.html#addNotificationFlow">addNotificationFlow</a></li><li><a href="global.html#firstName">firstName</a></li><li><a href="global.html#geoAssetNotificationsFlow">geoAssetNotificationsFlow</a></li><li><a href="global.html#geoFenceFlow">geoFenceFlow</a></li><li><a href="global.html#geoNotificationsFlow">geoNotificationsFlow</a></li><li><a href="global.html#geoRouteFlow">geoRouteFlow</a></li><li><a href="global.html#getProfileFlow">getProfileFlow</a></li><li><a href="global.html#hideSideNavFlow">hideSideNavFlow</a></li><li><a href="global.html#loadAssetsFlow">loadAssetsFlow</a></li><li><a href="global.html#loadLocalUserFlow">loadLocalUserFlow</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#pageLoadedFlow">pageLoadedFlow</a></li><li><a href="global.html#performLogoutFlow">performLogoutFlow</a></li><li><a href="global.html#performSignInFlow">performSignInFlow</a></li><li><a href="global.html#performSignUpFlow">performSignUpFlow</a></li><li><a href="global.html#putGeoFenceFlow">putGeoFenceFlow</a></li><li><a href="global.html#putGeoRouteFlow">putGeoRouteFlow</a></li><li><a href="global.html#setDateRangeFlow">setDateRangeFlow</a></li><li><a href="global.html#trackAssetFlow">trackAssetFlow</a></li><li><a href="global.html#updatePasswordFlow">updatePasswordFlow</a></li><li><a href="global.html#updateProfileFlow">updateProfileFlow</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Mar 31 2021 16:49:31 GMT+0530 (India Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Apr 03 2021 23:47:15 GMT+0530 (India Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

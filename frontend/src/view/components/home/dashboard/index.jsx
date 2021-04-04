@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadAssets,
-  setAssetType,
-  getAssets,
+  setAssetType
 } from "../../../../controller/reducer/assets";
 import {
   getLoading,
   getShowSidenav,
+  getTabId,
   pageLoaded,
+  setTabId
 } from "../../../../controller/reducer/ui";
 import Loader from "../widget/loader";
 import TypeSelector from "../widget/type";
@@ -25,13 +26,18 @@ import "./style.css";
  *   <Dashboard dispatch={dispatch}/>
  * )
  */
-const Dashboard = ({}) => {
+const Dashboard = (match) => {
   const dispatch = useDispatch();
-  const assets = useSelector(getAssets);
+  const tabId = useSelector(getTabId);
+  // logger(match.history.location.hash);
 
   useEffect(() => {
-    // dispatch(pageLoaded());
-  }, [dispatch]);
+    if (tabId !== "1") dispatch(setTabId("1"));
+  }, [tabId]);
+
+  useEffect(() => {
+    dispatch(pageLoaded());
+  }, []);
 
   const onSelect = (assetType) => {
     dispatch(setAssetType(assetType));

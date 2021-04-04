@@ -1,15 +1,16 @@
+import moment from "moment";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Badge, Button, Card, Figure } from "react-bootstrap";
+import { Figure } from "react-bootstrap";
 import ReactMapGL, {
+  FlyToInterpolator,
+  FullscreenControl,
+  GeolocateControl,
   Layer,
   Marker,
-  Popup,
-  Source,
-  FlyToInterpolator,
   NavigationControl,
-  FullscreenControl,
+  Popup,
   ScaleControl,
-  GeolocateControl,
+  Source,
 } from "react-map-gl";
 import { EditingMode, Editor } from "react-map-gl-draw";
 import { useSelector } from "react-redux";
@@ -18,15 +19,17 @@ import {
   getGeoFence,
   getGeoRoute,
 } from "../../../../../controller/reducer/geo";
-import { getDeviceSize, getTrackTabId } from "../../../../../controller/reducer/ui";
+import {
+  getDeviceSize,
+  getTrackTabId,
+} from "../../../../../controller/reducer/ui";
 import Markers from "../../../../../data/constants/Markers";
+import logger from "../../../../../utils/logger";
 import { getEditHandleStyle, getFeatureStyle } from "./common/draw-styles";
 import DrawFenceTools from "./common/DrawFenceTools";
 import DrawRouteTools from "./common/DrawRouteTools";
 import { heatmapLayer } from "./common/map-style";
-import moment from "moment";
 import "./styles.css";
-import logger from "../../../../../utils/logger";
 
 const geolocateStyle = {
   top: 0,
@@ -256,10 +259,7 @@ function Map({
             >
               <Figure.Caption>
                 <p className="p mt-2 mb-2 ml-4 mr-4 font-weight-bold">
-                  {moment
-                    .duration(moment().diff("2021-03-22T12:41:47.604Z"))
-                    .humanize()}{" "}
-                  ago
+                  {moment.duration(moment().diff(loc.timestamp)).humanize()} ago
                 </p>
               </Figure.Caption>
             </Figure>
@@ -272,7 +272,7 @@ function Map({
       />
       <FullscreenControl style={fullscreenControlStyle} />
       <NavigationControl style={navStyle} showCompass={false} />
-      {deviceSize!=="sm" && <ScaleControl style={scaleControlStyle} />}
+      {deviceSize !== "sm" && <ScaleControl style={scaleControlStyle} />}
     </ReactMapGL>
   );
 }

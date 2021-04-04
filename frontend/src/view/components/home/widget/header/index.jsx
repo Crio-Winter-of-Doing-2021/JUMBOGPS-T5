@@ -6,7 +6,7 @@ import { HashLink } from 'react-router-hash-link';
 import burgerIcon from "../../../../../assets/icons/menu.svg";
 import femaleIcon from "../../../../../assets/illustrations/female.svg";
 import maleIcon from "../../../../../assets/illustrations/male.svg";
-import { getDeviceSize, getUnseenNotifications } from "../../../../../controller/reducer/ui";
+import { getDeviceSize, getUnseenNotificationsCount } from "../../../../../controller/reducer/ui";
 import { getUser } from "../../../../../controller/reducer/user";
 import "./styles.css";
 
@@ -30,10 +30,9 @@ const firstName = (name) => name.split(" ")[0];
  * )
  */
 function Header({ onSelect }) {
-  const history = useHistory();
 
   const user = useSelector(getUser);
-  const unseenNotifications = useSelector(getUnseenNotifications);
+  const unseenNotificationsCount = useSelector(getUnseenNotificationsCount);
   const deviceSize = useSelector(getDeviceSize);
 
   return (
@@ -51,7 +50,7 @@ function Header({ onSelect }) {
         </div>
       )}
       <div>
-        {unseenNotifications.length !== 0 && (
+        {unseenNotificationsCount !== 0 && (
             <Button
               as={HashLink} to="/#notification"
               smooth 
@@ -59,7 +58,7 @@ function Header({ onSelect }) {
               size="sm"
               className="mb-1 mr-2"
             >
-              🔔<Badge variant="light">{unseenNotifications.length}</Badge>
+              🔔<Badge variant="light">{unseenNotificationsCount}</Badge>
             </Button>
         )}{" "}
         <Button

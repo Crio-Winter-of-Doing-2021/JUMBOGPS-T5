@@ -242,6 +242,7 @@ exports.updateLocation = async (req: Request, res: Response) => {
   if (status !== "none") {
     //notification exists for geo fence
     const notification = {
+      _id:mongoose.Types.ObjectId(),
       lat: req.body.lat,
       lon: req.body.lon,
       timestamp: req.body.timestamp,

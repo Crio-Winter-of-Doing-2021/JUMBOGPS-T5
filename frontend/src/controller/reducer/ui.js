@@ -12,8 +12,8 @@ export const counterSlice = createSlice({
     message: "",
     showSideNav: true,
     deviceSize : "lg",
-    unSeenNotifications:[],
-    unSeenAssetNotifications:[],
+    unSeenNotificationsCount:0,
+    unSeenAssetNotificationsCount:0,    
   },
   reducers: {
     pageLoaded: () => {},
@@ -40,17 +40,22 @@ export const counterSlice = createSlice({
       state.unSeenNotifications = action.payload;
     },
     setUnseenAssetNotifications:(state, action)  => {
-      logger(action.payload);
       state.unSeenAssetNotifications = action.payload;
     },
-    addUnseenNotifications:(state, action)  => {
-      state.unSeenNotifications.push(action.payload);
+    addUnseenNotifications:(state)  => {
+      state.unSeenNotificationsCount +=1;
     },
-    addUnseenAssetNotifications:(state, action)  => {
-      logger(action.payload);
-      state.unSeenAssetNotifications.push(action.payload);
+    addUnseenAssetNotifications:(state)  => {
+      state.unSeenAssetNotificationsCount +=1;
     },
-    
+    setUnseenNotificationsCount:(state, action)  => {
+      state.unSeenNotificationsCount = action.payload;
+    },
+    setUnseenAssetNotificationsCount:(state, action)  => {
+      state.unSeenAssetNotificationsCount = action.payload;
+    },
+    markSeenNotifications:()=>{},
+    markSeenAssetNotifications:()=>{},
   },
 });
 
@@ -68,7 +73,11 @@ export const {
   setUnseenNotifications,
   setUnseenAssetNotifications,
   addUnseenNotifications,
-  addUnseenAssetNotifications
+  addUnseenAssetNotifications,
+  setUnseenNotificationsCount,
+  setUnseenAssetNotificationsCount,
+  markSeenNotifications,
+  markSeenAssetNotifications
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -89,6 +98,6 @@ export const getShowSidenav = (state) => state.ui.showSideNav;
 
 export const getDeviceSize = (state) => state.ui.deviceSize;
 
-export const getUnseenNotifications = (state) => state.ui.unSeenNotifications;
+export const getUnseenNotificationsCount = (state) => state.ui.unSeenNotificationsCount;
 
-export const getUnseenAssetNotifications = (state) => state.ui.unSeenAssetNotifications;
+export const getUnseenAssetNotificationsCount = (state) => state.ui.unSeenAssetNotificationsCount;

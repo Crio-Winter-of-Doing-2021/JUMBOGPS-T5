@@ -19,7 +19,7 @@ const msg = (type, status) => {
 const NotificationList = ({ notifications, email }) => {
   return notifications.length === 0 ? (
     <p className="h4 font-weight-light">
-      No Notifications Appe
+      No Notifications Available
     </p>
   ) : (
     notifications.map(

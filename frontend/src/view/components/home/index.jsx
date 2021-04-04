@@ -1,31 +1,22 @@
 import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getAssetInfo } from "../../../controller/reducer/asset";
-import { addAssetNotification, addNotification } from "../../../controller/reducer/geo";
+import { addNotification } from "../../../controller/reducer/geo";
 import {
   getError,
   getShowSidenav,
   getTabId,
   getToastMessage,
-
-
-
-
-
-
   hideSidenav,
-  pageLoaded, setDeviceSize, setError,
+  pageLoaded,
+  setDeviceSize,
+  setError,
   setshowLogoutModal,
   setSuccessToast,
   setTabId,
-  toggleSidenav
+  toggleSidenav,
 } from "../../../controller/reducer/ui";
 import { performLogout } from "../../../controller/reducer/user";
 import logger from "../../../utils/logger";
@@ -65,7 +56,6 @@ const Home = () => {
   const err = useSelector(getError);
   const msg = useSelector(getToastMessage);
   const sidenav = useSelector(getShowSidenav);
-  const assetInfo = useSelector(getAssetInfo);
 
   const { width } = useWindowDimensions();
 
@@ -100,9 +90,6 @@ const Home = () => {
     socket.on("notification", (notification) => {
       logger(notification);
       dispatch(addNotification(notification));
-      if (notification.assetId === assetInfo.id) {
-        dispatch(addAssetNotification(notification));
-      }
     });
     return () => socket.off("notification");
   }, [socket]);
@@ -125,7 +112,6 @@ const Home = () => {
           onShow={handleShow}
         />
         <div
-          className="child "
           onTouchStart={handleTouch}
           style={{ marginLeft: sidenav ? "var(--sidenav-width)" : "0px" }}
         >

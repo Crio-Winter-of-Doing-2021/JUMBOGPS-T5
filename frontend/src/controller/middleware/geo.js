@@ -130,17 +130,14 @@ const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
 };
 
 const calcUnseen = (notifications, email) => {
-  let unseenNotifications = [];
+  let unseenNotificationsCount = 0;
   notifications.forEach((notification) => {
     notification.unseen = !notification.seenBy.includes(email);
     if (notification.unseen) {
-      unseenNotifications.push({
-        id: notification._id,
-        assetId: notification.assetId,
-      });
+      unseenNotificationsCount += 1;
     }
   });
-  return unseenNotifications;
+  return unseenNotificationsCount;
 };
 
 /**
@@ -162,7 +159,7 @@ const geoNotificationsFlow = ({ getNotifications }) => ({
       const notifications = response.data.data;
       logger(notifications);
       dispatch(
-        uiActions.setUnseenNotifications(
+        uiActions.setUnseenNotificationsCount(
           calcUnseen(notifications, getState().user.email)
         )
       );
@@ -195,7 +192,7 @@ const geoAssetNotificationsFlow = ({ getAssetNotifications }) => ({
       );
       const notifications = response.data.data;
       dispatch(
-        uiActions.setUnseenAssetNotifications(
+        uiActions.setUnseenAssetNotificationsCount(
           calcUnseen(notifications, getState().user.email)
         )
       );
@@ -210,9 +207,9 @@ const geoAssetNotificationsFlow = ({ getAssetNotifications }) => ({
 /**
  * Add = Notification Middleware
  * @description
- * Triggered on receiving new notification belonging and 
+ * Triggered on receiving new notification belonging and
  * add to unseen  notifications
- * Dispatches addUnseenNotifications(response.data) 
+ * Dispatches addUnseenNotifications(response.data)
  */
 const addNotificationFlow = () => ({ dispatch, getState }) => (next) => (
   action
@@ -220,13 +217,10 @@ const addNotificationFlow = () => ({ dispatch, getState }) => (next) => (
   next(action);
   if (action.type === addNotification.type) {
     try {
-      const notification = action.payload;
-      dispatch(
-        uiActions.addUnseenNotifications({
-          id: notification._id,
-          assetId: notification.assetId,
-        })
-      );
+      if (getState().asset.assetInfo.id === action.payload.assetId) {
+        dispatch(addAssetNotification(action.payload));
+      }
+      dispatch(uiActions.addUnseenNotifications());
     } catch (error) {
       logger(error);
     }
@@ -236,9 +230,9 @@ const addNotificationFlow = () => ({ dispatch, getState }) => (next) => (
 /**
  * Add Asset Notification Middleware
  * @description
- * Triggered on receiving new notification belonging to selected assset and 
+ * Triggered on receiving new notification belonging to selected assset and
  * add to unseen asset notifications
- * Dispatches addUnseenAssetNotifications(response.data) 
+ * Dispatches addUnseenAssetNotifications(response.data)
  */
 const addAssetNotificationFlow = () => ({ dispatch, getState }) => (next) => (
   action
@@ -246,14 +240,7 @@ const addAssetNotificationFlow = () => ({ dispatch, getState }) => (next) => (
   next(action);
   if (action.type === addAssetNotification.type) {
     try {
-      const notification = action.payload;
-      logger(getState().ui.unseenAssetNotifications);
-      dispatch(
-        uiActions.addUnseenAssetNotifications({
-          id: notification._id,
-          assetId: notification.assetId,
-        })
-      );
+      dispatch(uiActions.addUnseenAssetNotifications());
     } catch (error) {
       logger(error);
     }

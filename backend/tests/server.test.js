@@ -13,9 +13,9 @@ describe("Auth Endpoints", () => { // All Auth Endpoints goes here
   
   test("POST /auth/signup", async (done) => {
     const data = {
-      name: "perul jain",
-      email: "perul365@gmail.com",
-      password: "12345"
+      name: "tazril ali",
+      email: "taz@gmail.com",
+      password: "1234"
     };
 
     await supertest(app)

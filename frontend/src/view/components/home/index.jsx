@@ -64,25 +64,25 @@ const Home = () => {
       if (!sidenav) dispatch(toggleSidenav());
       dispatch(setDeviceSize("md"));
     } else dispatch(setDeviceSize("sm"));
-  }, [width]);
+  }, [width,sidenav,dispatch]);
 
   useEffect(() => {
     if (err) {
       notify(err);
       dispatch(setError(""));
     }
-  }, [err]);
+  }, [err,dispatch]);
 
   useEffect(() => {
     if (msg) {
       notify(msg);
       dispatch(setSuccessToast(""));
     }
-  }, [msg]);
+  }, [msg,dispatch]);
 
   useEffect(() => {
     dispatch(pageLoaded());
-  }, []);
+  }, [dispatch]);
 
   const socket = useContext(SocketContext);
   useEffect(() => {
@@ -92,7 +92,7 @@ const Home = () => {
       dispatch(addNotification(notification));
     });
     return () => socket.off("notification");
-  }, [socket]);
+  }, [socket,dispatch]);
 
   const handleClose = () => dispatch(setshowLogoutModal(false));
   const handleShow = () => dispatch(setshowLogoutModal(true));

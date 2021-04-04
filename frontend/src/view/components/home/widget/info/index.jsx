@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { HashLink } from 'react-router-hash-link';
 import { getDeviceSize } from "../../../../../controller/reducer/ui";
 import { AssetProperties } from "../../../../../data/constants/Asset";
@@ -25,7 +24,6 @@ import "./styles.css";
  * )
  */
 function Info({ asset, onClose, minimal }) {
-  const history = useHistory();
   const deviceSize = useSelector(getDeviceSize);
   if (!asset) return <div> </div>;
   return (

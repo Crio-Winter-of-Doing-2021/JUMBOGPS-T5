@@ -129,7 +129,7 @@ function Map({
       routeEditorRef.current.addFeatures(geoRoute);
       logger(routeEditorRef.current.getFeatures());
     }
-  }, [tabId]);
+  }, [tabId,geoFence,geoRoute]);
 
   const onDelete = useCallback(
     (ref) => () => {
@@ -137,7 +137,7 @@ function Map({
       else setGeoRoute(null);
       ref.current.deleteFeatures(0);
     },
-    []
+    [setGeoFence,setGeoRoute]
   );
 
   const onUpdate = useCallback(
@@ -153,7 +153,7 @@ function Map({
         }
       }
     },
-    []
+    [setGeoFence,setGeoRoute]
   );
 
   const setModeValue = (ref) => (mode) => {

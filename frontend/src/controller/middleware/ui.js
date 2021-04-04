@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import logger from "../../utils/logger";
-import { SocketContext } from "../../utils/socket";
 import { loadAssets } from "../reducer/assets";
 import {
   loadAssetNotifications,

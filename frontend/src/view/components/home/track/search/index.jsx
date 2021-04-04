@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
-import "./styles.css";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import Select, { components } from "react-select";
 import {
-  getAssetInfo,
-  loadAsset,
-  setAssetInfo,
+  getAssetInfo
 } from "../../../../../controller/reducer/asset";
 import { getAssets } from "../../../../../controller/reducer/assets";
-import { useHistory } from "react-router";
+import "./styles.css";
 
 const controlStyles = {
   padding: "10px",

@@ -85,7 +85,7 @@ const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
   next(action);
   if (action.type === updateGeoFence.type) {
     try {
-      const response = await putGeoFence(
+      await putGeoFence(
         getState().user.token,
         getState().asset.assetInfo.id,
         getState().geo.geoFence
@@ -95,7 +95,11 @@ const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
         "Geo Fence Updated for Asset " + getState().asset.assetInfo.name;
       dispatch(uiActions.setSuccessToast(message));
     } catch (error) {
-      dispatch(uiActions.setError(error));
+      if (error.response) {
+        dispatch(uiActions.setError(error.response.data.error.message));
+      } else {
+        dispatch(uiActions.setError(error.message));
+      }
     }
   }
 };
@@ -114,7 +118,7 @@ const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
   next(action);
   if (action.type === updateGeoRoute.type) {
     try {
-      const response = await putGeoRoute(
+      await putGeoRoute(
         getState().user.token,
         getState().asset.assetInfo.id,
         getState().geo.geoRoute
@@ -124,7 +128,11 @@ const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
         "Geo Route Updated for Asset " + getState().asset.assetInfo.name;
       dispatch(uiActions.setSuccessToast(message));
     } catch (error) {
-      dispatch(uiActions.setError(error));
+      if (error.response) {
+        dispatch(uiActions.setError(error.response.data.error.message));
+      } else {
+        dispatch(uiActions.setError(error.message));
+      }
     }
   }
 };

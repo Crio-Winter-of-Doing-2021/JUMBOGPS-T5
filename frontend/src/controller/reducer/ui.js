@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import logger from "../../utils/logger";
 
 export const counterSlice = createSlice({
   name: "ui",

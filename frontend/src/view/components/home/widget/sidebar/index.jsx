@@ -39,31 +39,31 @@ function SideBar({ activeKey, onSelect, onShow }) {
       >
         <Nav.Item>
           <Nav.Link as={Link} to="/" eventKey="1">
-            <img className="icon" src={dashboardIcon} />
+            <img className="icon" src={dashboardIcon} alt="dashboard"/>
             <p className="h5 font-weight-light">Dashboard </p>     
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to={`/track/${assetId ? assetId : "none"}`} eventKey="2">
-            <img className="icon" src={trackIcon} />
+            <img className="icon" src={trackIcon} alt="track"/>
             <p className=" h5 font-weight-light">Track Asset</p>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to="/asset-list" eventKey="3">
-            <img className="icon" src={tableIcon} />
+            <img className="icon" src={tableIcon} alt="asset list"/>
             <p className=" h5 font-weight-light">All Assets</p>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={Link} to="/profile" href="/profile" eventKey="4">
-            <img className="icon" src={profileIcon} />
+            <img className="icon" src={profileIcon} alt="profile"/>
             <p className=" h5 font-weight-light">Profile</p>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link onClick={onShow}>
-            <img className="icon" src={logoutIcon} />
+            <img className="icon" src={logoutIcon} alt="signout"/>
             <p className="h5 font-weight-light">Logout</p>
           </Nav.Link>
         </Nav.Item>

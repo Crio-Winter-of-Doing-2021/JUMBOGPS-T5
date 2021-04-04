@@ -1,7 +1,6 @@
 import React from "react";
 import { Badge, Button, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
 import { HashLink } from 'react-router-hash-link';
 import burgerIcon from "../../../../../assets/icons/menu.svg";
 import femaleIcon from "../../../../../assets/illustrations/female.svg";
@@ -43,6 +42,7 @@ function Header({ onSelect }) {
           <img
             src={user.profile.isMale ? maleIcon : femaleIcon}
             className="avatar-small"
+            alt="avatar"
           />
           <p className="h6 ml-2 mt-1 font-weight-normal text-light">
             {firstName(user.name)}
@@ -66,7 +66,7 @@ function Header({ onSelect }) {
           size="sm"
           className="mb-1 burger-container"
         >
-          <img src={burgerIcon} onClick={onSelect} className="burger" />
+          <img src={burgerIcon} onClick={onSelect} className="burger"  alt="menu"/>
         </Button>
       </div>
     </Navbar>

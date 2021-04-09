@@ -20,18 +20,19 @@ function NotificationArea({ dispatch, assetId }) {
   const email = useSelector(getEmail);
 
   const onSeenSubmit = () => {
-    let newNotifications = [];
-    notifications.forEach((notification) => {
-      if (!notification.seen)  {
-        socket.emit("notification", {
-          assetId: notification.assetId,
-          id: notification._id,
-          email,
-        });
-      }
-      newNotifications.push({ ...notification, seen: true });
-    });
-    dispatch(markSeenAssetNotifications(newNotifications));
+    let unseenNotifications = notifications
+      .filter((notification) => !notification.seen)
+      .map((notification) => ({
+        id: notification._id,
+        assetId: notification.assetId,
+        email,
+      }));
+    socket.emit("notification", unseenNotifications);
+    dispatch(
+      markSeenAssetNotifications(
+        notifications.map((notification) => ({ ...notification, seen: true }))
+      )
+    );
   };
 
   return (

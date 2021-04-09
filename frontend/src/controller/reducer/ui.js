@@ -10,6 +10,7 @@ export const counterSlice = createSlice({
     error: "",
     message: "",
     showSideNav: true,
+    showSpinner:"",
     deviceSize : "lg",
     unSeenNotificationsCount:0,
     unSeenAssetNotificationsCount:0,    
@@ -55,6 +56,9 @@ export const counterSlice = createSlice({
     },
     markSeenNotifications:()=>{},
     markSeenAssetNotifications:()=>{},
+    setSpinner:(state, action)  => {
+      state.showSpinner = action.payload;
+    },
   },
 });
 
@@ -76,7 +80,8 @@ export const {
   setUnseenNotificationsCount,
   setUnseenAssetNotificationsCount,
   markSeenNotifications,
-  markSeenAssetNotifications
+  markSeenAssetNotifications,
+  setSpinner
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
@@ -94,6 +99,8 @@ export const getToastMessage = (state) => state.ui.message;
 export const getTrackTabId = (state) => state.ui.trackTabId;
 
 export const getShowSidenav = (state) => state.ui.showSideNav;
+
+export const getSpinner = (state) => state.ui.showSpinner;
 
 export const getDeviceSize = (state) => state.ui.deviceSize;
 

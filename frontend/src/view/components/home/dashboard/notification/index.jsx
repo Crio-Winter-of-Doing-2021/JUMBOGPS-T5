@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Badge, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { getNotifications } from "../../../../../controller/reducer/geo";
 import {
-  getNotifications,
-
-} from "../../../../../controller/reducer/geo";
-import {  getUnseenNotificationsCount, markSeenNotifications } from "../../../../../controller/reducer/ui";
+  getUnseenNotificationsCount,
+  markSeenNotifications,
+} from "../../../../../controller/reducer/ui";
 import { getEmail } from "../../../../../controller/reducer/user";
 import { SocketContext } from "../../../../../utils/socket";
 import NotificationList from "./NotificationList";
@@ -18,37 +18,40 @@ function NotificationArea({ dispatch }) {
   const email = useSelector(getEmail);
 
   const onSeenSubmit = () => {
-    let newNotifications = [];
-    notifications.forEach((notification) => {
-      if (!notification.seen) {
-        socket.emit("notification", {
-          assetId:notification.assetId,
-          id:notification._id,
-          email,
-        });
-      }
-      newNotifications.push({ ...notification, seen: true });
-    });
-    dispatch(markSeenNotifications(newNotifications));
+    let unseenNotifications = notifications
+      .filter((notification) => !notification.seen)
+      .map((notification) => ({
+        id: notification._id,
+        assetId: notification.assetId,
+        email,
+      }));
+    socket.emit("notification", unseenNotifications);
+    dispatch(
+      markSeenNotifications(
+        notifications.map((notification) => ({ ...notification, seen: true }))
+      )
+    );
   };
 
   return (
     <div className="notification-box">
       <h1 className="h3 font-weight-normal">
         Notifications{" "}
-        {unseenNotificationsCount!==0 && (
+        {unseenNotificationsCount !== 0 && (
           <Badge variant="light">{unseenNotificationsCount}</Badge>
         )}{" "}
       </h1>
       <hr />
-     { (unseenNotificationsCount !== 0) && <Button
-        onClick={onSeenSubmit}
-        variant="outline-primary"
-        className="mr-4"
-        block
-      >
-        Mark Seen
-      </Button>}
+      {unseenNotificationsCount !== 0 && (
+        <Button
+          onClick={onSeenSubmit}
+          variant="outline-primary"
+          className="mr-4"
+          block
+        >
+          Mark Seen
+        </Button>
+      )}
       <div className="notification-box-container">
         <NotificationList notifications={notifications} email={email} />
       </div>

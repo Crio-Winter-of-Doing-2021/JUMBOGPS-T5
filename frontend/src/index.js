@@ -7,6 +7,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import  configStore  from './controller/configStore';
 import services from './data/index';
 import { Provider } from "react-redux";
+// import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
+// // Load worker code separately with worker-loader
+// import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker'; 
+// // Wire up loaded worker to be used instead of the default
+// mapboxgl.workerClass = MapboxWorker; 
 
 ReactDOM.render(
   <React.StrictMode>

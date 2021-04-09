@@ -1,4 +1,4 @@
-export const BASE_URL = process.env.REACT_APP_BASE_URL;
+export const BASE_URL = process.env.REACT_APP_BASE_URL; // "http://localhost:8003" 
 
 export const SIGN_IN_URL = `${BASE_URL}/auth/signin`;
 export const SIGN_UP_URL = `${BASE_URL}/auth/signup`;

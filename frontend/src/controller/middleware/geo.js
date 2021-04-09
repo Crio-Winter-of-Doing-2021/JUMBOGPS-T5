@@ -85,6 +85,7 @@ const putGeoFenceFlow = ({ putGeoFence, deleteGeoFence }) => ({
 }) => (next) => async (action) => {
   next(action);
   if (action.type === updateGeoFence.type) {
+    dispatch(uiActions.setSpinner("geo"));
     try {
       let message;
       if (getState().geo.geoFence == null) {
@@ -112,6 +113,7 @@ const putGeoFenceFlow = ({ putGeoFence, deleteGeoFence }) => ({
         dispatch(uiActions.setError(error.message));
       }
     }
+    dispatch(uiActions.setSpinner(""));
   }
 };
 
@@ -128,6 +130,7 @@ const putGeoRouteFlow = ({ putGeoRoute,deleteGeoRoute }) => ({ dispatch, getStat
 ) => async (action) => {
   next(action);
   if (action.type === updateGeoRoute.type) {
+    dispatch(uiActions.setSpinner("geo"));
     try {
       let message;
       if (getState().geo.geoRoute == null) {
@@ -154,6 +157,7 @@ const putGeoRouteFlow = ({ putGeoRoute,deleteGeoRoute }) => ({ dispatch, getStat
         dispatch(uiActions.setError(error.message));
       }
     }
+    dispatch(uiActions.setSpinner(""));
   }
 };
 

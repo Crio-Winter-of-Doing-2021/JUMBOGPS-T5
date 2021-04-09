@@ -1,15 +1,14 @@
-.profile{
+.profile {
   position: absolute;
   overflow: auto;
   top: 50px;
   right: 0px;
-  left:var(--sidenav-width);
+  left: var(--sidenav-width);
   bottom: 0px;
   transition: left 0.5s;
   padding: 20px;
 }
-body{
-  color: #8e9194;
+body {
   background-color: #f4f6f9;
 }
 .avatar-xl img {
@@ -43,7 +42,11 @@ img {
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-
+.spinner-child{
+  position: fixed;
+  z-index: 2px;
+  margin-top: 180px;
+}
 /* @media screen and (max-width: 750px) {
   .profile {left: 0px;}
 } */

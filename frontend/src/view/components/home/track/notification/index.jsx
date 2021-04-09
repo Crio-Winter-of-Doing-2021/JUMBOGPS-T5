@@ -22,14 +22,14 @@ function NotificationArea({ dispatch, assetId }) {
   const onSeenSubmit = () => {
     let newNotifications = [];
     notifications.forEach((notification) => {
-      if (notification.unseen) {
+      if (!notification.seen)  {
         socket.emit("notification", {
           assetId: notification.assetId,
           id: notification._id,
           email,
         });
       }
-      newNotifications.push({ ...notification, unseen: false });
+      newNotifications.push({ ...notification, seen: true });
     });
     dispatch(markSeenAssetNotifications(newNotifications));
   };

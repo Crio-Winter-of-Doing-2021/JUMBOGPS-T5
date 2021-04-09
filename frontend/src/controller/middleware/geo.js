@@ -79,20 +79,31 @@ const geoRouteFlow = ({ getGeoRoute }) => ({ dispatch, getState }) => (
  * Dispatches setError(err) on failure.
  * @param {function} services.putGeoFence put asset geofence api
  */
-const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
-  next
-) => async (action) => {
+const putGeoFenceFlow = ({ putGeoFence, deleteGeoFence }) => ({
+  dispatch,
+  getState,
+}) => (next) => async (action) => {
   next(action);
   if (action.type === updateGeoFence.type) {
     try {
-      await putGeoFence(
-        getState().user.token,
-        getState().asset.assetInfo.id,
-        getState().geo.geoFence
-      );
+      let message;
+      if (getState().geo.geoFence == null) {
+        await deleteGeoFence(
+          getState().user.token,
+          getState().asset.assetInfo.id
+        );
+        message =
+          "Geo Fence Deleted for Asset " + getState().asset.assetInfo.name;
+      } else {
+        await putGeoFence(
+          getState().user.token,
+          getState().asset.assetInfo.id,
+          getState().geo.geoFence
+        );
+        message =
+          "Geo Fence Updated for Asset " + getState().asset.assetInfo.name;
+      }
 
-      const message =
-        "Geo Fence Updated for Asset " + getState().asset.assetInfo.name;
       dispatch(uiActions.setSuccessToast(message));
     } catch (error) {
       if (error.response) {
@@ -112,20 +123,29 @@ const putGeoFenceFlow = ({ putGeoFence }) => ({ dispatch, getState }) => (
  * Dispatches setError(err) on failure.
  * @param {function} services.putGeoRoute put asset georoute api
  */
-const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
+const putGeoRouteFlow = ({ putGeoRoute,deleteGeoRoute }) => ({ dispatch, getState }) => (
   next
 ) => async (action) => {
   next(action);
   if (action.type === updateGeoRoute.type) {
     try {
-      await putGeoRoute(
-        getState().user.token,
-        getState().asset.assetInfo.id,
-        getState().geo.geoRoute
-      );
-
-      const message =
-        "Geo Route Updated for Asset " + getState().asset.assetInfo.name;
+      let message;
+      if (getState().geo.geoRoute == null) {
+        await deleteGeoRoute(
+          getState().user.token,
+          getState().asset.assetInfo.id
+        );
+        message =
+          "Geo Fence Deleted for Asset " + getState().asset.assetInfo.name;
+      } else {
+        await putGeoRoute(
+          getState().user.token,
+          getState().asset.assetInfo.id,
+          getState().geo.geoRoute
+        );
+        message =
+          "Geo Route Updated for Asset " + getState().asset.assetInfo.name;
+      }
       dispatch(uiActions.setSuccessToast(message));
     } catch (error) {
       if (error.response) {
@@ -135,17 +155,6 @@ const putGeoRouteFlow = ({ putGeoRoute }) => ({ dispatch, getState }) => (
       }
     }
   }
-};
-
-const calcUnseen = (notifications, email) => {
-  let unseenNotificationsCount = 0;
-  notifications.forEach((notification) => {
-    notification.unseen = !notification.seenBy.includes(email);
-    if (notification.unseen) {
-      unseenNotificationsCount += 1;
-    }
-  });
-  return unseenNotificationsCount;
 };
 
 /**
@@ -168,7 +177,7 @@ const geoNotificationsFlow = ({ getNotifications }) => ({
       logger(notifications);
       dispatch(
         uiActions.setUnseenNotificationsCount(
-          calcUnseen(notifications, getState().user.email)
+          notifications.filter((notification) => !notification.seen).length
         )
       );
       dispatch(loadNotificationsSuccess(notifications));
@@ -201,7 +210,7 @@ const geoAssetNotificationsFlow = ({ getAssetNotifications }) => ({
       const notifications = response.data.data;
       dispatch(
         uiActions.setUnseenAssetNotificationsCount(
-          calcUnseen(notifications, getState().user.email)
+          notifications.filter((notification) => !notification.seen).length
         )
       );
       dispatch(loadAssetNotificationsSuccess(notifications));

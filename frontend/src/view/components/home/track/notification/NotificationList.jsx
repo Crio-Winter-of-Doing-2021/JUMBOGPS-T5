@@ -23,7 +23,7 @@ const NotificationList = ({ notifications, email }) => {
     </p>
   ) : (
     notifications.map(
-      ({ name, type, status, timestamp, lat, lon, seenBy, unseen }, index) => (
+      ({ name, type, status, timestamp, lat, lon, seen }, index) => (
         <Toast
           key={index}
           style={{ display: "inline-block" }}
@@ -49,7 +49,7 @@ const NotificationList = ({ notifications, email }) => {
               Asset Located [{lon},{lat}] {msg(type, status)}
             </span>
             <h6 style={{ display: "inline" }}>
-              {unseen && (
+              {!seen && (
                 <Badge variant="info" className="ml-2">
                   NEW!
                 </Badge>

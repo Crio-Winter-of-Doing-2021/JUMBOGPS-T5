@@ -16,6 +16,8 @@ const services = {
 
     getGeoFence: geoApi.getGeoFence,
     getGeoRoute: geoApi.getGeoRoute,
+    deleteGeoFence: geoApi.delGeoFence,
+    deleteGeoRoute: geoApi.delGeoRoute,
     putGeoFence: geoApi.putGeoFence,
     putGeoRoute: geoApi.putGeoRoute,
     

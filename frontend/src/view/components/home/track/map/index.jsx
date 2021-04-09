@@ -169,7 +169,7 @@ function Map({
       width="100%"
       height="100%"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-      mapStyle="mapbox://styles/tazril/cklo46zze4zoz17pg8tp1oyms"
+      mapStyle={"mapbox://styles/mapbox/streets-v11"}
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
     >
       {tabId !== "2" &&

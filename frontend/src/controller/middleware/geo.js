@@ -205,7 +205,6 @@ const geoAssetNotificationsFlow = ({ getAssetNotifications }) => ({
 }) => (next) => async (action) => {
   next(action);
   if (action.type === loadAssetNotifications.type) {
-    dispatch(uiActions.setLoading(true));
     try {
       const response = await getAssetNotifications(
         getState().user.token,
@@ -221,7 +220,6 @@ const geoAssetNotificationsFlow = ({ getAssetNotifications }) => ({
     } catch (error) {
       dispatch(uiActions.setError(error));
     }
-    dispatch(uiActions.setLoading(false));
   }
 };
 

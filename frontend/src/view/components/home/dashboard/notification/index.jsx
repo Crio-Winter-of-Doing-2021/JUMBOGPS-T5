@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Badge, Button } from "react-bootstrap";
+import React, { useContext, useEffect, useCallback } from "react";
+import { Badge } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { getNotifications } from "../../../../../controller/reducer/geo";
 import {
@@ -17,7 +17,7 @@ function NotificationArea({ dispatch }) {
   const socket = useContext(SocketContext);
   const email = useSelector(getEmail);
 
-  const onSeenSubmit = () => {
+  const onSeenSubmit = useCallback(() => {
     let unseenNotifications = notifications
       .filter((notification) => !notification.seen)
       .map((notification) => ({
@@ -31,7 +31,14 @@ function NotificationArea({ dispatch }) {
         notifications.map((notification) => ({ ...notification, seen: true }))
       )
     );
-  };
+  }, [dispatch, notifications, email, socket]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (unseenNotificationsCount !== 0) onSeenSubmit();
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [notifications, unseenNotificationsCount, onSeenSubmit]);
 
   return (
     <div className="notification-box">
@@ -42,16 +49,6 @@ function NotificationArea({ dispatch }) {
         )}{" "}
       </h1>
       <hr />
-      {unseenNotificationsCount !== 0 && (
-        <Button
-          onClick={onSeenSubmit}
-          variant="outline-primary"
-          className="mr-4"
-          block
-        >
-          Mark Seen
-        </Button>
-      )}
       <div className="notification-box-container">
         <NotificationList notifications={notifications} email={email} />
       </div>

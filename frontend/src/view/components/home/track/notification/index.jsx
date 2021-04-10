@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Badge, Button } from "react-bootstrap";
+import React, { useCallback, useContext, useEffect } from "react";
+import { Badge } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { getAssetNotifications } from "../../../../../controller/reducer/geo";
 import {
@@ -19,7 +19,7 @@ function NotificationArea({ dispatch, assetId }) {
   const socket = useContext(SocketContext);
   const email = useSelector(getEmail);
 
-  const onSeenSubmit = () => {
+  const onSeenSubmit = useCallback(() => {
     let unseenNotifications = notifications
       .filter((notification) => !notification.seen)
       .map((notification) => ({
@@ -33,7 +33,14 @@ function NotificationArea({ dispatch, assetId }) {
         notifications.map((notification) => ({ ...notification, seen: true }))
       )
     );
-  };
+  }, [dispatch, notifications, email, socket]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (unseenAssetNotificationsCount !== 0) onSeenSubmit();
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [notifications, unseenAssetNotificationsCount, onSeenSubmit]);
 
   return (
     <div className="notification-box-track">
@@ -44,16 +51,6 @@ function NotificationArea({ dispatch, assetId }) {
         )}{" "}
       </h1>
       <hr />
-      {unseenAssetNotificationsCount !== 0 && (
-        <Button
-          onClick={onSeenSubmit}
-          variant="outline-primary"
-          className="mr-4"
-          block
-        >
-          Mark Seen
-        </Button>
-      )}
       <div className="notification-box-container">
         <NotificationList notifications={notifications} email={email} />
       </div>

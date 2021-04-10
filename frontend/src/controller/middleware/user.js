@@ -125,6 +125,7 @@ const updateProfileFlow = ({ putProfile, saveLocalUser, getLocalUser }) => ({ di
 ) => async (action) => {
   next(action);
   if (action.type === updateProfile.type) {
+    dispatch(uiActions.setSpinner("profile"));
     try {
       await putProfile(getState().user.token,action.payload);
       dispatch(loadProfileSuccess(action.payload));
@@ -139,6 +140,7 @@ const updateProfileFlow = ({ putProfile, saveLocalUser, getLocalUser }) => ({ di
         dispatch(uiActions.setError(error.message));
       }
     }
+    dispatch(uiActions.setSpinner(""));
   }
 };
 
@@ -155,16 +157,18 @@ const updatePasswordFlow = ({ putPassword}) => ({ dispatch, getState }) => (
 ) => async (action) => {
   next(action);
   if (action.type === updatePassword.type) {
+    dispatch(uiActions.setSpinner("password"));
     try {
       await putPassword(getState().user.token,action.payload);
       dispatch(uiActions.setSuccessToast("Password Updated Successfully"));
     } catch (error) {
       if (error.response) {
-        dispatch(uiActions.setError(error.response.data.error.message.message));
+        dispatch(uiActions.setError(error.response.data.error.message));
       } else {
         dispatch(uiActions.setError(error.message));
       }
     }
+    dispatch(uiActions.setSpinner(""));
   }
 };
 

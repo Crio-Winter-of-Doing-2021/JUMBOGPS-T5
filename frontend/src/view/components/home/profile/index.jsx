@@ -6,15 +6,14 @@ import maleIcon from "../../../../assets/illustrations/male.svg";
 import {
   getLoading,
   getShowSidenav,
-
-  setError
+  setError,
 } from "../../../../controller/reducer/ui";
 import {
-  getProfile, getUser,
+  getProfile,
+  getUser,
   loadProfile,
-
-
-  updatePassword, updateProfile
+  updatePassword,
+  updateProfile,
 } from "../../../../controller/reducer/user";
 import { useSelectedTab } from "../../../hooks/useSelectedTab";
 import Loader from "../widget/loader";
@@ -48,20 +47,17 @@ const Profile = () => {
 
   useSelectedTab("4");
 
-
-
   useEffect(() => {
     dispatch(loadProfile());
   }, [dispatch]);
 
-
-  const profileSubmit = (data)=>{
+  const profileSubmit = (data) => {
     dispatch(updateProfile(data));
-  }
+  };
 
-  const passwordSubmit = (data)=>{
+  const passwordSubmit = (data) => {
     dispatch(updatePassword(data));
-  }
+  };
   if (loading) return <Loader />;
 
   return (
@@ -87,7 +83,9 @@ const Profile = () => {
                   <div className="col-md-7">
                     <h4 className="mb-1">{user.name}</h4>
                     <p className=" mb-3">
-                      <span className="p-1 badge badge-dark">{profile.role}</span>
+                      <span className="p-1 badge badge-dark">
+                        {profile.role}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -115,7 +113,7 @@ const Profile = () => {
             )}
             <div>
               {showProfileForm && (
-                <ProfileForm onSubmit={profileSubmit} onClose={closeProfile}/>
+                <ProfileForm onSubmit={profileSubmit} onClose={closeProfile} />
               )}
               <br />
               <br />
@@ -133,7 +131,11 @@ const Profile = () => {
               )}
               <br />
               {showPasswordForm && (
-                <PasswordForm onSubmit={passwordSubmit} notify={notify} onClose={closePassword}/>
+                <PasswordForm
+                  onSubmit={passwordSubmit}
+                  notify={notify}
+                  onClose={closePassword}
+                />
               )}
             </div>
             <br />

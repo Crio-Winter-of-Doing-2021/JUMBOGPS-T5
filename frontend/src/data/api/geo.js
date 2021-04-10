@@ -16,6 +16,20 @@ export const getGeoFence = (authToken,assetId) =>
     },
   });
 
+  export const delGeoFence = (authToken,assetId) =>
+  axios.delete(Urls.delGeoFenceUrl(assetId), {
+    headers: {
+      Authorization: `Token ${authToken}`,
+    },
+  });
+
+  export const delGeoRoute = (authToken,assetId) =>
+  axios.delete(Urls.delGeoRouteUrl(assetId), {
+    headers: {
+      Authorization: `Token ${authToken}`,
+    },
+  });
+
   export const putGeoFence = (authToken,assetId,geoFence) =>
   axios.put(Urls.geoFenceUrl(assetId),geoFence, {
     headers: {

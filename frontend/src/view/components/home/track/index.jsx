@@ -6,29 +6,28 @@ import csvIcon from "../../../../assets/icons/table.svg";
 import {
   getAsset,
   getAssetInfo,
-
-  loadAsset
+  loadAsset,
 } from "../../../../controller/reducer/asset";
 import {
   getAssetsLength,
-  loadAssets
+  loadAssets,
 } from "../../../../controller/reducer/assets";
 import {
   setGeoFence,
   setGeoRoute,
   updateGeoFence,
-  updateGeoRoute
+  updateGeoRoute,
 } from "../../../../controller/reducer/geo";
 import {
   getLoading,
   getShowSidenav,
-
-
-  setTrackTabId
+  getSpinner,
+  setTrackTabId,
 } from "../../../../controller/reducer/ui";
 import logger from "../../../../utils/logger";
 import { useSelectedTab } from "../../../hooks/useSelectedTab";
 import Loader from "../widget/loader";
+import SpinnerComponent from "../widget/spinner";
 import DateRangeSelector from "./date-range";
 import Info from "./info";
 import Map from "./map";
@@ -77,15 +76,18 @@ const Track = ({ match }) => {
       match.params.id !== "none" ||
       (match.params.id !== "none" && match.params.id !== assetInfo.id)
     ) {
-      dispatch(loadAsset({id:match.params.id,mounted}));
+      dispatch(loadAsset({ id: match.params.id, mounted }));
     }
     if (noOfAssets === 0) dispatch(loadAssets());
-    return () => {mounted = false};
-  }, [match.params.id,dispatch,assetInfo.id,noOfAssets]);
+    return () => {
+      mounted = false;
+    };
+  }, [match.params.id, dispatch, assetInfo.id, noOfAssets]);
 
   useSelectedTab("2");
 
   const sidenav = useSelector(getShowSidenav);
+  const spinner = useSelector(getSpinner);
   if (useSelector(getLoading)) return <Loader />;
 
   if (match.params.id === "none" || !asset.asset_data) {
@@ -106,7 +108,9 @@ const Track = ({ match }) => {
 
   logger("asset ", asset);
   return (
-    <div className="track bg-light" style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
+    <div
+      className="track bg-light"
+      style={{ left: sidenav ? "var(--sidenav-width)" : "0px" }}
     >
       <h1 className="h2 font-weight-normal m-2">
         Asset : {assetInfo.name}
@@ -120,7 +124,8 @@ const Track = ({ match }) => {
           <DateRangeSelector dispatch={dispatch} />
         </Col>
       </Row>
-      <hr id="map"/>
+      <hr id="map" />
+      {(spinner==="geo") && <SpinnerComponent className="spinner-child" />}
       <div className="d-flex justify-content-center ">
         <Tabs onSelect={onSelectTab} />
       </div>
@@ -138,27 +143,29 @@ const Track = ({ match }) => {
       <div className="card-view" id="notifications">
         <Row>
           <Col lg={6}>
-          <NotificationArea dispatch={dispatch} assetId={assetInfo.id}/>
+            <NotificationArea dispatch={dispatch} assetId={assetInfo.id} />
           </Col>
-          <Col lg={6} >
-          <Info asset={asset.asset_data} />
+          <Col lg={6}>
+            <Info asset={asset.asset_data} />
           </Col>
         </Row>
-        
       </div>
       <br />
       <div className="table-view" id="table">
-        <h1 className="h3 font-weight-normal">Track List
-        <CSVLink
-          data={asset.track}
-          headers={headers}
-          filename={`${asset.asset_data.name}.csv`}
-          className="btn btn-dark btn-csv-end"
-          target="_blank"
-        >
-          <img src={csvIcon} className="mr-2 mb-1" alt="csv icon"/>CSV
-        </CSVLink></h1>
-        
+        <h1 className="h3 font-weight-normal">
+          Track List
+          <CSVLink
+            data={asset.track}
+            headers={headers}
+            filename={`${asset.asset_data.name}.csv`}
+            className="btn btn-dark btn-csv-end"
+            target="_blank"
+          >
+            <img src={csvIcon} className="mr-2 mb-1" alt="csv icon" />
+            CSV
+          </CSVLink>
+        </h1>
+
         <hr />
         <DataTable dispatch={dispatch} track={asset.track} />
       </div>

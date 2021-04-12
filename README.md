@@ -14,6 +14,14 @@ Team ID: JUMBOGPS-T5 | Team Members: Tazril Parveez Ali &amp; perul jain
 * [React Toastify ](https://fkhadra.github.io/react-toastify/introduction) for showing toast message
 * [Jsdoc](https://jsdoc.app/) and [Better Docs](https://betterdocs.co/) for documentation
 
+### Backend Libraries
+
+* [Express](https://expressjs.com/)  Minimal and flexible Node.js web application framework
+* [Mongo-db](https://www.mongodb.com/) for Database
+* [Mongoose](https://mongoosejs.com/) ODM
+* [Geojson](https://www.npmjs.com/package/geojson)  Parsing geojson data
+* [jest](https://jestjs.io/) for writing unit test
+
 
 
 ## Documentation

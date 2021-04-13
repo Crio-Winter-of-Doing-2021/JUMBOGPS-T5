@@ -5,49 +5,33 @@ import express from "express";
 
 import { authRoute } from "./routes/auth";
 import { assetRoute } from "./routes/asset";
-import {userRoute} from "./routes/user"
-import { markSeen } from "./controllers/notification";
+import { userRoute } from "./routes/user";
 
 const app = express();
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
+let swaggerDocument = require("../swagger.json");
 
-var http = require('http').Server(app);
-var io = require('socket.io')(http, {
-  cors: {
-    origin: '*',
-  }
-});
-
+//change swagger host dynamically for development
+//note: use 'npm run localhost' command for this to work
+if(process.env.NODE_ENV && process.env.NODE_ENV.trim() === "development"){
+  swaggerDocument.host ="localhost:8003";
+  swaggerDocument.schemes = ["http"];
+  console.log(swaggerDocument.host ,swaggerDocument.schemes)
+}
+    
 app.use(express.json());
 
 //Required for making calls from localhost -- dev only
-var cors = require('cors')
-app.use(cors()) 
+var cors = require("cors");
+app.use(cors());
 
 app.use("/api", assetRoute);
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req, res) => {
-  res.send("hello");
-});
-
-io.on('connection',function  (socket:any) {
-
-  socket.on("notification", ({assetId,id,email}: { assetId: string; id: string; email: string }  )=> {
-      console.log(assetId,id,email);
-      //add email in notification's sendBy in Db
-      markSeen(assetId,id,email);
-  });
-  
-});
-
-http.listen(8001, function() {
-  console.log('listening on port 8001');
+  res.send("hello world");
 });
 
 module.exports = app;
-export {http};
-export {io};

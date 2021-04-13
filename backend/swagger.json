@@ -9,7 +9,7 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "host": "localhost:8000",
+  "host": "jumbotail.herokuapp.com",
   "basePath": "/",
   "tags": [
     {
@@ -17,7 +17,7 @@
       "description": "API for tracking assets"
     }
   ],
-  "schemes": ["http"],
+  "schemes": ["https"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
@@ -367,6 +367,58 @@
           }
         ],
         "summary": "Update Georoute",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetUpdateResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/asset/delgeofence/{id}": {
+      "delete": {
+        "tags": ["Assets"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
+          }
+        ],
+        "summary": "Delete Geofence",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetUpdateResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/asset/delgeoroute/{id}": {
+      "delete": {
+        "tags": ["Assets"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token <token>"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": "true"
+          }
+        ],
+        "summary": "Delete Georoute",
         "responses": {
           "200": {
             "description": "OK",

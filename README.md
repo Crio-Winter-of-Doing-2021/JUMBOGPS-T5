@@ -29,6 +29,9 @@ Team ID: JUMBOGPS-T5 | Team Members: Tazril Parveez Ali &amp; perul jain
 ### Frontend
 [ JsDoc with BetterDocs ](https://reimagined-chainsaw-ed98d30d.pages.github.io/)
 
+### Backend
+[ Swagger ](https://jumbotail.herokuapp.com/api-docs/)
+
 ## Build
 
 ### Backend

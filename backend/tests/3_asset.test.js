@@ -66,8 +66,7 @@ describe("Asset End points", () => {
 
     test("Lat Lon timestamp", async (done) => {
       let data = {
-        lat: 24.3,
-        lon: 73.5,
+        lat: 24.3
       };
       const response = await supertest(app)
         .patch("/api/asset/" + id)
@@ -75,7 +74,7 @@ describe("Asset End points", () => {
         .set("Accept", "application/json");
       expect(response.statusCode).toBe(422);
       expect(response.body.error.message).toBe(
-        "Lat, lon and timestamp are required"
+        "Lat, lon are required"
       );
       done();
     });

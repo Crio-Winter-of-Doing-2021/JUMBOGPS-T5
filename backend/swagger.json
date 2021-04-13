@@ -525,7 +525,7 @@
           "200": {
             "description": "Get Notifications",
             "schema": {
-              "$ref": "#/definitions/Notification"
+              "$ref": "#/definitions/Notifications"
             }
           }
         }
@@ -607,18 +607,17 @@
         "name": {
           "type": "string"
         }
-        
       }
     },
     "UpdatePassword": {
-          "properties": {
-            "oldPassword": {
-              "type": "string"
-            },
-            "newPassword": {
-              "type": "string"
-            }
-          }
+      "properties": {
+        "oldPassword": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        }
+      }
     },
     "UserLogin": {
       "required": ["email", "password"],
@@ -867,44 +866,48 @@
         }
       }
     },
-    "NotificationGps": {
+    "Notification": {
       "properties": {
+        "timestamp": {
+          "type": "string"
+        },
+        "seen": {
+          "type": "boolean"
+        },
+        "_id": {
+          "type": "string"
+        },
         "lat": {
           "type": "string"
         },
         "lon": {
           "type": "string"
         },
-        "timestamp": {
+        "type": {
           "type": "string"
         },
-        "type": {
+        "status": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "assetId": {
           "type": "string"
         }
       }
     },
-    "Notification": {
+    "Notifications": {
       "properties": {
         "data": {
-          "type": "object",
-          "properties": {
-            "_id": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "track": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "$ref": "#/definitions/NotificationGps"
-              }
-            }
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Notifications"
           }
         },
         "error": {
-          "type" : "string"
+          "type": "string"
         }
       }
     }

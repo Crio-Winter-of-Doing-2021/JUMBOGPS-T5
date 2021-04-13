@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== "test") {
     console.log("Server: running on port 8003");
   });
 
-  //Initialize Socket connection
+  //Initialize Socket connections
   io = socketIO(server, {
     cors: {
       origin: "*",
